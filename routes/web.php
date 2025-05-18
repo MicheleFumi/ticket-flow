@@ -17,8 +17,8 @@ Route::get('/', function () {
 })->middleware(['auth', 'verified'])->name('dashboard'); */
 
 Route::middleware(['auth','verified'])->group(function(){
-   Route::get('/dashboard', [ticketController::class, 'index'])->name("dashboard");
-   Route::get('/lista-ticket',function(){return view("tickets");})->name("tickets");
+   Route::get('/dashboard', function(){return view("dashboard");})->name("dashboard");
+   Route::get('/lista-ticket',[ticketController::class, 'index'])->name("tickets");
    Route::get('/utenti', function(){return view("users");})->name("users");
 });
 

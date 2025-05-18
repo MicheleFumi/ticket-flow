@@ -12,12 +12,7 @@
                     {{ __("You're logged in!") }}
                 </div>
                 <div class="p-2 text-gray-900 dark:text-gray-100">
-                  @foreach ($tickets as $ticket)
-                        <div>{{$ticket["titolo"]}}</div>
-                        <div>{{$ticket["commento"]}}</div>
-                        <div>{{$ticket["stato"]}}</div>
-                    @endforeach
-                </div>
+                  
             </div>
         </div>
     </div>
