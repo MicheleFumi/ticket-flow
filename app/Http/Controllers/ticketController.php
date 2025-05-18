@@ -11,7 +11,28 @@ class ticketController extends Controller
      */
     public function index()
     {
-        $tickets=[];
+         $tickets = [
+        [
+            'id' => 1,
+            'titolo' => 'Errore login',
+            'commento' => 'Il sistema restituisce errore 500 al login.',
+            'stato' => 'aperto',
+        ],
+        [
+            'id' => 2,
+            'titolo' => 'Crash su salvataggio',
+            'commento' => 'L\'applicazione va in crash quando si salva un nuovo record.',
+            'stato' => 'in lavorazione',
+        ],
+        [
+            'id' => 3,
+            'titolo' => 'UI non responsiva',
+            'commento' => 'Il layout non si adatta su dispositivi mobili.',
+            'stato' => 'chiuso',
+        ],
+    ];
+
+    return view("dashboard", compact("tickets"));
     }
 
     /**
