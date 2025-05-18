@@ -12,9 +12,17 @@ Route::get('/', function () {
     return view('welcome');
 }); */
 
-Route::get('/dashboard', [ticketController::class, 'index'], function () {
+/* Route::get('/dashboard', [ticketController::class, 'index'], function () {
     return view('dashboard');
-})->middleware(['auth', 'verified'])->name('dashboard');
+})->middleware(['auth', 'verified'])->name('dashboard'); */
+
+Route::middleware(['auth','verified'])->group(function(){
+   Route::get('/dashboard', [ticketController::class, 'index'])->name("dashboard");
+   Route::get('/tickets',function(){return view("tickets");})->name("tickets");
+   Route::get('/users', function(){return view("users");})->name("users");
+});
+
+
 
 Route::middleware('auth')->group(function () {
     Route::get('/profile', [ProfileController::class, 'edit'])->name('profile.edit');
