@@ -1,49 +1,51 @@
 services:
-  app:
-    image: php:8.2-fpm
-    container_name: laravel-app
-    ports:
-      - "8000:8000"
-    volumes:
-      - .:/var/www/html
-    working_dir: /var/www/html
-    networks:
-      - laravel
-    environment:
-      APP_PORT: 8000
-    depends_on:
-      - mysql
-    command: >
-      bash -c "apt-get update && 
-               apt-get install -y curl libpq-dev libzip-dev libonig-dev zip unzip &&
-               docker-php-ext-install pdo_mysql &&
-               curl -sS https://getcomposer.org/installer | php &&
-               mv composer.phar /usr/local/bin/composer &&
-               composer install && 
-               php artisan key:generate &&
-               php artisan migrate &&
-               php artisan serve --host=0.0.0.0 --port=8000"
+    app:
+        image: php:8.2-fpm
+        container_name: laravel-app
+        ports:
+            - "8000:8000"
+        volumes:
+            - .:/var/www/html
+        working_dir: /var/www/html
+        networks:
+            - laravel
+        environment:
+            APP_PORT: 8000
+        depends_on:
+            - mysql
+        command: >
+            bash -c "apt-get update && 
+                     apt-get install -y curl libpq-dev libzip-dev libonig-dev zip unzip &&
+                     docker-php-ext-install pdo_mysql &&
+                     curl -sS https://getcomposer.org/installer | php &&
+                     mv composer.phar /usr/local/bin/composer &&
+                     composer install && 
+                     php artisan key:generate &&
+                     until php artisan migrate; do
+                     echo '⏳ Aspettando il database...';
+                     sleep 3;  &&
+                     php artisan serve --host=0.0.0.0 --port=8000"
 
-  mysql:
-    image: mysql:8.0
-    container_name: laravel-mysql
-    ports:
-      - '${FORWARD_DB_PORT:-3306}:3306'
-    environment:
-      MYSQL_DATABASE: "${DB_DATABASE}"
-      MYSQL_USER: "${DB_USERNAME}"
-      MYSQL_PASSWORD: "${DB_PASSWORD}"
-      MYSQL_ROOT_PASSWORD: "${DB_ROOT_PASSWORD}"
-      MYSQL_ROOT_HOST: "%"
-    volumes:
-      - mysql_data:/var/lib/mysql
-    networks:
-      - laravel
+    mysql:
+        image: mysql:8.0
+        container_name: laravel-mysql
+        ports:
+            - "${FORWARD_DB_PORT:-3306}:3306"
+        environment:
+            MYSQL_DATABASE: "${DB_DATABASE}"
+            MYSQL_USER: "${DB_USERNAME}"
+            MYSQL_PASSWORD: "${DB_PASSWORD}"
+            MYSQL_ROOT_PASSWORD: "${DB_ROOT_PASSWORD}"
+            MYSQL_ROOT_HOST: "%"
+        volumes:
+            - mysql_data:/var/lib/mysql
+        networks:
+            - laravel
 
 networks:
-  laravel:
-    driver: bridge
+    laravel:
+        driver: bridge
 
 volumes:
-  mysql_data:
-    driver: local
+    mysql_data:
+        driver: local
