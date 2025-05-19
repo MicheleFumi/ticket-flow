@@ -18,9 +18,13 @@ class Technician extends Authenticatable
      * @var list<string>
      */
     protected $fillable = [
-        'name',
+        'nome',
+        'cognome',
         'email',
         'password',
+        'telefono',
+        'is_admin',
+        'is_avaible',
     ];
 
     /**
