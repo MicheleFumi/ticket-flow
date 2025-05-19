@@ -13,11 +13,6 @@ if [[ "$OSTYPE" == "darwin"* ]]; then
     else
         echo "Docker is already running."
     fi
-
-    # Forza il caricamento del profilo della shell
-    source ~/.bashrc 2>/dev/null || source ~/.zshrc 2>/dev/null
-    export NVM_DIR="$HOME/.nvm"
-    [ -s "$NVM_DIR/nvm.sh" ] && \. "$NVM_DIR/nvm.sh"
 else
     echo "Detected Linux (Debian-based)."
     pkill docker
