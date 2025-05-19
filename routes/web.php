@@ -1,7 +1,7 @@
 <?php
 
 use App\Http\Controllers\ProfileController;
-use App\Http\Controllers\ticketController;
+use App\Http\Controllers\TicketController;
 use Illuminate\Support\Facades\Route;
 
 Route::get('/', function () {
@@ -18,7 +18,7 @@ Route::get('/', function () {
 
 Route::middleware(['auth','verified'])->group(function(){
    Route::get('/dashboard', function(){return view("dashboard");})->name("dashboard");
-   Route::get('/lista-ticket',[ticketController::class, 'index'])->name("tickets");
+   Route::get('/lista-ticket',[TicketController::class, 'index'])->name("tickets");
    Route::get('/utenti', function(){return view("users");})->name("users");
 });
 
