@@ -11,9 +11,13 @@ class TechnicianSeeder extends Seeder
     public function run(): void
     {
         Technician::create([
-            'name' => 'Tecnico di Prova',
+            'nome' => 'Mario',
+            'cognome' => 'Rossi',
             'email' => 'tecnico@example.com',
             'password' => Hash::make('password123'),
+            'telefono' => '1234567890',
+            'is_admin' => true,
+            'is_avaible' => true,
         ]);
     }
 }
