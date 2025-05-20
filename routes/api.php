@@ -15,3 +15,4 @@ Route::get('/lista-ticket/{ticket}', [TicketController::class, 'show'])->middlew
 // Route::get('/user', function (Request $request) {
 //     return $request->user();
 // })->middleware('auth:sanctum');
+ 

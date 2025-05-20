@@ -12,7 +12,7 @@ class Status extends Model
 
 public function tickets()
 {
-    return $this->belongsToMany(Ticket::class);
+    return $this->hasMany(Ticket::class);
 }
 
 
