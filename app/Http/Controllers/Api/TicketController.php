@@ -80,8 +80,13 @@ class TicketController extends Controller
     /**
      * Remove the specified resource from storage.
      */
-    public function destroy(string $id)
-    {
-        //
+    public function destroy(Ticket $ticket)
+    {        
+        $ticket->delete();
+        $ticketList= Ticket::all();
+
+        return response()->json([
+            'data'=>$ticketList
+        ]);
     }
 }
