@@ -6,7 +6,7 @@
                 {{ __('Lista Tecnici') }}
             </h2>
     @if(auth()->check() && auth()->user()->is_admin)
-            <button class="bg-blue-500 px-4 py-2 rounded">Aggiungi Tecnico</button>
+            <button id="openModalButton" class="bg-blue-500 hover:bg-blue-600 text-white font-bold py-2 px-4 rounded focus:outline-none focus:shadow-outline transition duration-150 ease-in-out">Aggiungi Tecnico</button>
     @endif
         </div>
     </x-slot>
@@ -28,7 +28,6 @@
                                 <tr>
                                     <td class="px-6 py-4 whitespace-nowrap">{{ $technician->nome }}  {{$technician->cognome}}</td>
                                     <td class="px-6 py-4 whitespace-nowrap">{{ $technician->email }}</td>
-                                    {{-- <td class="px-6 py-4 whitespace-nowrap">{{ $technician->is_avaible }}</td> --}}
                                     <td class="px-6 py-4 whitespace-nowrap ">
                                         @if($technician->is_avaible === 1)
                                             <span class="inline-block h-3 w-3 rounded-full bg-green-500" title="Disponibile"></span>
@@ -51,4 +50,45 @@
             </div>
         </div>
     </div>
+
+    <div id="addTechnicianModal" class="fixed inset-0 bg-gray-600 bg-opacity-50 overflow-y-auto h-full w-full hidden z-50">
+        <div class="relative top-20 mx-auto p-5 border w-96 shadow-lg rounded-md bg-white dark:bg-gray-700">
+            <div class="flex justify-end items-center pb-3">
+                <button id="closeModalButton" class="text-gray-400 hover:text-gray-600 dark:text-gray-300 dark:hover:text-gray-100 text-2xl font-bold leading-none align-baseline">&times;</button>
+            </div>
+            <div class="text-center text-gray-900 dark:text-gray-100">
+                <h3 class="text-lg font-semibold leading-6 mb-4">Aggiungi Nuovo Tecnico</h3>
+                {{-- searchbar utenti + lista utenti con pulsante affianco --}}
+                <h2>provaaa</h2>
+            </div>
+        </div>
+    </div>
+
+    <script>
+        document.addEventListener('DOMContentLoaded', function () {
+            const openModalButton = document.getElementById('openModalButton');
+            const closeModalButton = document.getElementById('closeModalButton');
+            const addTechnicianModal = document.getElementById('addTechnicianModal');
+
+            //apre il modale
+            openModalButton.addEventListener('click', function() {
+                addTechnicianModal.classList.remove('hidden');
+                addTechnicianModal.classList.add('flex', 'items-center', 'justify-center'); // Centra il modale
+            });
+
+            //chiude il modale con la X
+            closeModalButton.addEventListener('click', function() {
+                addTechnicianModal.classList.add('hidden');
+                addTechnicianModal.classList.remove('flex', 'items-center', 'justify-center');
+            });
+
+            //Chiude il modale cliccando fuori
+            addTechnicianModal.addEventListener('click', function(event) {
+                if (event.target === addTechnicianModal) {
+                    addTechnicianModal.classList.add('hidden');
+                    addTechnicianModal.classList.remove('flex', 'items-center', 'justify-center');
+                }
+            });
+        });
+    </script>
 </x-app-layout>
