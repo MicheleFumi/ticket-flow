@@ -11,7 +11,7 @@ Route::post('/login', [AuthController::class, 'login']);
 Route::post('/logout', [AuthController::class, 'logout'])->middleware('auth:sanctum');
 Route::post('/apri-ticket', [TicketController::class, 'store'])->middleware('auth:sanctum');
 Route::get('/lista-ticket', [TicketController::class, 'index'])->middleware('auth:sanctum');
-
+Route::get('/lista-ticket/{ticket}', [TicketController::class, 'show'])->middleware('auth:sanctum');
 // Route::get('/user', function (Request $request) {
 //     return $request->user();
 // })->middleware('auth:sanctum');
