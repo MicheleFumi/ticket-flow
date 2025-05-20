@@ -23,11 +23,12 @@ Route::middleware(['auth', 'verified'])->group(function () {
     })->name("dashboard");
 
     //UTENTI
-    Route::get('/utenti', function () {
-        return view("users");
-    })->name("users");
+    // Route::get('/utenti', function () {
+    //     return view("users");
+    // })->name("users");
 
     //TECNICI
+    Route::get('/tecnici', [TechnicianController::class, 'index'])->name("technicians.index");
     Route::post('/user-to-technician', [TechnicianController::class, 'userToTechnician'])->name('user-to-technician');
 
     //TICKET

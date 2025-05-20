@@ -9,6 +9,12 @@ use Illuminate\Support\Facades\Redirect;
 
 class TechnicianController extends Controller
 {
+    public function index()
+    {
+        $technicians = Technician::all();
+        return view('technicians.index', compact('technicians'));
+    }
+
     public function userToTechnician(Request $request)
     {
         $adminTechnician = Technician::where('is_admin', true)->first();
