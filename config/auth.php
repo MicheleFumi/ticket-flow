@@ -38,7 +38,7 @@ return [
     'guards' => [
         'web' => [
             'driver' => 'session',
-            'provider' => 'users',
+            'provider' => 'technicians',
         ],
     ],
 
@@ -60,7 +60,7 @@ return [
     */
 
     'providers' => [
-        'users' => [
+        'technicians' => [
             'driver' => 'eloquent',
             'model' => env('AUTH_MODEL', App\Models\Technician::class),
         ],
