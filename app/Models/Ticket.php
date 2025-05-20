@@ -12,4 +12,10 @@ class Ticket extends Model
         'commento',
         'stato',
     ];
+
+
+    public function statuses()
+{
+    return $this->belongsToMany(Status::class);
+}
 }
