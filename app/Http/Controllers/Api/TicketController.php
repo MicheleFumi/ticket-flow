@@ -3,6 +3,7 @@
 namespace App\Http\Controllers\Api;
 
 use App\Http\Controllers\Controller;
+use App\Models\Status;
 use App\Models\Ticket;
 
 use Illuminate\Http\Request;
@@ -37,7 +38,8 @@ class TicketController extends Controller
             'user_id'=>$request->user()->id,
             'titolo'=>$request->titolo,
             'commento'=>$request->commento,
-            'stato'=>$request->stato
+            'status_id' => $request->status_id ?? 1,  // 1 = Aperto di default
+
 
         ]);
         return response()->json([
@@ -51,8 +53,11 @@ class TicketController extends Controller
      */
     public function show(Ticket $ticket)
     {
+
+        $ticket->load('status');
         return response()->json([
             'data'=>$ticket
+            
         ]);
     }
 

@@ -10,12 +10,13 @@ class Ticket extends Model
         'user_id',
         'titolo',
         'commento',
-        'stato',
+        'status_id',
+        
     ];
 
 
-    public function statuses()
+    public function status()
 {
-    return $this->belongsToMany(Status::class);
+    return $this->belongsTo(Status::class);
 }
 }
