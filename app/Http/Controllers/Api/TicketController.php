@@ -7,6 +7,8 @@ use App\Models\Ticket;
 
 use Illuminate\Http\Request;
 
+use function Laravel\Prompts\error;
+
 class TicketController extends Controller
 {
     /**
@@ -47,9 +49,11 @@ class TicketController extends Controller
     /**
      * Display the specified resource.
      */
-    public function show(string $id)
+    public function show(Ticket $ticket)
     {
-        //
+        return response()->json([
+            'data'=>$ticket
+        ]);
     }
 
     /**
