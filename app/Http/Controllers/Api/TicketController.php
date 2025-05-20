@@ -7,6 +7,7 @@ use App\Models\Status;
 use App\Models\Ticket;
 
 use Illuminate\Http\Request;
+use Mockery\Undefined;
 
 use function Laravel\Prompts\error;
 
@@ -72,9 +73,22 @@ class TicketController extends Controller
     /**
      * Update the specified resource in storage.
      */
-    public function update(Request $request, string $id)
+    public function update(Request $request, Ticket $ticket)
     {
-        //
+        $data=$request->all();
+        $ticket->titolo =$data['titolo'];
+        $ticket->commento =$data['commento'];
+       
+        if (!isset($data['status_id']) || $data['status_id']=== null ) {
+            $ticket->status_id=1;
+        } else{
+             $ticket->status_id =$data['status_id'];
+        };
+        $ticket->update();
+
+        return response()->json([
+            'data'=>$ticket
+        ]);
     }
 
     /**
