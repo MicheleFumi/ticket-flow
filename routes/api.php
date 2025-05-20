@@ -9,7 +9,9 @@ use Illuminate\Support\Facades\Route;
 Route::post('/register', [AuthController::class, 'register']);
 Route::post('/login', [AuthController::class, 'login']);
 Route::post('/logout', [AuthController::class, 'logout'])->middleware('auth:sanctum');
-Route::post('/create-ticket', [TicketController::class, 'store'])->middleware('auth:sanctum');
+Route::post('/apri-ticket', [TicketController::class, 'store'])->middleware('auth:sanctum');
+Route::get('/lista-ticket', [TicketController::class, 'index'])->middleware('auth:sanctum');
+
 // Route::get('/user', function (Request $request) {
 //     return $request->user();
 // })->middleware('auth:sanctum');
