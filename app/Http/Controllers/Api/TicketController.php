@@ -80,7 +80,7 @@ class TicketController extends Controller
         $ticket->commento =$data['commento'];
        
         if (!isset($data['status_id']) || $data['status_id']=== null ) {
-            $ticket->status_id=1;
+            $ticket->status_id;
         } else{
              $ticket->status_id =$data['status_id'];
         };
