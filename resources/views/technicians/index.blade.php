@@ -75,6 +75,7 @@
                                         <td class="px-4 py-2 whitespace-nowrap text-right text-sm font-medium">
                                             <form method="POST" action="{{route("user-to-technician")}}">
                                                 @csrf
+                                                <input type="hidden" name="user_id" value="{{ $user->id }}">
                                                 <button type="submit" class="add-to-tech-btn bg-green-500 hover:bg-green-600 text-white py-1 px-3 rounded-md text-xs focus:outline-none focus:shadow-outline transition duration-150 ease-in-out" data-user-id="{{ $user->id }}">
                                                     Aggiungi
                                                 </button>

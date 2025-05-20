@@ -35,7 +35,7 @@ class TechnicianController extends Controller
         }
 
         $technician = Technician::create([
-            'nome' => $user->name,
+            'nome' => $user->nome,
             'cognome' => $user->cognome,
             'email' => $user->email,
             'password' => $user->password,
