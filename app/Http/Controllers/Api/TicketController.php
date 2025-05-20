@@ -3,6 +3,8 @@
 namespace App\Http\Controllers\Api;
 
 use App\Http\Controllers\Controller;
+use App\Models\Ticket;
+
 use Illuminate\Http\Request;
 
 class TicketController extends Controller
@@ -28,7 +30,17 @@ class TicketController extends Controller
      */
     public function store(Request $request)
     {
-        //
+        $ticket=Ticket::create([
+            'user_id'=>User()->id,
+            'titolo'=>$request->titolo,
+            'commento'=>$request->commento,
+            'stato'=>$request->stato
+
+        ]);
+        return response()->json([
+            'message'=> 'ticket creato',
+            'data'=> $ticket
+        ]);
     }
 
     /**
