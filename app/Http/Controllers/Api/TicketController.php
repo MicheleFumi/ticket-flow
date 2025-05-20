@@ -12,9 +12,10 @@ class TicketController extends Controller
     /**
      * Display a listing of the resource.
      */
-    public function index()
+    public function index(Request $request)
     {
-        //
+        $tickets = $request->user()->tickets;
+        return response()->json($tickets);
     }
 
     /**
@@ -31,7 +32,7 @@ class TicketController extends Controller
     public function store(Request $request)
     {
         $ticket=Ticket::create([
-            'user_id'=>User()->id,
+            'user_id'=>$request->user()->id,
             'titolo'=>$request->titolo,
             'commento'=>$request->commento,
             'stato'=>$request->stato
