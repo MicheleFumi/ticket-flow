@@ -12,7 +12,8 @@ class TechnicianController extends Controller
     public function index()
     {
         $technicians = Technician::all();
-        return view('technicians.index', compact('technicians'));
+        $users = $this->getUsers();
+        return view('technicians.index', compact('technicians', 'users'));
     }
 
     public function userToTechnician(Request $request)
@@ -34,7 +35,7 @@ class TechnicianController extends Controller
         }
 
         $technician = Technician::create([
-            'name' => $user->name,
+            'nome' => $user->name,
             'cognome' => $user->cognome,
             'email' => $user->email,
             'password' => $user->password,
