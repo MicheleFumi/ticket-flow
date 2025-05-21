@@ -17,6 +17,11 @@ class Ticket extends Model
 
     ];
 
+    protected $casts = [
+        'data_assegnazione' => 'datetime',
+        'data_chiusura' => 'datetime',
+    ];
+
 
     public function status()
     {
