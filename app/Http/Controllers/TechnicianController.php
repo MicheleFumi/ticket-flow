@@ -41,7 +41,7 @@ class TechnicianController extends Controller
             'password' => $user->password,
             'telefono' => $user->telefono,
             'is_admin' => $user->is_admin ?? false,
-            'is_avaible' => true,
+            'is_available' => true,
         ]);
 
         return Redirect::back()->with('success', 'Tecnico creato con successo!');

@@ -29,7 +29,7 @@
                             <div class="flex items-center justify-between text-sm">
                                 <span
                                     class="px-2 py-1 rounded-full
-                                    @if ($ticket->status->titolo === 'aperto') bg-green-100 text-green-700
+                                    @if ($ticket->status->titolo === 'Aperto') bg-green-100 text-green-700
                                     @elseif($ticket->status->titolo === 'In Lavorazione') bg-yellow-100 text-yellow-700
                                     @else bg-red-100 text-red-700 @endif">
                                     {{ ucfirst($ticket->status->titolo) }}
@@ -51,8 +51,9 @@
                     Una volta preso in carico dovrai contattare il tuo supervisore per rimuoverlo.
                 </p>
                 <div class="flex justify-center space-x-4">
-                    <form method="GET" action="{{ route('tickets.index', $ticket) }}">
+                    <form method="POST" action="{{ route('tickets.assign', $ticket) }}">
                         @csrf
+                        <input type="hidden" name="technician_id">
                         <button type="submit"
                             class="bg-green-500 hover:bg-green-600 text-white font-bold py-2 px-4 rounded">
                             Conferma

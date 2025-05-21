@@ -2,6 +2,7 @@
 
 namespace App\Http\Controllers;
 
+use App\Models\Technician;
 use App\Models\Ticket;
 use Illuminate\Http\Request;
 
@@ -12,11 +13,9 @@ class TicketController extends Controller
      */
     public function index()
     {
-         $tickets = Ticket::all();
-
-    return view("tickets.index", compact("tickets"));
+        $tickets = Ticket::with('status', 'technician')->get();
+        return view("tickets.index", compact("tickets"));
     }
-
     /**
      * Show the form for creating a new resource.
      */
@@ -38,7 +37,9 @@ class TicketController extends Controller
      */
     public function show(Ticket $ticket)
     {
-        $ticket->load('status');
+
+
+        $ticket->load('status',);
         return view('tickets.show', compact('ticket'));
     }
 
@@ -64,5 +65,18 @@ class TicketController extends Controller
     public function destroy(string $id)
     {
         //
+    }
+
+
+    public function assign(Ticket $ticket, Technician $technician)
+    {
+        $technician_id = auth()->guard('web')->user()->id;
+        $ticket->technician_id = $technician_id;
+        $ticket->status_id = 2;
+        $ticket->save();
+
+        $technician->is_available = false;
+        $technician->save();
+        return redirect()->route('tickets.index')->with('success', 'Ticket assegnato con successo');
     }
 }

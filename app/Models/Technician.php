@@ -24,7 +24,7 @@ class Technician extends Authenticatable
         'password',
         'telefono',
         'is_admin',
-        'is_avaible',
+        'is_available',
     ];
 
     /**
@@ -48,5 +48,11 @@ class Technician extends Authenticatable
             'email_verified_at' => 'datetime',
             'password' => 'hashed',
         ];
+    }
+
+
+    public function tickets()
+    {
+        return $this->hasMany(Ticket::class);
     }
 }
