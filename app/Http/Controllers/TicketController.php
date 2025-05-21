@@ -4,6 +4,7 @@ namespace App\Http\Controllers;
 
 use App\Models\Technician;
 use App\Models\Ticket;
+use Carbon\Carbon;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\DB;
 
@@ -81,6 +82,7 @@ class TicketController extends Controller
             // Assegna il ticket
             $ticket->technician_id = $technician->id;
             $ticket->status_id = 2;
+            $ticket->data_assegnazione = Carbon::now();
             $ticket->save();
 
 
