@@ -35,7 +35,7 @@ class TicketController extends Controller
         ],
     ];
 
-    return view("tickets", compact("tickets"));
+    return view("tickets.index", compact("tickets"));
     }
 
     /**
