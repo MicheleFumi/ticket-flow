@@ -16,6 +16,7 @@ class User extends Authenticatable
         'email',
         'password',
         'telefono',
+        'is_technician',
     ];
 
     protected $hidden = [
@@ -24,7 +25,7 @@ class User extends Authenticatable
     ];
 
     public function tickets()
-{
-    return $this->hasMany(Ticket::class)->orderBy('created_at');
-}
+    {
+        return $this->hasMany(Ticket::class)->orderBy('created_at');
+    }
 }
