@@ -52,7 +52,7 @@
     </div>
 
     <div id="addTechnicianModal" class="fixed inset-0 bg-gray-600 bg-opacity-50 overflow-y-auto h-full w-full hidden z-50 flex items-center justify-center">
-        <div class="relative p-5 border w-1/2 max-w-lg shadow-lg rounded-md bg-white dark:bg-gray-700"> {{-- Ho aumentato la larghezza del modale --}}
+        <div class="relative p-5 border w-1/2 max-w-lg shadow-lg rounded-md bg-white dark:bg-gray-700"> 
             <div class="flex justify-between items-center pb-3 border-b border-gray-200 dark:border-gray-600">
                 <h3 class="text-lg font-semibold leading-6 text-gray-900 dark:text-gray-100">Aggiungi Nuovo Tecnico</h3>
                 <button id="closeModalButton" class="text-gray-400 hover:text-gray-600 dark:text-gray-300 dark:hover:text-gray-100 text-2xl font-bold leading-none align-baseline">&times;</button>
@@ -61,14 +61,14 @@
             <div class="mt-4 text-gray-900 dark:text-gray-100">
                 <input type="text" id="userSearchInput" placeholder="Cerca per nome o cognome..." class="mb-4 p-2 w-full border rounded-md dark:bg-gray-800 dark:border-gray-600 dark:text-gray-100 focus:ring-blue-500 focus:border-blue-500">
 
-                <div class="max-h-64 overflow-y-auto border rounded-md dark:border-gray-600"> {{-- Aggiunto scroll e altezza massima --}}
+                <div class="max-h-64 overflow-y-auto border rounded-md dark:border-gray-600"> 
                     <table class="min-w-full divide-y divide-gray-200 dark:divide-gray-600" id="usersTable">
                         <tbody class="bg-white divide-y divide-gray-200 dark:bg-gray-800 dark:divide-gray-600">
                             @if(isset($users) && $users->count() > 0)
                                 @foreach($users as $user)
                                     <tr class="user-row">
                                         <td class="px-4 py-2 whitespace-nowrap text-sm font-medium text-gray-900 dark:text-gray-100">
-                                            <span class="user-name">{{ $user->nome }}</span> <span class="user-lastname">{{ $user->cognome ?? '' }}</span> {{-- Assumendo che tu abbia 'name' e 'lastname' per gli utenti --}}
+                                            <span class="user-name">{{ $user->nome }}</span> <span class="user-lastname">{{ $user->cognome ?? '' }}</span> 
                                             <br>
                                             <span class="text-xs text-gray-500 dark:text-gray-400">{{ $user->email }}</span>
                                         </td>
@@ -130,7 +130,7 @@
 
                 userRows.forEach(row => {
                     const userName = row.querySelector('.user-name').textContent.toLowerCase();
-                    const userLastname = row.querySelector('.user-lastname').textContent.toLowerCase(); // Assumendo che il cognome abbia questa classe
+                    const userLastname = row.querySelector('.user-lastname').textContent.toLowerCase(); 
                     const userEmail = row.querySelector('span.text-xs').textContent.toLowerCase();
 
                     if (userName.includes(searchValue) || userLastname.includes(searchValue) || userEmail.includes(searchValue)) {
