@@ -18,7 +18,7 @@
                     <x-nav-link :href="route('technicians.index')" :active="request()->routeIs('technicians.index')">
                         {{ __("Lista Tecnici") }}
                     </x-nav-link>
-                    <x-nav-link :href="route('tickets')" :active="request()->routeIs('tickets')">
+                    <x-nav-link :href="route('tickets.index')" :active="request()->routeIs('tickets')">
                         {{ __('Lista Ticket') }}
                     </x-nav-link>
                 </div>
@@ -77,7 +77,7 @@
             <x-responsive-nav-link :href="route('technicians.index')" :active="request()->routeIs('technicians.index')">
                 {{ __("Lista Tecnici") }}
             </x-responsive-nav-link>
-            <x-responsive-nav-link :href="route('tickets')" :active="request()->routeIs('tickets')">
+            <x-responsive-nav-link :href="route('tickets.index')" :active="request()->routeIs('tickets')">
                 {{ __('Lista Ticket') }}
             </x-responsive-nav-link>
         </div>

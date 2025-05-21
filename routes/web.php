@@ -32,10 +32,10 @@ Route::middleware(['auth', 'verified'])->group(function () {
     Route::post('/user-to-technician', [TechnicianController::class, 'userToTechnician'])->name('user-to-technician');
 
     //TICKET
-    Route::get('/lista-ticket', [TicketController::class, 'index'])->name("tickets");
+    Route::get('/lista-ticket', [TicketController::class, 'index'])->name("tickets.index");
+    Route::get('/lista-ticket/{ticket}', [TicketController::class, 'show'])->name("tickets.show");
+
 });
-
-
 //PROFILE
 Route::middleware('auth')->group(function () {
     Route::get('/profile', [ProfileController::class, 'edit'])->name('profile.edit');

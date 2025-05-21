@@ -14,20 +14,25 @@
                 <div class="p-2 text-gray-900 dark:text-gray-100">
                   <div class="space-y-4">
     @foreach ($tickets as $ticket)
-        <div class="bg-white shadow-md rounded-2xl p-4 border border-gray-200">
-            <h2 class="text-xl font-semibold text-gray-800 mb-2">{{ $ticket["titolo"] }}</h2>
-            <p class="text-gray-600 mb-1">{{ $ticket["commento"] }}</p>
-            <div class="flex items-center justify-between text-sm text-gray-500">
-                <span class="px-2 py-1 rounded-full 
-                    @if($ticket['stato'] === 'aperto') bg-red-100 text-red-700 
-                    @elseif($ticket['stato'] === 'in lavorazione') bg-yellow-100 text-yellow-700 
-                    @else bg-green-100 text-green-700 
-                    @endif">
-                    {{ ucfirst($ticket["stato"]) }}
-                </span>
-                <span>{{ $ticket["data"] }}</span>
-            </div>
-        </div>
+      <div class="bg-white shadow-md rounded-2xl p-4 border border-gray-200">
+    <div class="flex items-center justify-between mb-2">
+        <h2 class="text-xl font-semibold text-gray-800">{{ $ticket["titolo"] }}</h2>
+        <span class="text-sm text-gray-500">{{ $ticket["created_at"]->format('d/m/Y') }}</span>
+    </div>
+    <div class="flex items-center justify-between text-sm">
+        <span class="px-2 py-1 rounded-full
+            @if($ticket->status->titolo === 'aperto') bg-green-100 text-green-700
+            @elseif($ticket->status->titolo === 'In Lavorazione') bg-yellow-100 text-yellow-700
+            @else bg-red-100 text-red-700
+            @endif">
+            {{ ucfirst($ticket->status->titolo) }}
+        </span>
+        <a href="{{ route('tickets.show', $ticket) }}" class="bg-blue-500 hover:bg-blue-600 text-white font-bold py-2 px-4 rounded focus:outline-none focus:shadow-outline transition duration-150 ease-in-out">
+            Vedi dettagli →
+        </a>
+    </div>
+</div>
+
     @endforeach
 </div>
 
