@@ -65,7 +65,7 @@ class TechnicianController extends Controller
         }
     }
 
-    public function destroyTechnician(Request $request)
+    public function technicianToUser(Request $request)
     {
         $adminTechnician = Technician::where('is_admin', true)->first();
 
