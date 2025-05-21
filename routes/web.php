@@ -30,6 +30,7 @@ Route::middleware(['auth', 'verified'])->group(function () {
     //TECNICI
     Route::get('/tecnici', [TechnicianController::class, 'index'])->name("technicians.index");
     Route::post('/user-to-technician', [TechnicianController::class, 'userToTechnician'])->name('user-to-technician');
+    Route::post('/technician-to-user', [TechnicianController::class, 'technicianToUser'])->name('technician-to-user');
 
     //TICKET
     Route::get('/lista-ticket', [TicketController::class, 'index'])->name("tickets");
