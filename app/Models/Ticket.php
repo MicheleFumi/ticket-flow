@@ -11,8 +11,15 @@ class Ticket extends Model
         'titolo',
         'commento',
         'status_id',
-        'technician_id'
+        'technician_id',
+        'data_assegnazione',
+        'data_chiusura',
 
+    ];
+
+    protected $casts = [
+        'data_assegnazione' => 'datetime',
+        'data_chiusura' => 'datetime',
     ];
 
 
