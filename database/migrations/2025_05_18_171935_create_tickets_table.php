@@ -17,7 +17,7 @@ return new class extends Migration
             $table->string("titolo")->nullable();
             $table->text("commento")->nullable();
             $table->foreignId('status_id')->default(1);
-            $table->foreign('status_id')->references('id')->on('statuses');
+            $table->foreignId('technician_id')->nullable()->constrained('technicians')->onDelete('set null');
             $table->timestamps();
         });
     }

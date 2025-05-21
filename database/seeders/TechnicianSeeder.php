@@ -17,7 +17,7 @@ class TechnicianSeeder extends Seeder
             'password' => Hash::make('password123'),
             'telefono' => '1234567890',
             'is_admin' => true,
-            'is_avaible' => true,
+            'is_available' => true,
         ]);
     }
 }

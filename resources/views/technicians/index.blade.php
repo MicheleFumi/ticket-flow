@@ -67,21 +67,23 @@
             </div>
 
             <div class="mt-4 text-gray-900 dark:text-gray-100">
-                <input type="text" id="userSearchInput" placeholder="Cerca per nome o cognome..." class="mb-4 p-2 w-full border rounded-md dark:bg-gray-800 dark:border-gray-600 dark:text-gray-100 focus:ring-blue-500 focus:border-blue-500">
+                <input type="text" id="userSearchInput" placeholder="Cerca per nome o cognome..."
+                    class="mb-4 p-2 w-full border rounded-md dark:bg-gray-800 dark:border-gray-600 dark:text-gray-100 focus:ring-blue-500 focus:border-blue-500">
 
                 <div class="max-h-64 overflow-y-auto border rounded-md dark:border-gray-600">
                     <table class="min-w-full divide-y divide-gray-200 dark:divide-gray-600" id="usersTable">
                         <tbody class="bg-white divide-y divide-gray-200 dark:bg-gray-800 dark:divide-gray-600">
-                            @if(isset($users) && $users->count() > 0)
-                                @foreach($users as $user)
+                            @if (isset($users) && $users->count() > 0)
+                                @foreach ($users as $user)
                                     <tr class="user-row">
                                         <td class="px-4 py-2 whitespace-nowrap text-sm font-medium text-gray-900 dark:text-gray-100">
                                             <span class="user-name">{{ $user->nome }}</span> <span class="user-lastname">{{ $user->cognome ?? '' }}</span>
                                             <br>
-                                            <span class="text-xs text-gray-500 dark:text-gray-400">{{ $user->email }}</span>
+                                            <span
+                                                class="text-xs text-gray-500 dark:text-gray-400">{{ $user->email }}</span>
                                         </td>
                                         <td class="px-4 py-2 whitespace-nowrap text-right text-sm font-medium">
-                                            <form method="POST" action="{{route("user-to-technician")}}">
+                                            <form method="POST" action="{{ route('user-to-technician') }}">
                                                 @csrf
                                                 <input type="hidden" name="user_id" value="{{ $user->id }}">
                                                 <button type="submit" class="add-to-tech-btn bg-green-500 hover:bg-green-600 text-white py-1 px-3 rounded-md text-xs focus:outline-none focus:shadow-outline transition duration-150 ease-in-out">
@@ -93,7 +95,9 @@
                                 @endforeach
                             @else
                                 <tr>
-                                    <td colspan="2" class="px-4 py-2 text-sm text-gray-500 text-center dark:text-gray-400">Nessun utente trovato.</td>
+                                    <td colspan="2"
+                                        class="px-4 py-2 text-sm text-gray-500 text-center dark:text-gray-400">Nessun
+                                        utente trovato.</td>
                                 </tr>
                             @endif
                         </tbody>

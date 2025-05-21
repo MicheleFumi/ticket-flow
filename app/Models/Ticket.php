@@ -11,12 +11,18 @@ class Ticket extends Model
         'titolo',
         'commento',
         'status_id',
-        
+        'technician_id'
+
     ];
 
 
     public function status()
-{
-    return $this->belongsTo(Status::class);
-}
+    {
+        return $this->belongsTo(Status::class);
+    }
+
+    public function technician()
+    {
+        return $this->belongsTo(Technician::class);
+    }
 }
