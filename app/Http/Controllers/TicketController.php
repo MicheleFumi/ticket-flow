@@ -5,6 +5,7 @@ namespace App\Http\Controllers;
 use App\Models\Technician;
 use App\Models\Ticket;
 use Illuminate\Http\Request;
+use Illuminate\Support\Facades\DB;
 
 class TicketController extends Controller
 {
@@ -68,15 +69,31 @@ class TicketController extends Controller
     }
 
 
-    public function assign(Ticket $ticket, Technician $technician)
+    public function assign(Ticket $ticket)
     {
-        $technician_id = auth()->guard('web')->user()->id;
-        $ticket->technician_id = $technician_id;
-        $ticket->status_id = 2;
-        $ticket->save();
+        $technicianId = auth('web')->id();
+        $technician = \App\Models\Technician::findOrFail($technicianId);
 
-        $technician->is_available = false;
-        $technician->save();
-        return redirect()->route('tickets.index')->with('success', 'Ticket assegnato con successo');
+
+        DB::beginTransaction();
+
+        try {
+            // Assegna il ticket
+            $ticket->technician_id = $technician->id;
+            $ticket->status_id = 2;
+            $ticket->save();
+
+
+            // Rendi il tecnico non disponibile
+            $technician->update(['is_available' => false]);
+
+            DB::commit();
+
+            return redirect()->route('tickets.index')->with('success', 'Ticket assegnato con successo');
+        } catch (\Exception $e) {
+            DB::rollBack();
+
+            return redirect()->back()->with('error', 'Si è verificato un errore: ' . $e->getMessage());
+        }
     }
 }
