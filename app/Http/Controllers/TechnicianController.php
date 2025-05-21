@@ -14,7 +14,8 @@ class TechnicianController extends Controller
     {
         $technicians = Technician::all();
         $users = $this->getUsers();
-        return view('technicians.index', compact('technicians', 'users'));
+        $nonAdminTechnicians = Technician::where('is_admin', false)->get();
+        return view('technicians.index', compact('technicians', 'users', 'nonAdminTechnicians'));
     }
 
     public function userToTechnician(Request $request)
@@ -81,6 +82,10 @@ class TechnicianController extends Controller
 
         if (!$technician) {
             return Redirect::back()->with('error', 'Tecnico non trovato.');
+        }
+
+        if ($technician->is_admin) {
+            return Redirect::back()->with('error', 'Impossibile rimuovere un tecnico amministratore. Modificare prima i suoi privilegi.');
         }
 
         DB::beginTransaction();

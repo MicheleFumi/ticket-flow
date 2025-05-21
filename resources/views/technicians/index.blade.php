@@ -32,7 +32,7 @@
                                     <td class="px-6 py-4 whitespace-nowrap">{{ $technician->nome }} {{ $technician->cognome }}</td>
                                     <td class="px-6 py-4 whitespace-nowrap">{{ $technician->email }}</td>
                                     <td class="px-6 py-4 whitespace-nowrap ">
-                                        @if($technician->is_avaible === 1)
+                                        @if($technician->is_available === 1)
                                             <span class="inline-block h-3 w-3 rounded-full bg-green-500" title="Disponibile"></span>
                                         @else
                                             <span class="inline-block h-3 w-3 rounded-full bg-red-500" title="Non Disponibile"></span>
@@ -101,6 +101,7 @@
         </div>
     </div>
 
+    
      {{-- Modale per Rimuovere Tecnico --}}
     <div id="removeTechnicianModal" class="fixed inset-0 bg-gray-600 bg-opacity-50 overflow-y-auto h-full w-full hidden z-50 flex items-center justify-center">
         <div class="relative p-5 border w-1/2 max-w-lg shadow-lg rounded-md bg-white dark:bg-gray-700">
@@ -115,8 +116,8 @@
                 <div class="max-h-64 overflow-y-auto border rounded-md dark:border-gray-600">
                     <table class="min-w-full divide-y divide-gray-200 dark:divide-gray-600" id="techniciansRemoveTable">
                         <tbody class="bg-white divide-y divide-gray-200 dark:bg-gray-800 dark:divide-gray-600">
-                            @if(isset($technicians) && $technicians->count() > 0)
-                                @foreach($technicians as $technician)
+                            @if(isset($nonAdminTechnicians) && $nonAdminTechnicians->count() > 0)
+                                @foreach($nonAdminTechnicians as $technician)
                                     <tr class="technician-row">
                                         <td class="px-4 py-2 whitespace-nowrap text-sm font-medium text-gray-900 dark:text-gray-100">
                                             <span class="technician-name">{{ $technician->nome }}</span> <span class="technician-lastname">{{ $technician->cognome ?? '' }}</span>
