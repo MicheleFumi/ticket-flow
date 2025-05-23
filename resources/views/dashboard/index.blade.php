@@ -32,6 +32,16 @@
                                             @else bg-red-100 text-red-700 @endif">
                                             {{ ucfirst($ticket->status->titolo) }}
                                         </span>
+
+                                        <div class="flex gap-2">
+                                            <form method="POST" action="{{route("tickets.unassign")}}">
+                                                @csrf
+                                                <input type="hidden" name="technician_id" value="{{ $ticket->technician->id }}">
+                                                <button type="submit" class="px-2 py-1 rounded-full bg-yellow-400">Rimuovi il ticket dal tecnico</button>
+                                            </form>
+                                            <button class="px-2 py-1 rounded-full bg-red-600">Termina Lavoro</button>
+                                            <button></button>
+                                        </div>
                                     </div>
                                 </div>
                             @endforeach
