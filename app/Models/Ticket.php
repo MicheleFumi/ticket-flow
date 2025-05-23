@@ -2,6 +2,7 @@
 
 namespace App\Models;
 
+use Carbon\Carbon;
 use Illuminate\Database\Eloquent\Model;
 
 class Ticket extends Model
@@ -31,5 +32,17 @@ class Ticket extends Model
     public function technician()
     {
         return $this->belongsTo(Technician::class);
+    }
+
+    public function assignToTechnician(Technician $technician)
+    {
+        if (!$technician->is_available) {
+            throw new \Exception("Il tecnico non è disponibile.");
+        }
+        $this->technician_id = $technician->id;
+        $this->data_assegnazione = Carbon::now();
+        $this->save();
+
+        return $this;
     }
 }
