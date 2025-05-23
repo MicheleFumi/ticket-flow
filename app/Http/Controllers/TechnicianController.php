@@ -90,6 +90,11 @@ class TechnicianController extends Controller
         DB::beginTransaction();
 
         try {
+
+            foreach ($technician->tickets as $ticket) {
+                $ticket->removeFromTechnician($technician);
+            }
+
             $user = User::where('email', $technician->email)->first();
             if ($user) {
                 $user->update(['is_technician' => false]);
