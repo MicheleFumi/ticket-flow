@@ -29,6 +29,7 @@ Route::middleware(['auth', 'verified'])->group(function () {
     Route::get('/lista-ticket', [TicketController::class, 'index'])->name("tickets.index");
     Route::get('/lista-ticket/{ticket}', [TicketController::class, 'show'])->name("tickets.show");
     Route::post('/assegna-ticket/{ticket}', [TicketController::class, 'assign'])->name("tickets.assign");
+    Route::post("/ticket/unassign", [TicketController::class, 'unassign'])->name("tickets.unassign");
 });
 //PROFILE
 Route::middleware('auth')->group(function () {

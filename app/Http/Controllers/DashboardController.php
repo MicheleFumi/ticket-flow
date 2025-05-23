@@ -11,7 +11,7 @@ class DashboardController extends Controller
 {
     public function index()
     {
-        $technician = Auth::guard('web')->user();
+        $technician = Auth::guard()->user();
         if (!$technician) {
             return redirect('/login')->with('error', 'Devi essere loggato come tecnico per accedere a questa dashboard.');
         }

@@ -15,22 +15,20 @@ class TechnicianController extends Controller
         $technicians = Technician::all();
         $users = $this->getUsers();
         $nonAdminTechnicians = Technician::where('is_admin', false)->get();
+        // dd($nonAdminTechnicians);
         return view('technicians.index', compact('technicians', 'users', 'nonAdminTechnicians'));
     }
 
     public function userToTechnician(Request $request)
     {
-        $adminTechnician = Technician::where('is_admin', true)->first();
 
-        if (!$adminTechnician) {
+        $technician = auth()->guard()->user();
+
+        if (!$technician->is_admin) {
             return Redirect::back()->with('error', 'Non sei autorizzato a eseguire questa operazione.');
         }
 
-        $request->validate([
-            'user_id' => 'required|exists:users,id',
-        ]);
-
-        $user = User::find($request->user_id);
+        $user = User::where('id', $request->input('user_id'))->firstOrFail();
 
         if (!$user) {
             return Redirect::back()->with('error', 'Utente non trovato.');
@@ -50,7 +48,7 @@ class TechnicianController extends Controller
                 'password' => $user->password,
                 'telefono' => $user->telefono,
                 'is_admin' => $user->is_admin ?? false,
-                'is_avaible' => true,
+                'is_available' => true,
             ]);
 
             $user->update([
@@ -68,9 +66,10 @@ class TechnicianController extends Controller
 
     public function technicianToUser(Request $request)
     {
-        $adminTechnician = Technician::where('is_admin', true)->first();
 
-        if (!$adminTechnician) {
+        $authTechnician = auth()->guard()->user();
+
+        if (!$authTechnician || !$authTechnician->is_admin) {
             return Redirect::back()->with('error', 'Non sei autorizzato a eseguire questa operazione.');
         }
 
@@ -91,6 +90,11 @@ class TechnicianController extends Controller
         DB::beginTransaction();
 
         try {
+
+            foreach ($technician->tickets as $ticket) {
+                $ticket->removeFromTechnician($technician);
+            }
+
             $user = User::where('email', $technician->email)->first();
             if ($user) {
                 $user->update(['is_technician' => false]);
@@ -106,6 +110,7 @@ class TechnicianController extends Controller
             return Redirect::back()->with('error', 'Errore durante la rimozione del tecnico: ' . $e->getMessage());
         }
     }
+
 
     private function getUsers()
     {
