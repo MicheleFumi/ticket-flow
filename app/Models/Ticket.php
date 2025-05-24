@@ -82,8 +82,11 @@ class Ticket extends Model
             throw new \Exception("Il ticket non è assegnato a questo tecnico.");
         }
 
-        $technician->is_available = true;
-        $technician->save();
+        $assignedTechnician = $this->technician;
+        if ($assignedTechnician) {
+            $assignedTechnician->is_available = true;
+            $assignedTechnician->save();
+        }
 
         // $this->technician_id = null;
         $this->chiuso_da = $technician->id;
