@@ -144,4 +144,42 @@ class TicketController extends Controller
             return redirect()->back()->with('error', 'Errore durante la rimozione: ' . $e->getMessage());
         }
     }
+
+    public function close(Request $request)
+    {
+        /** @var \App\Models\Technician $technician */
+        $technician = Auth::guard()->user();
+
+        if (!$technician) {
+            return redirect()->back()->with('error', 'Utente non autenticato come tecnico.');
+        }
+
+        $request->validate([
+            'ticket_id' => 'required|exists:tickets,id',
+        ]);
+        $ticket = Ticket::find($request->ticket_id);
+
+        if (!$ticket) {
+            return redirect()->back()->with('error', 'Ticket non trovato.');
+        }
+
+
+        // if (!$technician->is_admin && $ticket->technician_id !== $technician->id) {
+        //     return redirect()->back()->with('error', 'Non sei autorizzato a chiudere questo ticket.');
+        // }
+
+
+        DB::beginTransaction();
+
+        try {
+            $ticket->close($technician);
+
+            DB::commit();
+
+            return redirect()->route('dashboard.index')->with('success', 'Ticket chiuso con successo.');
+        } catch (\Exception $e) {
+            DB::rollBack();
+            return redirect()->back()->with('error', 'Errore durante la chiusura del ticket: ' . $e->getMessage());
+        }
+    }
 }

@@ -18,6 +18,7 @@ return new class extends Migration
             $table->text("commento")->nullable();
             $table->foreignId('status_id')->default(1);
             $table->foreignId('technician_id')->nullable()->constrained('technicians')->onDelete('set null');
+            $table->foreignId("chiuso_da")->nullable()->constrained('technicians')->onDelete('set null');
             $table->timestamp('data_assegnazione')->nullable();
             $table->timestamp('data_chiusura')->nullable();
             $table->timestamps();
