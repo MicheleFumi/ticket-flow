@@ -23,7 +23,7 @@
                         <div class="bg-white shadow-md rounded-2xl p-4 border border-gray-200">
                             <div class="flex items-center justify-between mb-2">
                                 <h2 class="text-xl font-semibold text-gray-800">{{ $ticket['titolo'] }}</h2>
-                                <span class="text-sm text-gray-500">{{ $ticket['created_at']->format('d/m/Y') }}</span>
+                                <span class="text-sm text-gray-500">{{ $ticket['created_at']->format('d/m/Y H:i') }}</span>
                             </div>
                             <p class="text-md text-gray-500 mb-2">{{ $ticket['commento'] }}</p>
                             <div class="flex items-center justify-between text-sm">
@@ -34,6 +34,11 @@
                                     @else bg-red-100 text-red-700 @endif">
                                     {{ ucfirst($ticket->status->titolo) }}
                                 </span>
+                                <form action="{{route("tickets.delete", $ticket)}}" method="POST">
+                                    @csrf
+                                    <input type="hidden" name="ticket_id" value="{{ $ticket->id }}">
+                                    <button class="bg-red-500 hover:bg-red-600 text-white font-bold py-2 px-3 rounded"><i class="bi bi-trash3"></i></button>
+                                </form>
                             </div>
                         </div>
                     </div>

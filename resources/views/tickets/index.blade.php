@@ -28,14 +28,15 @@
                                     <div class="flex items-center justify-between mb-2">
                                         <h2 class="text-xl font-semibold text-gray-800">{{ $ticket['titolo'] }}</h2>
                                         <span
-                                            class="text-sm text-gray-500">{{ $ticket['created_at']->format('d/m/Y') }}</span>
+                                            class="text-sm text-gray-500">{{ $ticket['created_at']->format('d/m/Y H:i') }}</span>
                                     </div>
                                     <div class="flex items-center justify-between text-sm">
                                         <span
                                             class="px-2 py-1 rounded-full
-            @if ($ticket->status->titolo === 'Aperto') bg-green-100 text-green-700
-            @elseif($ticket->status->titolo === 'In Lavorazione') bg-yellow-100 text-yellow-700
-            @else bg-red-100 text-red-700 @endif">
+                                            @if ($ticket->status->titolo === 'Aperto') bg-green-100 text-green-700
+                                            @elseif($ticket->status->titolo === 'In Lavorazione') bg-yellow-100 text-yellow-700
+                                            @else bg-red-100 text-red-700  
+                                            @endif">
                                             {{ ucfirst($ticket->status->titolo) }}
                                         </span>
                                         <a href="{{ route('tickets.show', $ticket) }}"

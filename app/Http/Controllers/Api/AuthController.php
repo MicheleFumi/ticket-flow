@@ -10,7 +10,6 @@ use Illuminate\Support\Facades\Validator;
 
 class AuthController extends Controller
 {
-    // Metodo per la registrazione
     public function register(Request $request)
     {
         $validator = Validator::make($request->all(), [
@@ -42,7 +41,6 @@ class AuthController extends Controller
         ], 201);
     }
 
-    // Metodo per il Login
     public function login(Request $request)
     {
         $request->validate([
@@ -67,7 +65,6 @@ class AuthController extends Controller
         ], 200);
     }
 
-    // Metodo per il Logout
     public function logout(Request $request)
     {
         $request->user()->currentAccessToken()->delete();

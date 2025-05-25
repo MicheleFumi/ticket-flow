@@ -64,9 +64,35 @@ class TicketController extends Controller
     /**
      * Remove the specified resource from storage.
      */
-    public function destroy(string $id)
+    public function destroy(Ticket $ticket)
     {
-        //
+        $technician = Auth::guard()->user();
+        if (!$technician || !$technician->is_admin) {
+            return redirect()->back()->with('error', 'Non sei autorizzato a eseguire questa operazione.');
+        }
+        // $ticket = Ticket::find($id);
+
+        if (!$ticket) {
+            return redirect()->back()->with('error', 'Ticket non trovato.');
+        }
+
+        if ($ticket->status_id === 2) {
+            return redirect()->back()->with('error', 'Impossibile eliminare un ticket assegnato a un tecnico.');
+        }
+        if ($ticket->status_id === 3) {
+            return redirect()->back()->with('error', 'Impossibile eliminare un ticket chiuso.');
+        }
+
+        DB::beginTransaction();
+
+        try {
+            $ticket->delete();
+            DB::commit();
+            return redirect()->route('tickets.index')->with('success', 'Ticket eliminato con successo.');
+        } catch (\Exception $e) {
+            DB::rollBack();
+            return redirect()->back()->with('error', 'Errore durante l\'eliminazione del ticket: ' . $e->getMessage());
+        }
     }
 
     public function assign(Ticket $ticket)
