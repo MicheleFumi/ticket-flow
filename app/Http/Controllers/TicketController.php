@@ -105,6 +105,14 @@ class TicketController extends Controller
             return redirect()->back()->with('error', 'Utente non autenticato come tecnico.');
         }
 
+        if ($ticket->status_id === 3) {
+            return redirect()->back()->with('error', 'Impossibile assegnare un ticket già chiuso.');
+        }
+
+        if ($ticket->status_id === 2) {
+            return redirect()->back()->with('error', 'Impossibile assegnare un ticket già assegnato a un tecnico.');
+        }
+
         DB::beginTransaction();
 
         try {
