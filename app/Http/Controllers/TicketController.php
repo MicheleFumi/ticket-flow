@@ -41,8 +41,9 @@ class TicketController extends Controller
     {
 
 
-        $ticket->load('status',);
-        return view('tickets.show', compact('ticket'));
+        $ticket->load('status');
+        $technician = Auth::guard()->user();
+        return view('tickets.show', compact('ticket', 'technician'));
     }
 
     /**

@@ -5,10 +5,19 @@
                 {{ __('Lista Ticket') }}
             </h2>
             <!-- Bottone che apre il modale -->
-            <button id="openModalButton"
-                class="bg-blue-500 hover:bg-blue-600 text-white font-bold py-2 px-4 rounded focus:outline-none focus:shadow-outline transition duration-150 ease-in-out">
-                Prendi In Carico
-            </button>
+
+            @if ($technician->is_available === 0)
+                <button disabled
+                    class="bg-blue-400 text-white font-bold py-2 px-4 rounded cursor-not-allowed opacity-70 focus:outline-none focus:shadow-outline transition duration-150 ease-in-out">
+                    Non Puoi Prendere Altri Ticket
+                </button>
+            @elseif(!isset($ticket['technician_id']))
+                <button id="openModalButton"
+                    class="bg-blue-500 hover:bg-blue-600 text-white font-bold py-2 px-4 rounded focus:outline-none focus:shadow-outline transition duration-150 ease-in-out">
+                    Prendi In Carico
+                </button>
+            @endif
+
         </div>
     </x-slot>
 
@@ -23,7 +32,8 @@
                         <div class="bg-white shadow-md rounded-2xl p-4 border border-gray-200">
                             <div class="flex items-center justify-between mb-2">
                                 <h2 class="text-xl font-semibold text-gray-800">{{ $ticket['titolo'] }}</h2>
-                                <span class="text-sm text-gray-500">{{ $ticket['created_at']->format('d/m/Y H:i') }}</span>
+                                <span
+                                    class="text-sm text-gray-500">{{ $ticket['created_at']->format('d/m/Y H:i') }}</span>
                             </div>
                             <p class="text-md text-gray-500 mb-2">{{ $ticket['commento'] }}</p>
                             <div class="flex items-center justify-between text-sm">
@@ -34,10 +44,12 @@
                                     @else bg-red-100 text-red-700 @endif">
                                     {{ ucfirst($ticket->status->titolo) }}
                                 </span>
-                                <form action="{{route("tickets.delete", $ticket)}}" method="POST">
+                                <form action="{{ route('tickets.delete', $ticket) }}" method="POST">
                                     @csrf
                                     <input type="hidden" name="ticket_id" value="{{ $ticket->id }}">
-                                    <button class="bg-red-500 hover:bg-red-600 text-white font-bold py-2 px-3 rounded"><i class="bi bi-trash3"></i></button>
+                                    <button
+                                        class="bg-red-500 hover:bg-red-600 text-white font-bold py-2 px-3 rounded"><i
+                                            class="bi bi-trash3"></i></button>
                                 </form>
                             </div>
                         </div>
