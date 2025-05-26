@@ -97,4 +97,9 @@ class Ticket extends Model
 
         return $this;
     }
+
+    public function closedBy()
+    {
+        return $this->belongsTo(Technician::class, 'chiuso_da');
+    }
 }

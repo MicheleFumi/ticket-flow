@@ -14,6 +14,7 @@ Route::middleware(['auth', 'verified'])->group(function () {
 
     //DASHBOARD
     Route::get("/dashboard", [DashboardController::class, 'index'])->name("dashboard.index");
+    Route::get("/dashboard/history", [DashboardController::class, 'history'])->name("dashboard.history");
 
     //UTENTI
     // Route::get('/utenti', function () {
