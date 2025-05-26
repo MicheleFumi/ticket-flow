@@ -32,6 +32,7 @@ Route::middleware(['auth', 'verified'])->group(function () {
     Route::post("/ticket/unassign", [TicketController::class, 'unassign'])->name("tickets.unassign");
     Route::post("/ticket/close", [TicketController::class, 'close'])->name("tickets.close");
     Route::post("/ticket/delete/{ticket}", [TicketController::class, 'destroy'])->name("tickets.delete");
+    Route::post("/ticket/assegna-a/{ticket}", [TicketController::class, 'assignTo'])->name("tickets.assignTo");
 });
 //PROFILE
 Route::middleware('auth')->group(function () {

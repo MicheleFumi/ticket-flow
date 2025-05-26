@@ -37,13 +37,14 @@ class TicketController extends Controller
     /**
      * Display the specified resource.
      */
-    public function show(Ticket $ticket)
+    public function show(Ticket $ticket, Technician $technicianList)
     {
 
 
         $ticket->load('status');
         $technician = Auth::guard()->user();
-        return view('tickets.show', compact('ticket', 'technician'));
+        $technicianList = Technician::where("is_available", 1)->get();
+        return view('tickets.show', compact('ticket', 'technician', 'technicianList'));
     }
 
     /**
@@ -129,11 +130,26 @@ class TicketController extends Controller
         }
     }
 
-    public function assignTo()
+    public function assignTo(Request $request, Ticket $ticket)
     {
 
-        //
+        $admin = Auth::guard()->user();
+        if (!$admin) {
+            return redirect()->back()->with('error', 'Utente non autenticato come tecnico.');
+        }
 
+        if (!$admin->is_admin) {
+            return redirect()->back()->with('error', 'Non sei autorizzato a eseguire questa operazione.');
+        }
+
+        $request->validate([
+            'technician_id' => 'required|exists:technicians,id',
+        ]);
+        $technician = Technician::find($request->technician_id);
+        if ($technician->is_available === 0) {
+            return redirect()->back()->with('error', 'Tecnico non disponibile');
+        }
+        dd($ticket);
     }
 
     public function unassign(Request $request)
