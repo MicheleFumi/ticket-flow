@@ -13,23 +13,31 @@
                 @if ($tickets->count() > 0)
                     <div class="p-6 text-gray-900 dark:text-gray-100 flex justify-between items-center">
                         <span>{{ __('Stai visualizzando lo storico dei ticket chiusi') }}</span>
-
-                        @if (auth()->user()->is_admin)
-                            <div>
-                                <input
-                                    type="text"
-                                    id="searchInput"
-                                    placeholder="Filtra per tecnico..."
-                                    class="rounded-md px-3 py-1 border border-gray-300 dark:bg-gray-700 dark:text-white"
-                                />
-                            </div>
-                        @endif
+                        <div>
+                            @if (auth()->user()->is_admin)
+                                <div class="flex flex-col sm:flex-row sm:items-center sm:gap-4">
+                                    <input
+                                        type="text"
+                                        id="searchInput"
+                                        placeholder="Filtra per tecnico..."
+                                        class="rounded-md px-3 py-1 border border-gray-300 dark:bg-gray-700 dark:text-white"
+                                    />
+                                    <input
+                                        type="date"
+                                        id="dateInput"
+                                        max="{{ now()->toDateString() }}"
+                                        class="mt-2 sm:mt-0 rounded-md px-3 py-1 border border-gray-300 dark:bg-gray-700 dark:text-white"
+                                    />
+                                </div>
+                            @endif
+                        </div>
                     </div>
 
                     <div class="p-2 text-gray-900 dark:text-gray-100 space-y-4" id="ticketContainer">
                         @foreach ($tickets as $ticket)
                             <div class="ticket-card bg-white shadow-md rounded-2xl p-4 border border-gray-200"
-                                 data-technician="{{ strtolower($ticket->technician->nome . ' ' . $ticket->technician->cognome) }}">
+                                 data-technician="{{ strtolower($ticket->technician->nome . ' ' . $ticket->technician->cognome) }}"
+                                 data-date="{{ $ticket->data_chiusura->format('Y-m-d') }}">
                                 <div class="flex items-center justify-between mb-2">
                                     <h2 class="text-xl font-semibold text-gray-800">{{ $ticket->titolo }}</h2>
                                     <span class="text-sm text-gray-500">
@@ -108,51 +116,63 @@
         </div>
     </div>
 
-    
     <script>
-    document.addEventListener('DOMContentLoaded', () => {
-        document.querySelectorAll('.open-modal-btn').forEach(button => {
-            button.addEventListener('click', () => {
-                const modal = document.getElementById(button.dataset.modalId);
-                if (modal) modal.classList.remove('hidden');
-            });
-        });
-
-        
-        document.querySelectorAll('.close-modal-btn').forEach(button => {
-            button.addEventListener('click', () => {
-                button.closest('.modal').classList.add('hidden');
-            });
-        });
-
-        window.addEventListener('keydown', (e) => {
-            if (e.key === 'Escape') {
-                document.querySelectorAll('.modal').forEach(modal => modal.classList.add('hidden'));
-            }
-        });
-
-        document.querySelectorAll('.modal').forEach(modal => {
-            modal.addEventListener('click', (e) => {
-                if (!e.target.closest('.modal-content')) {
-                    modal.classList.add('hidden');
-                }
-            });
-        });
-
-        // Serachbar
-        const searchInput = document.getElementById('searchInput');
-        const ticketCards = document.querySelectorAll('.ticket-card');
-
-        if (searchInput) {
-            searchInput.addEventListener('input', (e) => {
-                const value = e.target.value.toLowerCase();
-                ticketCards.forEach(card => {
-                    const tech = card.dataset.technician;
-                    card.style.display = tech.includes(value) ? 'block' : 'none';
+        document.addEventListener('DOMContentLoaded', () => {
+            // Modale
+            document.querySelectorAll('.open-modal-btn').forEach(button => {
+                button.addEventListener('click', () => {
+                    const modal = document.getElementById(button.dataset.modalId);
+                    if (modal) modal.classList.remove('hidden');
                 });
             });
-        }
-    });
-</script>
 
+            document.querySelectorAll('.close-modal-btn').forEach(button => {
+                button.addEventListener('click', () => {
+                    button.closest('.modal').classList.add('hidden');
+                });
+            });
+
+            window.addEventListener('keydown', (e) => {
+                if (e.key === 'Escape') {
+                    document.querySelectorAll('.modal').forEach(modal => modal.classList.add('hidden'));
+                }
+            });
+
+            document.querySelectorAll('.modal').forEach(modal => {
+                modal.addEventListener('click', (e) => {
+                    if (!e.target.closest('.modal-content')) {
+                        modal.classList.add('hidden');
+                    }
+                });
+            });
+
+            // Calendario e searchbar
+            const searchInput = document.getElementById('searchInput');
+            const dateInput = document.getElementById('dateInput');
+            const ticketCards = document.querySelectorAll('.ticket-card');
+
+            function filterTickets() {
+                const searchValue = searchInput?.value.toLowerCase() || '';
+                const selectedDate = dateInput?.value || '';
+
+                ticketCards.forEach(card => {
+                    const tech = card.dataset.technician;
+                    const date = card.dataset.date;
+
+                    const matchTech = tech.includes(searchValue);
+                    const matchDate = selectedDate === '' || date === selectedDate;
+
+                    card.style.display = (matchTech && matchDate) ? 'block' : 'none';
+                });
+            }
+
+            if (searchInput) {
+                searchInput.addEventListener('input', filterTickets);
+            }
+
+            if (dateInput) {
+                dateInput.addEventListener('change', filterTickets);
+            }
+        });
+    </script>
 </x-app-layout>
