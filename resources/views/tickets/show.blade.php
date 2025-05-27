@@ -26,6 +26,15 @@
                                 <span class="text-sm text-gray-500">{{ $ticket['created_at']->format('d/m/Y H:i') }}</span>
                             </div>
                             <p class="text-md text-gray-500 mb-2">{{ $ticket['commento'] }}</p>
+                            <div>
+                                @if (isset($ticket->images) && $ticket->images->count())
+                                    @foreach ($ticket->images as $image)
+                                        <a href="{{ asset($image->file_path) }}" target="_blank" class="text-blue-600 hover:underline block">
+                                            Visualizza immagine {{ $loop->iteration }}
+                                        </a>
+                                    @endforeach
+                                @endif
+                            </div>
                             <div class="flex items-center justify-between text-sm">
                                 <span
                                     class="px-2 py-1 rounded-full
