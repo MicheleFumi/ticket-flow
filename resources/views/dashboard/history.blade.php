@@ -88,6 +88,8 @@
                                                         @endforeach
                                                     @endif
                                                 </div>
+                                                <p><strong>Note di chiusura:</strong>
+                                                {{ $ticket->note_chiusura}}</p>
                                             </div>
                                             <div class="mt-4
                                             text-right">
