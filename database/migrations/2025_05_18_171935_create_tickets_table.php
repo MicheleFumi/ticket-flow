@@ -21,6 +21,7 @@ return new class extends Migration
             $table->foreignId("chiuso_da")->nullable()->constrained('technicians')->onDelete('set null');
             $table->timestamp('data_assegnazione')->nullable();
             $table->timestamp('data_chiusura')->nullable();
+            $table->text("note_chiusura")->nullable();
             $table->timestamps();
         });
     }

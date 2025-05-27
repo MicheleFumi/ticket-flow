@@ -230,7 +230,7 @@ class TicketController extends Controller
         if (!$ticket) {
             return redirect()->back()->with('error', 'Ticket non trovato.');
         }
-
+        $note_chiusura = $request->input('note_chiusura');
 
         // if (!$technician->is_admin && $ticket->technician_id !== $technician->id) {
         //     return redirect()->back()->with('error', 'Non sei autorizzato a chiudere questo ticket.');
@@ -240,7 +240,7 @@ class TicketController extends Controller
         DB::beginTransaction();
 
         try {
-            $ticket->close($technician);
+            $ticket->close($technician, $note_chiusura);
 
             DB::commit();
 

@@ -16,6 +16,7 @@ class Ticket extends Model
         'data_assegnazione',
         'data_chiusura',
         'chiuso_da',
+        'note_chiusura'
     ];
 
     protected $casts = [
@@ -73,7 +74,7 @@ class Ticket extends Model
         return $this;
     }
 
-    public function close(Technician $technician)
+    public function close(Technician $technician, $note_chiusura)
     {
         if ($this->status_id !== 2) {
             throw new \Exception("Il ticket non può essere chiuso perché non è assegnato.");
@@ -97,7 +98,9 @@ class Ticket extends Model
         $this->chiuso_da = $technician->id;
         $this->status_id = 3;
         $this->data_chiusura = Carbon::now();
+        $this->note_chiusura = $note_chiusura;
         $this->save();
+
 
 
         return $this;

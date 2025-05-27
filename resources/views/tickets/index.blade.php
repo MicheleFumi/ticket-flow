@@ -9,11 +9,8 @@
         <div class="max-w-7xl mx-auto sm:px-6 lg:px-8">
             <div class="bg-white dark:bg-gray-800 overflow-hidden shadow-sm sm:rounded-lg">
                 <div class="p-6 text-gray-900 dark:text-gray-100">
-                    @php
-                        $aperti = $tickets->where('status.titolo', 'Aperto')->count();
-                    @endphp
 
-                    @if ($aperti > 0)
+                    @if ($tickets->where('status.titolo', 'Aperto')->count() > 0)
                         {{ __('Stai visualizzando la lista dei ticket') }}
                     @else
                         {{ __('Non ci sono nuovi ticket') }}
@@ -35,8 +32,7 @@
                                             class="px-2 py-1 rounded-full
                                             @if ($ticket->status->titolo === 'Aperto') bg-green-100 text-green-700
                                             @elseif($ticket->status->titolo === 'In Lavorazione') bg-yellow-100 text-yellow-700
-                                            @else bg-red-100 text-red-700  
-                                            @endif">
+                                            @else bg-red-100 text-red-700 @endif">
                                             {{ ucfirst($ticket->status->titolo) }}
                                         </span>
                                         <a href="{{ route('tickets.show', $ticket) }}"
