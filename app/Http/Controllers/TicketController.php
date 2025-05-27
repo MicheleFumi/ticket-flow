@@ -149,7 +149,24 @@ class TicketController extends Controller
         if ($technician->is_available === 0) {
             return redirect()->back()->with('error', 'Tecnico non disponibile');
         }
-        dd($ticket);
+
+        if ($ticket->status_id === 2) {
+            return redirect()->back()->with('error', 'Il ticket è già stato assegnato ad un tecnico ed è in fase di lavorazione.');
+        }
+        if ($ticket->status_id === 3) {
+            return redirect()->back()->with('error', 'Il ticket è già stato chiuso.');
+        }
+
+        DB::beginTransaction();
+        try {
+
+            $ticket->assignToTechnician($technician);
+            DB::commit();
+            return redirect()->route('tickets.index')->with('success', 'Tecnico assegnato con successo.');
+        } catch (\Exception $e) {
+            DB::rollBack();
+            return redirect()->back()->with('error', 'Errore durante la rimozione: ' . $e->getMessage());
+        }
     }
 
     public function unassign(Request $request)
