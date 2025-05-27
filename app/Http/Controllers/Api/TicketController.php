@@ -35,19 +35,29 @@ class TicketController extends Controller
      */
     public function store(Request $request)
     {
-        $ticket=Ticket::create([
-            'user_id'=>$request->user()->id,
-            'titolo'=>$request->titolo,
-            'commento'=>$request->commento,
-            'status_id' => $request->status_id ?? 1,  // 1 = Aperto di default
-
+        $ticket = Ticket::create([
+            'user_id' => $request->user()->id,
+            'titolo' => $request->titolo,
+            'commento' => $request->commento,
+            'status_id' => $request->status_id ?? 1,
 
         ]);
+        if ($request->has('images') && is_array($request->images)) {
+            foreach ($request->images as $imageUrl) {
+                $ticket->images()->create([
+                    'file_path' => $imageUrl,
+                ]);
+            }
+        }
+
+        $ticket->load('images');
+
         return response()->json([
-            'message'=> 'ticket creato',
-            'data'=> $ticket
+            'message' => 'Ticket creato',
+            'data' => $ticket
         ]);
     }
+
 
     /**
      * Display the specified resource.
@@ -55,10 +65,10 @@ class TicketController extends Controller
     public function show(Ticket $ticket)
     {
 
-        $ticket->load('status');
+        $ticket->load('status', "images");
         return response()->json([
-            'data'=>$ticket
-            
+            'data' => $ticket
+
         ]);
     }
 
@@ -75,19 +85,19 @@ class TicketController extends Controller
      */
     public function update(Request $request, Ticket $ticket)
     {
-        $data=$request->all();
-        $ticket->titolo =$data['titolo'];
-        $ticket->commento =$data['commento'];
-       
-        if (!isset($data['status_id']) || $data['status_id']=== null ) {
+        $data = $request->all();
+        $ticket->titolo = $data['titolo'];
+        $ticket->commento = $data['commento'];
+
+        if (!isset($data['status_id']) || $data['status_id'] === null) {
             $ticket->status_id;
-        } else{
-             $ticket->status_id =$data['status_id'];
+        } else {
+            $ticket->status_id = $data['status_id'];
         };
         $ticket->update();
 
         return response()->json([
-            'data'=>$ticket
+            'data' => $ticket
         ]);
     }
 
@@ -95,12 +105,12 @@ class TicketController extends Controller
      * Remove the specified resource from storage.
      */
     public function destroy(Ticket $ticket)
-    {        
+    {
         $ticket->delete();
-        $ticketList= Ticket::all();
+        $ticketList = Ticket::all();
 
         return response()->json([
-            'data'=>$ticketList
+            'data' => $ticketList
         ]);
     }
 }

@@ -34,6 +34,11 @@ class Ticket extends Model
         return $this->belongsTo(Technician::class);
     }
 
+    public function images()
+    {
+        return $this->hasMany(TicketImage::class);
+    }
+
     public function assignToTechnician(Technician $technician)
     {
         if (!$technician->is_available) {
