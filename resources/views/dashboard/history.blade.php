@@ -66,7 +66,7 @@
                             <div
                                 id="modal-{{ $ticket->id }}"
                                 class="modal hidden fixed inset-0 bg-black bg-opacity-50 backdrop-blur-sm z-50 flex items-center justify-center">
-                                <div class="bg-white dark:bg-gray-800 rounded-lg p-6 w-full max-w-md shadow-xl relative">
+                                <div class="modal-content bg-white dark:bg-gray-800 rounded-lg p-6 w-full max-w-md shadow-xl relative">
                                     <h2 class="text-xl font-bold text-gray-800 dark:text-gray-100 mb-4">Dettagli Ticket</h2>
                                     <div class="text-sm text-gray-700 dark:text-gray-300 space-y-2">
                                         <p><strong>Titolo:</strong> {{ $ticket->titolo }}</p>
@@ -110,40 +110,49 @@
 
     
     <script>
-        document.addEventListener('DOMContentLoaded', () => {
-            // Modale
-            document.querySelectorAll('.open-modal-btn').forEach(button => {
-                button.addEventListener('click', () => {
-                    const modal = document.getElementById(button.dataset.modalId);
-                    if (modal) modal.classList.remove('hidden');
-                });
+    document.addEventListener('DOMContentLoaded', () => {
+        document.querySelectorAll('.open-modal-btn').forEach(button => {
+            button.addEventListener('click', () => {
+                const modal = document.getElementById(button.dataset.modalId);
+                if (modal) modal.classList.remove('hidden');
             });
+        });
 
-            document.querySelectorAll('.close-modal-btn').forEach(button => {
-                button.addEventListener('click', () => {
-                    button.closest('.modal').classList.add('hidden');
-                });
+        
+        document.querySelectorAll('.close-modal-btn').forEach(button => {
+            button.addEventListener('click', () => {
+                button.closest('.modal').classList.add('hidden');
             });
+        });
 
-            window.addEventListener('keydown', (e) => {
-                if (e.key === 'Escape') {
-                    document.querySelectorAll('.modal').forEach(modal => modal.classList.add('hidden'));
-                }
-            });
-
-            // Searchbar
-            const searchInput = document.getElementById('searchInput');
-            const ticketCards = document.querySelectorAll('.ticket-card');
-
-            if (searchInput) {
-                searchInput.addEventListener('input', (e) => {
-                    const value = e.target.value.toLowerCase();
-                    ticketCards.forEach(card => {
-                        const tech = card.dataset.technician;
-                        card.style.display = tech.includes(value) ? 'block' : 'none';
-                    });
-                });
+        window.addEventListener('keydown', (e) => {
+            if (e.key === 'Escape') {
+                document.querySelectorAll('.modal').forEach(modal => modal.classList.add('hidden'));
             }
         });
-    </script>
+
+        document.querySelectorAll('.modal').forEach(modal => {
+            modal.addEventListener('click', (e) => {
+                if (!e.target.closest('.modal-content')) {
+                    modal.classList.add('hidden');
+                }
+            });
+        });
+
+        // Serachbar
+        const searchInput = document.getElementById('searchInput');
+        const ticketCards = document.querySelectorAll('.ticket-card');
+
+        if (searchInput) {
+            searchInput.addEventListener('input', (e) => {
+                const value = e.target.value.toLowerCase();
+                ticketCards.forEach(card => {
+                    const tech = card.dataset.technician;
+                    card.style.display = tech.includes(value) ? 'block' : 'none';
+                });
+            });
+        }
+    });
+</script>
+
 </x-app-layout>
