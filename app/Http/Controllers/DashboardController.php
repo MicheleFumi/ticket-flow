@@ -32,4 +32,29 @@ class DashboardController extends Controller
 
         return view('dashboard.index', compact("technician", 'tickets'));
     }
+
+    public function history()
+    {
+        $technician = Auth::guard()->user();
+        if (!$technician) {
+            return redirect('/login')->with('error', 'Devi essere loggato come tecnico per accedere alla cronologia.');
+        }
+
+        $technicianId = $technician->id;
+
+        $tickets = Ticket::with(['technician', 'status', "closedBy"])
+            ->where('technician_id', $technicianId)
+            ->where('status_id', 3)
+            ->orderBy('data_chiusura', 'desc')
+            ->get();
+
+        if ($technician->is_admin) {
+            $tickets = Ticket::with(['technician', 'status', "closedBy"])
+                ->where('status_id', 3)
+                ->orderBy('data_chiusura', 'desc')
+                ->get();
+        }
+
+        return view('dashboard.history', compact("technician", 'tickets'));
+    }
 }
