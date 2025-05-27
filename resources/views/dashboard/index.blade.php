@@ -34,11 +34,15 @@
                                         <div class="my-6">
                                             @foreach ($ticket->images as $image)
                                                 <a href="{{ asset($image->file_path) }}" target="_blank"
-                                                    class="text-blue-600 hover:underline block">
-                                                    Visualizza immagine {{ $loop->iteration }}
+                                                    class="inline-block">
+                                                    <img src="{{ asset($image->file_path) }}"
+                                                        alt="Anteprima immagine {{ $loop->iteration }}"
+                                                        class="w-[50px] h-[50px] object-cover rounded hover:scale-105 transition">
                                                 </a>
                                             @endforeach
                                         </div>
+                                    @else
+                                        <div class="my-3">Non ci sono foto da visualizzare</div>
                                     @endif
                                     <div class="flex items-center justify-between text-sm">
                                         <div
