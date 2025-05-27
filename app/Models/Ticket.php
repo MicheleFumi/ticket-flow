@@ -23,7 +23,10 @@ class Ticket extends Model
         'data_assegnazione' => 'datetime',
         'data_chiusura' => 'datetime',
     ];
-
+    public function user()
+    {
+        return $this->belongsTo(User::class);
+    }
 
     public function status()
     {

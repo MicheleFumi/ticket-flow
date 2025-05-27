@@ -25,11 +25,19 @@
                                     <div class="flex items-center justify-between mb-2">
                                         <h2 class="text-xl font-semibold text-gray-800">{{ $ticket->titolo }}</h2>
                                         {{-- Visualizza il nome del tecnico e la data di assegnazione --}}
-                                        <span class="text-sm text-gray-500">
-                                            Assegnato a: {{ $ticket->technician->nome }}
-                                            {{ $ticket->technician->cognome }} il:
-                                            {{ $ticket->data_assegnazione->format('d/m/Y H:i') }}
-                                        </span>
+                                        <div>
+                                            <div class="text-sm text-gray-500">
+                                                Creato da: {{ $ticket->user->nome }}
+                                                {{ $ticket->user->cognome }} il:
+                                                {{ $ticket->created_at->format('d/m/Y H:i') }}
+                                            </div>
+                                            <div class="text-sm text-gray-500">
+                                                Assegnato a: {{ $ticket->technician->nome }}
+                                                {{ $ticket->technician->cognome }} il:
+                                                {{ $ticket->data_assegnazione->format('d/m/Y H:i') }}
+                                            </div>
+                                        </div>
+
                                     </div>
                                     <p class="text-md text-gray-500 mb-2">{{ $ticket->commento }}</p>
                                     @if (isset($ticket->images) && $ticket->images->count() > 0)
