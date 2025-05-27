@@ -26,13 +26,15 @@
                                             Assegnato a: {{ $ticket->technician->nome }} {{ $ticket->technician->cognome }} il: {{ $ticket->data_assegnazione->format('d/m/Y H:i') }}
                                         </span>
                                     </div>
-                                    <p class="text-md text-gray-500 mb-2">{{ $ticket->commento }}</p>
+
+                                    {{-- COMMENTO RIMOSSO DALLA CARD PRINCIPALE --}}
+                                    
                                     <div class="flex items-center justify-end mb-2">
                                         <span class="text-sm text-gray-500">
                                             Chiuso da: {{ $ticket->closedBy ? $ticket->closedBy->nome . ' ' . $ticket->closedBy->cognome : 'N/D' }} il: {{ $ticket->data_chiusura->format('d/m/Y H:i') }}
                                         </span>
-
                                     </div>
+
                                     <div class="flex items-center justify-between text-sm">
                                         <span
                                             class="px-2 py-1 rounded-full
@@ -43,21 +45,40 @@
                                         </span>
 
                                         <div class="flex gap-2">
-                                            {{-- <form method="POST" action="{{route("tickets.unassign")}}">
-                                                @csrf
-                                                <input type="hidden" name="technician_id" value="{{ $ticket->technician->id }}">
-                                                <button type="submit" class="px-2 py-1 rounded-full bg-yellow-400">Rimuovi il ticket dal tecnico</button>
-                                            </form>
-                                            <form method="POST" action="{{route("tickets.close")}}">
-                                                @csrf
-                                                <input type="hidden" name="ticket_id" value="{{ $ticket->id }}">
-                                                <button type="submit" class="px-2 py-1 rounded-full bg-red-600">Termina Lavoro</button>
-                                            </form> --}}
-                                            <button type="button" class="px-2 py-1 rounded-full bg-blue-500">Dettagli</button>
+                                            <button @click="open = true" type="button" class="px-2 py-1 rounded-full bg-blue-500 text-white"
+                                                    x-data="{ open: false }">
+                                                Dettagli
+
+                                                <!-- Modale -->
+                                                <div x-show="open" @click.away="open = false"
+                                                    class="fixed inset-0 bg-black bg-opacity-50 z-50 flex items-center justify-center">
+                                                    <div class="bg-white dark:bg-gray-800 rounded-lg p-6 w-full max-w-md shadow-xl"
+                                                        @keydown.escape.window="open = false">
+                                                        <h2 class="text-xl font-bold text-gray-800 dark:text-gray-100 mb-4">Dettagli Ticket</h2>
+                                                        <div class="text-sm text-gray-700 dark:text-gray-300 space-y-2">
+                                                            <p><strong>Titolo:</strong> {{ $ticket->titolo }}</p>
+                                                            <p><strong>Testo:</strong> {{ $ticket->commento }}</p>
+                                                            <p><strong>Data Apertura:</strong> {{ $ticket->created_at->format('d/m/Y H:i') }}</p>
+                                                            <p><strong>Data Assegnazione:</strong> {{ $ticket->data_assegnazione->format('d/m/Y H:i') }}</p>
+                                                            <p><strong>Data Chiusura:</strong> {{ $ticket->data_chiusura->format('d/m/Y H:i') }}</p>
+                                                            <p><strong>Aperto da:</strong> User #{{ $ticket->user_id }}</p>
+                                                            <p><strong>Tecnico assegnato:</strong> {{ $ticket->technician->nome }} {{ $ticket->technician->cognome }}</p>
+                                                            <p><strong>Chiuso da:</strong> {{ $ticket->closedBy ? $ticket->closedBy->nome . ' ' . $ticket->closedBy->cognome : 'N/D' }}</p>
+                                                        </div>
+                                                        <div class="mt-4 text-right">
+                                                            <button @click="open = false"
+                                                                    class="bg-red-500 hover:bg-red-600 text-white font-bold py-1 px-3 rounded">
+                                                                Chiudi
+                                                            </button>
+                                                        </div>
+                                                    </div>
+                                                </div>
+                                            </button>
                                         </div>
                                     </div>
                                 </div>
                             @endforeach
+
                         @else
                             <div class="p-6 text-gray-900 dark:text-gray-100">
                                 {{ __("Nessun ticket trovato con lo stato 'In Lavorazione' o assegnato a te.") }}
