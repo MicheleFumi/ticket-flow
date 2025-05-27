@@ -5,7 +5,8 @@
                 {{ __('Dashboard') }}
             </h2>
 
-            <a href="{{ route('dashboard.history') }}">STORICO</a>
+            <a class="text-black dark:text-white hover:underline" href="{{ route('dashboard.history') }}">STORICO DEI
+                TICKET</a>
         </div>
     </x-slot>
 
