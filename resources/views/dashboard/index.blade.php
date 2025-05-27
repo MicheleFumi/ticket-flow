@@ -42,7 +42,7 @@
                                             @endforeach
                                         </div>
                                     @else
-                                        <div class="my-3">Non ci sono foto da visualizzare</div>
+                                        <div class="my-3 text-black">Non ci sono foto da visualizzare</div>
                                     @endif
                                     <div class="flex items-center justify-between text-sm">
                                         <div
