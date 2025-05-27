@@ -67,13 +67,16 @@
                                     @else bg-red-100 text-red-700 @endif">
                                     {{ ucfirst($ticket->status->titolo) }}
                                 </span>
-                                <form action="{{ route('tickets.delete', $ticket) }}" method="POST">
-                                    @csrf
-                                    <input type="hidden" name="ticket_id" value="{{ $ticket->id }}">
-                                    <button
-                                        class="bg-red-500 hover:bg-red-600 text-white font-bold py-2 px-3 rounded"><i
-                                            class="bi bi-trash3"></i></button>
-                                </form>
+                                @if ($technician->is_admin)
+                                    <form action="{{ route('tickets.delete', $ticket) }}" method="POST">
+                                        @csrf
+                                        <input type="hidden" name="ticket_id" value="{{ $ticket->id }}">
+                                        <button
+                                            class="bg-red-500 hover:bg-red-600 text-white font-bold py-2 px-3 rounded"><i
+                                                class="bi bi-trash3"></i></button>
+                                    </form>
+                                @endif
+
                             </div>
                         </div>
                     </div>

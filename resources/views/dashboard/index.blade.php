@@ -5,7 +5,7 @@
                 {{ __('Dashboard') }}
             </h2>
 
-            <a class="text-black dark:text-white hover:underline" href="{{ route('dashboard.history') }}">STORICO DEI
+            <a class="text-black dark:text-white hover:underline" href="{{ route('dashboard.history') }}">STORICO
                 TICKET</a>
         </div>
     </x-slot>
@@ -61,8 +61,8 @@
                                                 <input type="hidden" name="technician_id"
                                                     value="{{ $ticket->technician->id }}">
                                                 <button type="submit"
-                                                    class="px-2 py-1 rounded-full bg-yellow-500">Rimuovi il ticket dal
-                                                    tecnico</button>
+                                                    class="px-2 py-1 rounded-full bg-yellow-500">Rimuovi Assegnazione
+                                                    Ticket</button>
                                             </form>
 
                                             <!-- Bottone che apre il modale -->
