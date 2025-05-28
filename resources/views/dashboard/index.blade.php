@@ -15,7 +15,7 @@
             <div class="bg-white dark:bg-gray-800 overflow-hidden shadow-sm sm:rounded-lg">
                 @if ($tickets->count() > 0)
                     <div class="p-6 text-gray-900 dark:text-gray-100">
-                        {{ __('Stai visualizzando la lista dei ticket') }}
+                        {{ __('Stai visualizzando la tua Dashboard') }}
                     </div>
                     <div class="p-2 text-gray-900 dark:text-gray-100">
                         <div class="space-y-4">
