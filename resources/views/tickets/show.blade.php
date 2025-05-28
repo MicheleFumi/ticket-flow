@@ -82,14 +82,7 @@
                             @else
                                 <div class="my-3 text-black">Non ci sono foto da visualizzare</div>
                             @endif
-                            @if ($ticket->status_id === 3)
-                                <div class="text-sm text-gray-500"> Preso in carico da:
-                                    <span>
-                                        {{ $ticket->note_chiusura }}
-                                    </span>
 
-                                </div>
-                            @endif
                             <div class="flex items-center justify-between text-sm">
                                 <span
                                     class="px-2 py-1 rounded-full

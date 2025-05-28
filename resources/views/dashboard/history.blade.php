@@ -111,7 +111,12 @@
                                                 @endforeach
                                             @endif
                                         </div>
-                                        <p><strong>Note di chiusura:</strong> {{ $ticket->note_chiusura }}</p>
+                                        @if ($ticket->note_chiusura !== null)
+                                            <p><strong>Note di chiusura:</strong> {{ $ticket->note_chiusura }}</p>
+                                        @else
+                                            <p><strong>Note di chiusura:</strong> Non ci sono note di chiusura.</p>
+                                        @endif
+
                                     </div>
                                     <div class="mt-4 text-right">
                                         <button
