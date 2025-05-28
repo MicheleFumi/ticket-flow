@@ -2,7 +2,7 @@
     <x-slot name="header">
         <div class="flex justify-between items-center">
             <h2 class="font-semibold text-xl text-gray-800 dark:text-gray-200 leading-tight">
-                {{ __('Storico') }}
+                {{ __('Storico Ticket') }}
             </h2>
         </div>
     </x-slot>
@@ -16,28 +16,37 @@
                         <div>
                             @if (auth()->user()->is_admin)
                                 <div class="flex flex-col sm:flex-row sm:items-center sm:gap-4">
-                                    <input
-                                        type="text"
-                                        id="searchInput"
-                                        placeholder="Filtra per tecnico..."
-                                        class="rounded-md px-3 py-1 border border-gray-300 dark:bg-gray-700 dark:text-white"
-                                    />
-                                    <input
-                                        type="date"
-                                        id="dateInput"
-                                        max="{{ now()->toDateString() }}"
-                                        class="mt-2 sm:mt-0 rounded-md px-3 py-1 border border-gray-300 dark:bg-gray-700 dark:text-white"
-                                    />
+                                    <div class="relative">
+                                        <input type="text" id="searchInput" placeholder="Filtra per tecnico..."
+                                            class="rounded-md px-3 py-1 border border-gray-300 dark:bg-gray-700 dark:text-white pr-8" />
+                                        <button type="button"
+                                            onclick="document.getElementById('searchInput').value='';"
+                                            class="absolute right-1 top-1/2 -translate-y-1/2 bg-gray-300 dark:bg-gray-600 hover:bg-gray-400 dark:hover:bg-gray-500 text-gray-700 dark:text-gray-200 rounded-full w-5 h-5 flex items-center justify-center text-md font-bold focus:outline-none"
+                                            aria-label="Clear text input">
+                                            &times;
+                                        </button>
+                                    </div>
+
+                                    <div class="relative mt-2 sm:mt-0">
+                                        <input type="date" id="dateInput" max="{{ now()->toDateString() }}"
+                                            class="rounded-md px-3 py-1 border border-gray-300 dark:bg-gray-700 dark:text-white pr-8" />
+                                        <button type="button" onclick="document.getElementById('dateInput').value='';"
+                                            class="absolute right-1 top-1/2 -translate-y-1/2 bg-gray-300 dark:bg-gray-600 hover:bg-gray-400 dark:hover:bg-gray-500 text-gray-700 dark:text-gray-200 rounded-full w-5 h-5 flex items-center justify-center text-md font-bold focus:outline-none"
+                                            aria-label="Clear date input">
+                                            &times;
+                                        </button>
+                                    </div>
                                 </div>
                             @endif
+
                         </div>
                     </div>
 
                     <div class="p-2 text-gray-900 dark:text-gray-100 space-y-4" id="ticketContainer">
                         @foreach ($tickets as $ticket)
                             <div class="ticket-card bg-white shadow-md rounded-2xl p-4 border border-gray-200"
-                                 data-technician="{{ strtolower($ticket->technician->nome . ' ' . $ticket->technician->cognome) }}"
-                                 data-date="{{ $ticket->data_chiusura->format('Y-m-d') }}">
+                                data-technician="{{ strtolower($ticket->technician->nome . ' ' . $ticket->technician->cognome) }}"
+                                data-date="{{ $ticket->data_chiusura->format('Y-m-d') }}">
                                 <div class="flex items-center justify-between mb-2">
                                     <h2 class="text-xl font-semibold text-gray-800">{{ $ticket->titolo }}</h2>
                                     <span class="text-sm text-gray-500">
@@ -60,8 +69,7 @@
                                     </span>
 
                                     <div class="flex gap-2">
-                                        <button
-                                            type="button"
+                                        <button type="button"
                                             class="px-2 py-1 rounded-full bg-blue-500 text-white open-modal-btn"
                                             data-modal-id="modal-{{ $ticket->id }}">
                                             Dettagli
@@ -71,26 +79,33 @@
                             </div>
 
                             <!-- Modale -->
-                            <div
-                                id="modal-{{ $ticket->id }}"
+                            <div id="modal-{{ $ticket->id }}"
                                 class="modal hidden fixed inset-0 bg-black bg-opacity-50 backdrop-blur-sm z-50 flex items-center justify-center">
-                                <div class="modal-content bg-white dark:bg-gray-800 rounded-lg p-6 w-full max-w-md shadow-xl relative">
-                                    <h2 class="text-xl font-bold text-gray-800 dark:text-gray-100 mb-4">Dettagli Ticket</h2>
+                                <div
+                                    class="modal-content bg-white dark:bg-gray-800 rounded-lg p-6 w-full max-w-md shadow-xl relative">
+                                    <h2 class="text-xl font-bold text-gray-800 dark:text-gray-100 mb-4">Dettagli Ticket
+                                    </h2>
                                     <div class="text-sm text-gray-700 dark:text-gray-300 space-y-2">
                                         <p><strong>Titolo:</strong> {{ $ticket->titolo }}</p>
                                         <p><strong>Testo:</strong> {{ $ticket->commento }}</p>
-                                        <p><strong>Aperto da:</strong> {{ $ticket->user->nome }} {{ $ticket->user->cognome }}</p>
-                                        <p><strong>Data Apertura:</strong> {{ $ticket->created_at->format('d/m/Y H:i') }}</p>
-                                        <p><strong>Tecnico assegnato:</strong> {{ $ticket->technician->nome }} {{ $ticket->technician->cognome }}</p>
-                                        <p><strong>Data Assegnazione:</strong> {{ $ticket->data_assegnazione->format('d/m/Y H:i') }}</p>
+                                        <p><strong>Aperto da:</strong> {{ $ticket->user->nome }}
+                                            {{ $ticket->user->cognome }}</p>
+                                        <p><strong>Data Apertura:</strong>
+                                            {{ $ticket->created_at->format('d/m/Y H:i') }}</p>
+                                        <p><strong>Tecnico assegnato:</strong> {{ $ticket->technician->nome }}
+                                            {{ $ticket->technician->cognome }}</p>
+                                        <p><strong>Data Assegnazione:</strong>
+                                            {{ $ticket->data_assegnazione->format('d/m/Y H:i') }}</p>
                                         <p><strong>Chiuso da:</strong>
-                                            {{ $ticket->closedBy ? $ticket->closedBy->nome . ' ' . $ticket->closedBy->cognome : 'N/D' }}</p>
-                                        <p><strong>Data Chiusura:</strong> {{ $ticket->data_chiusura->format('d/m/Y H:i') }}</p>
+                                            {{ $ticket->closedBy ? $ticket->closedBy->nome . ' ' . $ticket->closedBy->cognome : 'N/D' }}
+                                        </p>
+                                        <p><strong>Data Chiusura:</strong>
+                                            {{ $ticket->data_chiusura->format('d/m/Y H:i') }}</p>
                                         <div>
                                             @if (isset($ticket->images) && $ticket->images->count())
                                                 @foreach ($ticket->images as $image)
                                                     <a href="{{ asset($image->file_path) }}" target="_blank"
-                                                       class="text-blue-600 hover:underline block">
+                                                        class="text-blue-600 hover:underline block">
                                                         Visualizza immagine {{ $loop->iteration }}
                                                     </a>
                                                 @endforeach
@@ -99,7 +114,8 @@
                                         <p><strong>Note di chiusura:</strong> {{ $ticket->note_chiusura }}</p>
                                     </div>
                                     <div class="mt-4 text-right">
-                                        <button class="close-modal-btn bg-red-500 hover:bg-red-600 text-white font-bold py-1 px-3 rounded">
+                                        <button
+                                            class="close-modal-btn bg-red-500 hover:bg-red-600 text-white font-bold py-1 px-3 rounded">
                                             Chiudi
                                         </button>
                                     </div>
