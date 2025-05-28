@@ -19,6 +19,7 @@ Route::middleware(['auth', 'verified'])->group(function () {
 
     //UTENTI
     Route::get("/utenti", [UserController::class, 'index'])->name("users.index");
+    Route::get('/users/{user}', [UserController::class, 'show'])->name('users.show');
 
     //TECNICI
     Route::get('/tecnici', [TechnicianController::class, 'index'])->name("technicians.index");

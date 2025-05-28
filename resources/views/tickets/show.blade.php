@@ -5,7 +5,6 @@
                 {{ __('Lista Ticket') }}
             </h2>
 
-            <!-- Bottoni che aprono i modali -->
             @if ($technician->is_admin && !isset($ticket['technician_id']))
                 <div>
                     <button id="openModalButton"
@@ -112,7 +111,7 @@
             </div>
         </div>
 
-        <!-- Modale di assegnazione tecnico da ADMIN SOLO-->
+        <!-- Modale di assegnazione tecnico ADMIN ONLY-->
         <div id="assignTicketTechnicianSearchModal"
             class="fixed inset-0 bg-gray-600 bg-opacity-50 overflow-y-auto h-full w-full hidden z-50 flex items-center justify-center">
             <div class="relative p-5 border w-1/2 max-w-lg shadow-lg rounded-md bg-white dark:bg-gray-700">
