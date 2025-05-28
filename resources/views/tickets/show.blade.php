@@ -42,8 +42,31 @@
                         <div class="bg-white shadow-md rounded-2xl p-4 border border-gray-200">
                             <div class="flex items-center justify-between mb-2">
                                 <h2 class="text-xl font-semibold text-gray-800">{{ $ticket['titolo'] }}</h2>
-                                <span
-                                    class="text-sm text-gray-500">{{ $ticket['created_at']->format('d/m/Y H:i') }}</span>
+                                <div>
+                                    <div class="text-sm text-gray-500"> Creato da: {{ $ticket->user->nome }}
+                                        {{ $ticket->user->cognome }} il:
+                                        {{ $ticket['created_at']->format('d/m/Y H:i') }}
+                                    </div>
+
+                                    @if ($ticket->status_id === 2)
+                                        <div class="text-sm text-gray-500"> Preso in carico da:
+                                            {{ $ticket->technician->nome }}
+                                            {{ $ticket->technician->cognome }} il:
+                                            {{ $ticket['data_assegnazione']->format('d/m/Y H:i') }}
+                                        </div>
+                                    @elseif($ticket->status_id === 3)
+                                        <div class="text-sm text-gray-500"> Preso in carico da:
+                                            {{ $ticket->technician->nome }}
+                                            {{ $ticket->technician->cognome }} il:
+                                            {{ $ticket['data_assegnazione']->format('d/m/Y H:i') }}
+                                        </div>
+                                        <div class="text-sm text-gray-500"> Chiuso da:
+                                            {{ $ticket->technician->nome }}
+                                            {{ $ticket->technician->cognome }} il:
+                                            {{ $ticket['data_chiusura']->format('d/m/Y H:i') }}
+                                        </div>
+                                    @endif
+                                </div>
                             </div>
                             <p class="text-md text-gray-500 mb-2">{{ $ticket['commento'] }}</p>
                             @if (isset($ticket->images) && $ticket->images->count() > 0)
@@ -58,6 +81,14 @@
                                 </div>
                             @else
                                 <div class="my-3 text-black">Non ci sono foto da visualizzare</div>
+                            @endif
+                            @if ($ticket->status_id === 3)
+                                <div class="text-sm text-gray-500"> Preso in carico da:
+                                    <span>
+                                        {{ $ticket->note_chiusura }}
+                                    </span>
+
+                                </div>
                             @endif
                             <div class="flex items-center justify-between text-sm">
                                 <span
