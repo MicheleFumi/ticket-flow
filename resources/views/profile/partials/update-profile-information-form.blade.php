@@ -40,7 +40,7 @@
 
             @if ($user instanceof \Illuminate\Contracts\Auth\MustVerifyEmail && !$user->hasVerifiedEmail())
                 <div>
-                    <p class="text-sm mt-2 text-gray-800 dark:text-gray-200">
+                    <p class="text-sm mt-2 text-red-600 dark:text-red-500">
                         {{ __('La tua mail non è verificata.') }}
 
                         <button form="send-verification"
