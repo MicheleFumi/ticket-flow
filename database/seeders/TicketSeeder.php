@@ -14,10 +14,6 @@ class TicketSeeder extends Seeder
 
     public function run()
     {
-        // Stati per comodità (assumi che ci siano in tabella con questi ID)
-        // 1 = Aperto
-        // 2 = In lavorazione
-        // 3 = Chiuso
 
         $tickets = [
             [
