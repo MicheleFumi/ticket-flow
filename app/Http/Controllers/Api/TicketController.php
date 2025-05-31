@@ -62,14 +62,19 @@ class TicketController extends Controller
     /**
      * Display the specified resource.
      */
-    public function show(Ticket $ticket)
+    public function show(Ticket $ticket, Request $request)
     {
+        $user_id = $request->user()->id;
+        if ($ticket->user_id === $user_id) {
+            $ticket->load('status', "images");
+            return response()->json([
+                'data' => $ticket
 
-        $ticket->load('status', "images");
+            ]);
+        }
         return response()->json([
-            'data' => $ticket
-
-        ]);
+            'error' => "ticket non trovato o non creato dall'utente",
+        ], 402);
     }
 
     /**
@@ -106,11 +111,13 @@ class TicketController extends Controller
      */
     public function destroy(Ticket $ticket, Request $request)
     {
-        dd($request);
-        if ($ticket->id === $request->user()->id && $ticket->status_id === 1) {
+        $user_id = $request->user()->id;
+
+        if ($request->ticket->user_id === $user_id && $request->ticket->status_id === 1) {
 
             $ticket->delete();
-            $ticketList = Ticket::all();
+            $ticketList = Ticket::where('user_id', $request->user()->id)->get();
+
 
             return response()->json([
                 'data' => $ticketList
