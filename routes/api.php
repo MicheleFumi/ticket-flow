@@ -1,6 +1,7 @@
 <?php
 
 use App\Http\Controllers\Api\AuthController;
+use App\Http\Controllers\Api\PasswordResetController;
 use App\Http\Controllers\Api\TicketController;
 use App\Http\Controllers\Api\UserController;
 use Illuminate\Http\Request;
@@ -12,6 +13,9 @@ Route::post('/login', [AuthController::class, 'login']);
 Route::post('/logout', [AuthController::class, 'logout'])->middleware('auth:sanctum');
 Route::post("/user-delete", [UserController::class, 'destroy'])->middleware('auth:sanctum');
 Route::patch('/update-password', [UserController::class, 'updatePassword'])->middleware('auth:sanctum');
+Route::post("/forgot-password", [PasswordResetController::class, 'sendResetLink']);
+Route::post("/reset-password", [PasswordResetController::class, 'resetPassword']);
+
 
 //TICKETS
 Route::post('/apri-ticket', [TicketController::class, 'store'])->middleware('auth:sanctum');
