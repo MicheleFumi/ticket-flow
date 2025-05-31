@@ -73,16 +73,4 @@ class AuthController extends Controller
             'message' => 'Logout effettuato con successo!'
         ], 200);
     }
-
-    public function destroy(Request $request)
-    {
-        $user = $request->user();
-        $user->tickets()->delete();
-        $user->tokens()->delete();
-        $user->forceDelete();
-
-        return response()->json([
-            'message' => 'Account eliminato con successo!'
-        ], 200);
-    }
 }

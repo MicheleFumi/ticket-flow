@@ -2,6 +2,7 @@
 
 use App\Http\Controllers\Api\AuthController;
 use App\Http\Controllers\Api\TicketController;
+use App\Http\Controllers\Api\UserController;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Route;
 
@@ -9,7 +10,8 @@ use Illuminate\Support\Facades\Route;
 Route::post('/register', [AuthController::class, 'register']);
 Route::post('/login', [AuthController::class, 'login']);
 Route::post('/logout', [AuthController::class, 'logout'])->middleware('auth:sanctum');
-Route::post("/user-delete", [AuthController::class, 'destroy'])->middleware('auth:sanctum');
+Route::post("/user-delete", [UserController::class, 'destroy'])->middleware('auth:sanctum');
+Route::patch('/update-password', [UserController::class, 'updatePassword'])->middleware('auth:sanctum');
 
 //TICKETS
 Route::post('/apri-ticket', [TicketController::class, 'store'])->middleware('auth:sanctum');
