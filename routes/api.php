@@ -11,18 +11,19 @@ use Illuminate\Support\Facades\Route;
 Route::post('/register', [AuthController::class, 'register']);
 Route::post('/login', [AuthController::class, 'login']);
 Route::post('/logout', [AuthController::class, 'logout'])->middleware('auth:sanctum');
-Route::post("/user-delete", [UserController::class, 'destroy'])->middleware('auth:sanctum');
+Route::post("/user/delete", [UserController::class, 'destroy'])->middleware('auth:sanctum');
 Route::patch('/update-password', [UserController::class, 'updatePassword'])->middleware('auth:sanctum');
 Route::post("/forgot-password", [PasswordResetController::class, 'sendResetLink']);
 Route::post("/reset-password", [PasswordResetController::class, 'resetPassword']);
 
 
 //TICKETS
-Route::post('/apri-ticket', [TicketController::class, 'store'])->middleware('auth:sanctum');
-Route::get('/lista-ticket', [TicketController::class, 'index'])->middleware('auth:sanctum');
-Route::get('/lista-ticket/{ticket}', [TicketController::class, 'show'])->middleware('auth:sanctum');
-Route::patch('/modifica-ticket/{ticket}', [TicketController::class, 'update'])->middleware('auth:sanctum');
-Route::delete('/elimina-ticket/{ticket}', [TicketController::class, 'destroy'])->middleware('auth:sanctum');
+
+Route::get('/tickets', [TicketController::class, 'index'])->middleware('auth:sanctum');
+Route::post('/ticket/open', [TicketController::class, 'store'])->middleware('auth:sanctum');
+Route::get('/ticket/detail/{ticket}', [TicketController::class, 'show'])->middleware('auth:sanctum');
+Route::patch('/ticket/update/{ticket}', [TicketController::class, 'update'])->middleware('auth:sanctum');
+Route::delete('/ticket/delete/{ticket}', [TicketController::class, 'destroy'])->middleware('auth:sanctum');
 // Route::get('/user', function (Request $request) {
 //     return $request->user();
 // })->middleware('auth:sanctum');

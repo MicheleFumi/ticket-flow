@@ -18,22 +18,22 @@ Route::middleware(['auth', 'verified'])->group(function () {
     Route::get("/dashboard/history", [DashboardController::class, 'history'])->name("dashboard.history");
 
     //UTENTI
-    Route::get("/utenti", [UserController::class, 'index'])->name("users.index");
+    Route::get("/users", [UserController::class, 'index'])->name("users.index");
     Route::get('/users/{user}', [UserController::class, 'show'])->name('users.show');
 
     //TECNICI
-    Route::get('/tecnici', [TechnicianController::class, 'index'])->name("technicians.index");
+    Route::get('/technicians', [TechnicianController::class, 'index'])->name("technicians.index");
     Route::post('/user-to-technician', [TechnicianController::class, 'userToTechnician'])->name('user-to-technician');
     Route::post('/technician-to-user', [TechnicianController::class, 'technicianToUser'])->name('technician-to-user');
 
     //TICKET
-    Route::get('/lista-ticket', [TicketController::class, 'index'])->name("tickets.index");
-    Route::get('/lista-ticket/{ticket}', [TicketController::class, 'show'])->name("tickets.show");
-    Route::post('/assegna-ticket/{ticket}', [TicketController::class, 'assign'])->name("tickets.assign");
-    Route::post("/ticket/unassign", [TicketController::class, 'unassign'])->name("tickets.unassign");
+    Route::get('/tickets', [TicketController::class, 'index'])->name("tickets.index");
+    Route::get('/ticket/detail/{ticket}', [TicketController::class, 'show'])->name("tickets.show");
+    Route::post('/ticket/assign/{ticket}', [TicketController::class, 'assign'])->name("tickets.assign");
+    Route::post("/ticket/unassignTo", [TicketController::class, 'unassign'])->name("tickets.unassign");
     Route::post("/ticket/close", [TicketController::class, 'close'])->name("tickets.close");
     Route::post("/ticket/delete/{ticket}", [TicketController::class, 'destroy'])->name("tickets.delete");
-    Route::post("/ticket/assegna-a/{ticket}", [TicketController::class, 'assignTo'])->name("tickets.assignTo");
+    Route::post("/ticket/assign-to/{ticket}", [TicketController::class, 'assignTo'])->name("tickets.assignTo");
 });
 //PROFILE
 Route::middleware('auth')->group(function () {
