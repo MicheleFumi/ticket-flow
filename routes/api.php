@@ -12,9 +12,9 @@ Route::post('/register', [AuthController::class, 'register']);
 Route::post('/login', [AuthController::class, 'login']);
 Route::post('/logout', [AuthController::class, 'logout'])->middleware('auth:sanctum');
 Route::post("/user/delete", [UserController::class, 'destroy'])->middleware('auth:sanctum');
-Route::patch('/update-password', [UserController::class, 'updatePassword'])->middleware('auth:sanctum');
-Route::post("/forgot-password", [PasswordResetController::class, 'sendResetLink']);
-Route::post("/reset-password", [PasswordResetController::class, 'resetPassword']);
+Route::patch('/password/update', [UserController::class, 'updatePassword'])->middleware('auth:sanctum');
+Route::post("/password/forgot", [PasswordResetController::class, 'sendResetLink']);
+Route::post("/password/reset", [PasswordResetController::class, 'resetPassword']);
 
 
 //TICKETS
