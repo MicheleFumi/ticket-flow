@@ -16,7 +16,9 @@ class Ticket extends Model
         'data_assegnazione',
         'data_chiusura',
         'chiuso_da',
-        'note_chiusura'
+        'note_chiusura',
+        'is_reported',
+        'commento_report'
     ];
 
     protected $casts = [

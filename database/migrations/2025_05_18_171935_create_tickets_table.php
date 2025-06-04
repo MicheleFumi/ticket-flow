@@ -22,6 +22,8 @@ return new class extends Migration
             $table->timestamp('data_assegnazione')->nullable();
             $table->timestamp('data_chiusura')->nullable();
             $table->text("note_chiusura")->nullable();
+            $table->boolean("is_reported")->default(0);
+            $table->text("commento_report")->nullable();
             $table->timestamps();
         });
     }
