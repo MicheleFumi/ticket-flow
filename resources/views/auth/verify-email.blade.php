@@ -2,7 +2,7 @@
     <div class="mb-4 text-sm text-gray-600 dark:text-gray-400">
         {{ __('Grazie per esserti registrato!
                 Prima di iniziare, potresti verificare il tuo indirizzo email cliccando sul link che ti abbiamo appena inviato via email?
-                Se non hai ricevuto l’email, saremo felici di inviartene un’altra..') }}
+                Se non hai ricevuto l’email, saremo felici di inviartene un’altra.') }}
     </div>
 
     @if (session('status') == 'verification-link-sent')

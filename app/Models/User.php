@@ -2,13 +2,15 @@
 
 namespace App\Models;
 
+use App\Notifications\ApiResetPasswordNotification;
+use Illuminate\Auth\Passwords\CanResetPassword;
 use Illuminate\Foundation\Auth\User as Authenticatable;
 use Laravel\Sanctum\HasApiTokens;
 use Illuminate\Notifications\Notifiable;
 
 class User extends Authenticatable
 {
-    use HasApiTokens, Notifiable;
+    use HasApiTokens, Notifiable, CanResetPassword;
 
     protected $fillable = [
         'nome',
@@ -27,5 +29,10 @@ class User extends Authenticatable
     public function tickets()
     {
         return $this->hasMany(Ticket::class)->orderBy('created_at');
+    }
+
+    public function sendPasswordResetNotification($token)
+    {
+        $this->notify(new ApiResetPasswordNotification($token));
     }
 }
