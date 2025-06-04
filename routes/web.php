@@ -7,13 +7,13 @@ use App\Http\Controllers\TicketController;
 use App\Http\Controllers\UserController;
 use Illuminate\Support\Facades\Route;
 
-Route::get('/', function () {
-    return redirect('/login');
-});
 
 
 Route::middleware(['auth', 'verified'])->group(function () {
 
+    Route::get('/', function () {
+        return redirect('/login');
+    });
     //DASHBOARD
     Route::get("/dashboard", [DashboardController::class, 'index'])->name("dashboard.index");
     Route::get("/dashboard/history", [DashboardController::class, 'history'])->name("dashboard.history");
