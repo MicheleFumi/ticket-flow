@@ -24,7 +24,6 @@ class Technician extends Authenticatable implements MustVerifyEmail
         'password',
         'telefono',
         'is_admin',
-        'is_superadmin',
         'is_available',
     ];
 
@@ -56,4 +55,14 @@ class Technician extends Authenticatable implements MustVerifyEmail
     {
         return $this->hasMany(Ticket::class);
     }
+
+    // public function isAdmin(): bool
+    // {
+    //     return $this->is_admin;
+    // }
+
+    // public function isNotAdmin(): bool
+    // {
+    //     return !$this->is_admin;
+    // }
 }
