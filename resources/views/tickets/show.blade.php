@@ -42,6 +42,7 @@
                             <div class="flex items-center justify-between mb-2">
                                 <h2 class="text-xl font-semibold text-gray-800">{{ $ticket['titolo'] }}</h2>
                                 <div>
+
                                     <div class="text-sm text-gray-500"> Creato da: {{ $ticket->user->nome }}
                                         {{ $ticket->user->cognome }} il:
                                         {{ $ticket['created_at']->format('d/m/Y H:i') }}
@@ -65,6 +66,7 @@
                                             {{ $ticket['data_chiusura']->format('d/m/Y H:i') }}
                                         </div>
                                     @endif
+
                                 </div>
                             </div>
                             <p class="text-md text-gray-500 mb-2">{{ $ticket['commento'] }}</p>
@@ -83,13 +85,27 @@
                             @endif
 
                             <div class="flex items-center justify-between text-sm">
-                                <span
-                                    class="px-2 py-1 rounded-full
+                                <div>
+                                    <span
+                                        class="px-2 py-1 rounded-full 
                                     @if ($ticket->status->titolo === 'Aperto') bg-green-100 text-green-700
                                     @elseif($ticket->status->titolo === 'In Lavorazione') bg-yellow-100 text-yellow-700
                                     @else bg-red-100 text-red-700 @endif">
-                                    {{ ucfirst($ticket->status->titolo) }}
-                                </span>
+                                        {{ ucfirst($ticket->status->titolo) }}
+                                    </span>
+                                    @if ($technician->is_admin && $ticket->is_reported)
+                                        <span>
+                                            <span
+                                                class="inline-flex items-center overflow-hidden rounded-full bg-yellow-100 text-yellow-700 ms-2 px-2 py-1"
+                                                onclick="openReportModal('{{ $ticket->commento_report }}')">
+                                                <i
+                                                    class="bi bi-exclamation-triangle-fill mr-1 not-italic hover:underline">
+                                                    Visualizza Dettagli Segnalazione</i>
+
+                                            </span>
+                                        </span>
+                                    @endif
+                                </div>
                                 <div class="flex items-center gap-2 ml-auto">
                                     @if ($technician->is_admin)
                                         <button id="openDeleteModalButton"
@@ -113,7 +129,21 @@
             </div>
         </div>
 
-        <!-- Modal per reportare ticket -->
+
+        <!-- Modale messaggio repor -->
+        <div id="commentModal"
+            class="fixed inset-0 bg-black bg-opacity-50 backdrop-blur-sm flex items-center justify-center z-50 hidden">
+            <div class="bg-white dark:bg-gray-800 rounded-lg shadow-lg w-full max-w-sm p-6 relative">
+                <h2 class="text-lg font-semibold text-gray-800 dark:text-gray-100 mb-4">Motivo segnalazione</h2>
+                <p id="reportReason" class="text-gray-700 dark:text-gray-300 text-sm"></p>
+                <button onclick="closeReportModal()"
+                    class="mt-6 bg-red-600 hover:bg-red-700 text-white font-bold py-1 px-4 rounded">
+                    Chiudi
+                </button>
+            </div>
+        </div>
+
+        <!-- Modale per reportare ticket -->
         <div id="reportTicketModal"
             class="fixed inset-0 bg-gray-600 bg-opacity-50 overflow-y-auto h-full w-full hidden z-50 flex items-center justify-center">
             <div class="relative p-5 border w-1/2 max-w-lg shadow-lg rounded-md bg-white dark:bg-gray-700">
@@ -203,7 +233,8 @@
                                                     class="text-xs text-gray-500 dark:text-gray-400">{{ $technician->email }}</span>
                                             </td>
                                             <td class="px-4 py-2 whitespace-nowrap text-right text-sm font-medium">
-                                                <form method="POST" action="{{ route('tickets.assignTo', $ticket) }}">
+                                                <form method="POST"
+                                                    action="{{ route('tickets.assignTo', $ticket) }}">
                                                     @csrf
                                                     <input type="hidden" name="technician_id"
                                                         value="{{ $technician->id }}">
@@ -260,6 +291,17 @@
 
     <!-- Script -->
     <script>
+        /* MODALE PER LETTURA MOTIVO REPORT TICKET */
+        function openReportModal(reason) {
+            document.getElementById('reportReason').innerText = reason;
+            document.getElementById('commentModal').classList.remove('hidden');
+        }
+
+        function closeReportModal() {
+            document.getElementById('commentModal').classList.add('hidden');
+        }
+
+
         /* MODALE PER PRESA IN CARICO TICKET DEL TECNICO */
         document.addEventListener('DOMContentLoaded', function() {
             const openModalButton = document.getElementById('openModalButton');

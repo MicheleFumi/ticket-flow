@@ -75,13 +75,13 @@
                                                     {{ ucfirst($ticket->status->titolo) }}
                                                 </span>
                                                 @if ($ticket->is_reported)
-                                                    <span
-                                                        class="inline-flex items-center overflow-hidden rounded-full bg-yellow-100 text-yellow-700 transition-all duration-300 group max-w-[2.2rem] hover:max-w-xs cursor-default px-2 py-1">
-                                                        <i class="bi bi-exclamation-triangle-fill mr-1"></i>
-                                                        <span
-                                                            class="whitespace-nowrap opacity-0 group-hover:opacity-100 transition-opacity duration-300">
-                                                            Ticket reportato
-                                                        </span>
+                                                    <span id="reportBadge"
+                                                        class="inline-flex items-center rounded-full bg-yellow-100 text-yellow-700 mx-2 px-2 py-1 text-sm transition-all duration-300 overflow-hidden cursor-default"
+                                                        style="width: 1.8rem;">
+                                                        <i class="bi bi-exclamation-triangle-fill"></i>
+                                                        <span id="reportText"
+                                                            class="ml-2 whitespace-nowrap opacity-0 transition-opacity duration-300">Ticket
+                                                            segnalato</span>
                                                     </span>
                                                 @endif
                                             </div>
@@ -101,3 +101,21 @@
         </div>
     </div>
 </x-app-layout>
+
+
+
+<script>
+    /* SCRIPT MODALE REPORT */
+    const badge = document.getElementById('reportBadge');
+    const text = document.getElementById('reportText');
+
+    badge.addEventListener('mouseenter', () => {
+        badge.style.width = 'auto';
+        text.style.opacity = '1';
+    });
+
+    badge.addEventListener('mouseleave', () => {
+        badge.style.width = '1.8rem';
+        text.style.opacity = '0';
+    });
+</script>
