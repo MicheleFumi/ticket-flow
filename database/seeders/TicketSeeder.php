@@ -28,8 +28,8 @@ class TicketSeeder extends Seeder
                 'note_chiusura' => null,
                 'created_at' => Carbon::now(),
                 'updated_at' => Carbon::now(),
-                'is_reported' => 1,
-                'commento_report' => 'il ticket era stato aperto due volte, nonostante avessi già spiegato che il problema è della rete interna alla sede.'
+                'is_reported' => 0,
+                'commento_report' => ''
             ],
             [
                 'user_id' => 2,
@@ -88,8 +88,8 @@ class TicketSeeder extends Seeder
                 'note_chiusura' => 'Fix applicato con aggiornamento patch 1.2',
                 'created_at' => Carbon::now(),
                 'updated_at' => Carbon::now(),
-                'is_reported' => 0,
-                'commento_report' => ''
+                'is_reported' => 1,
+                'commento_report' => 'il ticket era stato aperto due volte, nonostante avessi già spiegato che il problema è della rete interna alla sede.'
             ],
             [
                 'user_id' => 1,
