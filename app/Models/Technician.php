@@ -24,6 +24,7 @@ class Technician extends Authenticatable implements MustVerifyEmail
         'password',
         'telefono',
         'is_admin',
+        'is_superadmin',
         'is_available',
     ];
 

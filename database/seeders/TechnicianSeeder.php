@@ -13,10 +13,11 @@ class TechnicianSeeder extends Seeder
         Technician::create([
             'nome' => 'Mario',
             'cognome' => 'Rossi',
-            'email' => 'tecnico@example.com',
-            'password' => Hash::make('password123'),
+            'email' => env("SUPERADMIN_EMAIL"),
+            'password' => Hash::make(env("SUPERADMIN_PASSWORD")),
             'telefono' => '1234567890',
             'is_admin' => true,
+            "is_superadmin" => true,
             'is_available' => true,
         ]);
     }

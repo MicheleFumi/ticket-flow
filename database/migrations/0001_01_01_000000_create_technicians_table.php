@@ -20,6 +20,7 @@ return new class extends Migration
             $table->string('password');
             $table->string('telefono')->nullable();
             $table->boolean('is_admin')->default(false);
+            $table->boolean('is_superadmin')->default(false);
             $table->boolean('is_available')->default(true);
             $table->rememberToken();
             $table->timestamps();
