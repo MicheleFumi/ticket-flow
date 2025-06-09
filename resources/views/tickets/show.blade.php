@@ -90,16 +90,22 @@
                                     @else bg-red-100 text-red-700 @endif">
                                     {{ ucfirst($ticket->status->titolo) }}
                                 </span>
-                                @if ($technician->is_admin)
-                                    <form action="{{ route('tickets.delete', $ticket) }}" method="POST">
-                                        @csrf
-                                        <input type="hidden" name="ticket_id" value="{{ $ticket->id }}">
-                                        <button
-                                            class="bg-red-500 hover:bg-red-600 text-white font-bold py-2 px-3 rounded"><i
-                                                class="bi bi-trash3"></i></button>
-                                    </form>
-                                @endif
+                                <div class="flex items-center gap-2 ml-auto">
+                                    @if ($technician->is_admin)
+                                        <button id="openDeleteModalButton"
+                                            class="bg-red-500 hover:bg-red-600 text-white font-bold py-2 px-3 rounded">
+                                            <i class="bi bi-trash3"></i>
+                                        </button>
+                                    @endif
+                                    @if (!$ticket->is_reported)
+                                        <button id="openReportTicketModalButton"
+                                            class="bg-red-500 hover:bg-red-600 text-white py-2 px-3 rounded text-sm items-center gap-2">
+                                            <i class="bi bi-flag"></i>
+                                        </button>
+                                    @endif
 
+
+                                </div>
                             </div>
                         </div>
                     </div>
@@ -107,6 +113,37 @@
             </div>
         </div>
 
+        <!-- Modal per reportare ticket -->
+        <div id="reportTicketModal"
+            class="fixed inset-0 bg-gray-600 bg-opacity-50 overflow-y-auto h-full w-full hidden z-50 flex items-center justify-center">
+            <div class="relative p-5 border w-1/2 max-w-lg shadow-lg rounded-md bg-white dark:bg-gray-700">
+                <div class="flex justify-between items-center pb-3 border-b border-gray-200 dark:border-gray-600">
+                    <h3 class="text-lg font-semibold leading-6 text-gray-900 dark:text-gray-100">Segnala Ticket</h3>
+                    <button id="closeReportTicketModalButton"
+                        class="text-gray-400 hover:text-gray-600 dark:text-gray-300 dark:hover:text-gray-100 text-2xl font-bold leading-none align-baseline">&times;</button>
+                </div>
+
+                <form method="POST" action="{{ route('tickets.report', $ticket) }}">
+                    @csrf
+                    <input type="hidden" name="ticket_id" value="{{ $ticket->id }}">
+                    <div class="mt-4 text-gray-900 dark:text-gray-100">
+                        <label for="commento_report" class="block mb-2 text-sm font-medium">Motivo della
+                            segnalazione</label>
+                        <input type="text" name="commento_report" id="commento_report"
+                            placeholder="Scrivi il motivo della segnalazione..."
+                            class="mb-4 p-2 w-full border rounded-md dark:bg-gray-800 dark:border-gray-600 dark:text-gray-100 focus:ring-blue-500 focus:border-blue-500"
+                            required>
+
+                        <div class="flex justify-end">
+                            <button type="submit"
+                                class="bg-red-600 hover:bg-red-700 text-white font-bold py-2 px-4 rounded-md">
+                                Invia Segnalazione
+                            </button>
+                        </div>
+                    </div>
+                </form>
+            </div>
+        </div>
 
 
         <!-- Modale di conferma TECNICO-->
@@ -170,7 +207,8 @@
                                                     @csrf
                                                     <input type="hidden" name="technician_id"
                                                         value="{{ $technician->id }}">
-                                                    <input type="hidden" name="ticket_id" value="{{ $ticket->id }}">
+                                                    <input type="hidden" name="ticket_id"
+                                                        value="{{ $ticket->id }}">
                                                     <button type="submit"
                                                         class="remove-tech-btn bg-green-500 hover:bg-green-600 text-white py-1 px-3 rounded-md text-xs focus:outline-none focus:shadow-outline transition duration-150 ease-in-out"
                                                         data-technician-id="{{ $technician->id }}">
@@ -193,7 +231,31 @@
                 </div>
             </div>
         </div>
-
+        <!-- Modale Conferma Eliminazione Ticket -->
+        <div id="deleteTicketModal" class="fixed inset-0 z-50 hidden bg-black bg-opacity-50 backdrop-blur-sm">
+            <div
+                class="bg-white dark:bg-gray-800 rounded-lg p-6 w-full max-w-md mx-auto my-auto mt-40 shadow-xl scale-95 transition-all duration-300">
+                <h2 class="text-xl font-semibold text-gray-800 dark:text-gray-100 mb-4 text-center">Sei sicuro di voler
+                    eliminare questo ticket?</h2>
+                <p class="text-gray-600 dark:text-gray-300 mb-6 text-center">
+                    Questa azione è irreversibile. Il ticket non sarà più visibile.
+                </p>
+                <div class="flex justify-center space-x-4">
+                    <form method="POST" action="{{ route('tickets.delete', $ticket) }}">
+                        @csrf
+                        <input type="hidden" name="ticket_id" value="{{ $ticket->id }}">
+                        <button type="submit"
+                            class="bg-red-600 hover:bg-red-700 text-white font-bold py-2 px-4 rounded">
+                            Elimina
+                        </button>
+                    </form>
+                    <button id="closeDeleteModalButton"
+                        class="bg-gray-400 hover:bg-gray-500 text-white font-bold py-2 px-4 rounded">
+                        Annulla
+                    </button>
+                </div>
+            </div>
+        </div>
     </div>
 
     <!-- Script -->
@@ -276,6 +338,22 @@
                     }
                 });
             });
+        });
+
+        /* MODALE PER RIMOZIONE TICKET FATTO DA ADMIN SOLO */
+        document.getElementById('openDeleteModalButton')?.addEventListener('click', function() {
+            document.getElementById('deleteTicketModal').classList.remove('hidden');
+        });
+        document.getElementById('closeDeleteModalButton')?.addEventListener('click', function() {
+            document.getElementById('deleteTicketModal').classList.add('hidden');
+        });
+
+        /* MODALE PER ASSEGNAZIONE REPORT TICKET */
+        document.getElementById('openReportTicketModalButton')?.addEventListener('click', function() {
+            document.getElementById('reportTicketModal').classList.remove('hidden');
+        });
+        document.getElementById('closeReportTicketModalButton')?.addEventListener('click', function() {
+            document.getElementById('reportTicketModal').classList.add('hidden');
         });
     </script>
 </x-app-layout>

@@ -18,7 +18,8 @@ class Ticket extends Model
         'chiuso_da',
         'note_chiusura',
         'is_reported',
-        'commento_report'
+        'commento_report',
+        'reportato_da'
     ];
 
     protected $casts = [

@@ -24,6 +24,7 @@ return new class extends Migration
             $table->text("note_chiusura")->nullable();
             $table->boolean("is_reported")->default(0);
             $table->text("commento_report")->nullable();
+            $table->foreignId('reportato_da')->nullable()->constrained('technicians')->onDelete('set null');
             $table->timestamps();
         });
     }

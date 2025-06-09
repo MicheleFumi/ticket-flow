@@ -31,10 +31,12 @@ Route::middleware(['auth', 'verified'])->group(function () {
 
     //TICKET
     Route::get('/tickets', [TicketController::class, 'index'])->name("tickets.index");
+    Route::post("/ticket/report/{ticket}", [TicketController::class, 'report'])->name("tickets.report");
     Route::get('/ticket/detail/{ticket}', [TicketController::class, 'show'])->name("tickets.show");
     Route::post('/ticket/assign/{ticket}', [TicketController::class, 'assign'])->name("tickets.assign");
     Route::post("/ticket/unassignTo", [TicketController::class, 'unassign'])->name("tickets.unassign");
     Route::post("/ticket/close", [TicketController::class, 'close'])->name("tickets.close");
+
     Route::post("/ticket/delete/{ticket}", [TicketController::class, 'destroy'])->name("tickets.delete");
     Route::post("/ticket/assign-to/{ticket}", [TicketController::class, 'assignTo'])->name("tickets.assignTo");
 });

@@ -15,8 +15,11 @@ class TicketController extends Controller
      */
     public function index()
     {
-        $tickets = Ticket::with('status', 'technician')->orderBy('id', 'ASC')->get();
-        return view("tickets.index", compact("tickets"));
+        $technician = Auth::guard()->user();
+        $tickets = Ticket::with('status', 'technician')->where('is_reported', false)->orderBy('id', 'ASC')->get();
+        $reportedTickets = Ticket::with('status', 'technician')->where('is_reported', true)->orderBy('id', 'ASC')->get();
+        $allTickets = Ticket::with('status', 'technician')->orderBy('id', 'ASC')->get();
+        return view("tickets.index", compact("tickets", "technician", "reportedTickets", "allTickets"));
     }
     /**
      * Show the form for creating a new resource.
@@ -66,14 +69,16 @@ class TicketController extends Controller
     /**
      * Remove the specified resource from storage.
      */
-    public function destroy(Ticket $ticket)
+    public function destroy(Ticket $ticket, Request $request)
     {
+
         $technician = Auth::guard()->user();
+
+
         if (!$technician || !$technician->is_admin) {
+
             return redirect()->back()->with('error', 'Non sei autorizzato a eseguire questa operazione.');
         }
-        // $ticket = Ticket::find($id);
-
         if (!$ticket) {
             return redirect()->back()->with('error', 'Ticket non trovato.');
         }
@@ -86,9 +91,9 @@ class TicketController extends Controller
         }
 
         DB::beginTransaction();
-
         try {
-            $ticket->delete();
+            $ticket->status_id = 3;
+
             DB::commit();
             return redirect()->route('tickets.index')->with('success', 'Ticket eliminato con successo.');
         } catch (\Exception $e) {
@@ -96,6 +101,50 @@ class TicketController extends Controller
             return redirect()->back()->with('error', 'Errore durante l\'eliminazione del ticket: ' . $e->getMessage());
         }
     }
+
+    public function report(Ticket $ticket, Request $request)
+    {
+        $technician = Auth::guard()->user();
+
+        if (!$technician && !$request->filled('commento_report')) {
+
+            return redirect()->back()->with('error', 'Non sei autorizzato a eseguire questa operazione.');
+        }
+
+        if (!$technician && $request->filled('commento_report')) {
+
+            return redirect()->back()->with('error', 'Non sei autorizzato a eseguire questa operazione.');
+        }
+
+        if ($ticket->status_id === 3 || $ticket->status_id === 2 || $ticket->is_reported === true || $ticket->commento_report) {
+
+            return redirect()->back()->with('error', 'Il ticket è già stato chiuso, assegnato oppure reportato');
+        }
+
+        if ($technician && $request->filled('commento_report')) {
+
+            DB::beginTransaction();
+
+            try {
+                $ticket->is_reported = true;
+                $ticket->commento_report = $request->input('commento_report');
+                $ticket->reportato_da = $technician->id;
+                $ticket->save();
+
+
+
+                DB::commit();
+
+                return redirect()->route('tickets.index')->with('success', 'Segnalazione inviata con successo.');
+            } catch (\Exception $e) {
+                DB::rollBack();
+                return redirect()->back()->with('error', 'Errore durante la segnalazione: ' . $e->getMessage());
+            }
+        }
+    }
+
+
+
 
     public function assign(Ticket $ticket)
     {
