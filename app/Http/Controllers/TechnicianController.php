@@ -15,8 +15,9 @@ class TechnicianController extends Controller
         $technicians = Technician::all();
         $users = $this->getUsers();
         $nonAdminTechnicians = Technician::where('is_admin', false)->get();
+        $adminTechnicians = Technician::where('is_admin', true)->where("is_superadmin", false)->get();
         // dd($nonAdminTechnicians);
-        return view('technicians.index', compact('technicians', 'users', 'nonAdminTechnicians'));
+        return view('technicians.index', compact('technicians', 'users', 'nonAdminTechnicians', 'adminTechnicians'));
     }
 
     public function userToTechnician(Request $request)
@@ -166,6 +167,10 @@ class TechnicianController extends Controller
 
         if (!$technician->is_admin) {
             return Redirect::back()->with('error', 'Il tecnico non è un amministratore.');
+        }
+
+        if ($technician->is_superadmin) {
+            return Redirect::back()->with('error', 'Impossibile degradare il super amministratore a tecnico.');
         }
 
         DB::beginTransaction();
