@@ -19,7 +19,8 @@ class Ticket extends Model
         'note_chiusura',
         'is_reported',
         'commento_report',
-        'reportato_da'
+        'reportato_da',
+        'repot_date'
     ];
 
     protected $casts = [
@@ -45,7 +46,10 @@ class Ticket extends Model
     {
         return $this->hasMany(TicketImage::class);
     }
-
+    public function reportatoDa()
+    {
+        return $this->belongsTo(Technician::class, 'reportato_da');
+    }
     public function assignToTechnician(Technician $technician)
     {
         if (!$technician->is_available) {

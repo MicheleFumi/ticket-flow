@@ -89,7 +89,9 @@ class TicketSeeder extends Seeder
                 'created_at' => Carbon::now(),
                 'updated_at' => Carbon::now(),
                 'is_reported' => 1,
-                'commento_report' => 'il ticket era stato aperto due volte, nonostante avessi già spiegato che il problema è della rete interna alla sede.'
+                'commento_report' => 'il ticket era stato aperto due volte, nonostante avessi già spiegato che il problema è della rete interna alla sede.',
+                'reportato_da' => 1,
+                'report_date' => Carbon::now(),
             ],
             [
                 'user_id' => 1,

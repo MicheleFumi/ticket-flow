@@ -25,6 +25,7 @@ return new class extends Migration
             $table->boolean("is_reported")->default(0);
             $table->text("commento_report")->nullable();
             $table->foreignId('reportato_da')->nullable()->constrained('technicians')->onDelete('set null');
+            $table->timestamp('report_date')->nullable();
             $table->timestamps();
         });
     }

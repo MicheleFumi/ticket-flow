@@ -44,7 +44,7 @@ class TicketController extends Controller
     {
 
 
-        $ticket->load('status');
+        $ticket->load('status', 'technician', 'reportatoDa');
         $technician = Auth::guard()->user();
         $technicianList = Technician::where("is_available", 1)->get();
         return view('tickets.show', compact('ticket', 'technician', 'technicianList'));
@@ -129,6 +129,7 @@ class TicketController extends Controller
                 $ticket->is_reported = true;
                 $ticket->commento_report = $request->input('commento_report');
                 $ticket->reportato_da = $technician->id;
+                $ticket->report_date = now();
                 $ticket->save();
 
 

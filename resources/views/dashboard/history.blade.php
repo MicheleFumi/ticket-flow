@@ -64,13 +64,25 @@
                                 </div>
 
                                 <div class="flex items-center justify-between text-sm">
-                                    <span class="px-2 py-1 rounded-full bg-red-100 text-red-700">
-                                        {{ ucfirst($ticket->status->titolo) }}
-                                    </span>
+                                    <div>
+                                        <span class="px-2 py-1 rounded-full bg-red-100 text-red-700">
+                                            {{ ucfirst($ticket->status->titolo) }}
 
+                                        </span>
+                                        @if ($ticket->is_reported)
+                                            <span id="reportBadge"
+                                                class="inline-flex items-center rounded-full bg-yellow-100 text-yellow-700 mx-2 px-2 py-1 text-sm transition-all duration-300 overflow-hidden cursor-default"
+                                                style="width: 1.8rem;">
+                                                <i class="bi bi-exclamation-triangle-fill"></i>
+                                                <span id="reportText"
+                                                    class="ml-2 whitespace-nowrap opacity-0 transition-opacity duration-300">Ticket
+                                                    segnalato</span>
+                                            </span>
+                                        @endif
+                                    </div>
                                     <div class="flex gap-2">
                                         <button type="button"
-                                            class="px-2 py-1 rounded-full bg-blue-500 text-white open-modal-btn"
+                                            class="px-2 py-1 rounded bg-blue-500 text-white open-modal-btn"
                                             data-modal-id="modal-{{ $ticket->id }}">
                                             Dettagli
                                         </button>
@@ -81,46 +93,63 @@
                             <!-- Modale -->
                             <div id="modal-{{ $ticket->id }}"
                                 class="modal hidden fixed inset-0 bg-black bg-opacity-50 backdrop-blur-sm z-50 flex items-center justify-center">
+
                                 <div
-                                    class="modal-content bg-white dark:bg-gray-800 rounded-lg p-6 w-full max-w-md shadow-xl relative">
-                                    <h2 class="text-xl font-bold text-gray-800 dark:text-gray-100 mb-4">Dettagli Ticket
+                                    class="modal-content bg-white dark:bg-gray-800 rounded-2xl shadow-2xl w-full max-w-xl p-6 sm:p-8 relative border border-gray-200 dark:border-gray-700">
+
+                                    <h2 class="text-2xl font-bold text-gray-800 dark:text-white mb-6">📋 Dettagli Ticket
                                     </h2>
-                                    <div class="text-sm text-gray-700 dark:text-gray-300 space-y-2">
-                                        <p><strong>Titolo:</strong> {{ $ticket->titolo }}</p>
-                                        <p><strong>Testo:</strong> {{ $ticket->commento }}</p>
-                                        <p><strong>Aperto da:</strong> {{ $ticket->user->nome }}
+
+                                    <div class="space-y-4 text-sm text-gray-700 dark:text-gray-300">
+                                        <p><span class="font-bold">Titolo:</span> {{ $ticket->titolo }}</p>
+                                        <p><span class="font-bold">Testo:</span> {{ $ticket->commento }}</p>
+                                        <p><span class="font-bold">Aperto da:</span> {{ $ticket->user->nome }}
                                             {{ $ticket->user->cognome }}</p>
-                                        <p><strong>Data Apertura:</strong>
+                                        <p><span class="font-bold">Data Apertura:</span>
                                             {{ $ticket->created_at->format('d/m/Y H:i') }}</p>
-                                        <p><strong>Tecnico assegnato:</strong> {{ $ticket->technician->nome }}
-                                            {{ $ticket->technician->cognome }}</p>
-                                        <p><strong>Data Assegnazione:</strong>
+                                        <p><span class="font-bold">Tecnico assegnato:</span>
+                                            {{ $ticket->technician->nome }} {{ $ticket->technician->cognome }}</p>
+                                        <p><span class="font-bold">Data Assegnazione:</span>
                                             {{ $ticket->data_assegnazione->format('d/m/Y H:i') }}</p>
-                                        <p><strong>Chiuso da:</strong>
+                                        <p><span class="font-bold">Chiuso da:</span>
                                             {{ $ticket->closedBy ? $ticket->closedBy->nome . ' ' . $ticket->closedBy->cognome : 'N/D' }}
                                         </p>
-                                        <p><strong>Data Chiusura:</strong>
+                                        <p><span class="font-bold">Data Chiusura:</span>
                                             {{ $ticket->data_chiusura->format('d/m/Y H:i') }}</p>
-                                        <div>
-                                            @if (isset($ticket->images) && $ticket->images->count())
-                                                @foreach ($ticket->images as $image)
-                                                    <a href="{{ asset($image->file_path) }}" target="_blank"
-                                                        class="text-blue-600 hover:underline block">
-                                                        Visualizza immagine {{ $loop->iteration }}
-                                                    </a>
-                                                @endforeach
-                                            @endif
-                                        </div>
-                                        @if ($ticket->note_chiusura !== null)
-                                            <p><strong>Note di chiusura:</strong> {{ $ticket->note_chiusura }}</p>
-                                        @else
-                                            <p><strong>Note di chiusura:</strong> Non ci sono note di chiusura.</p>
+
+                                        @if ($ticket->is_reported)
+                                            <div class="border-t pt-3 mt-3">
+                                                <p><span class="font-bold">Segnalato da:</span>
+                                                    {{ $ticket->technician->nome }} {{ $ticket->technician->cognome }}
+                                                </p>
+                                                <p><span class="font-bold">Data segnalazione:</span>
+                                                    {{ $ticket->report_date }}</p>
+                                                <p><span class="font-bold">Motivazione segnalazione:</span>
+                                                    {{ $ticket->commento_report }}</p>
+                                            </div>
                                         @endif
 
+                                        @if (isset($ticket->images) && $ticket->images->count())
+                                            <div class="border-t pt-3 mt-3 space-y-1">
+                                                <span class="font-bold">Immagini:</span>
+                                                @foreach ($ticket->images as $image)
+                                                    <a href="{{ asset($image->file_path) }}" target="_blank"
+                                                        class="text-blue-600 hover:underline block">Visualizza immagine
+                                                        {{ $loop->iteration }}</a>
+                                                @endforeach
+                                            </div>
+                                        @endif
+
+                                        <div class="border-t pt-3 mt-3">
+                                            <p><span class="font-bold">Note di chiusura:</span>
+                                                {{ $ticket->note_chiusura ?? 'Non ci sono note di chiusura.' }}
+                                            </p>
+                                        </div>
                                     </div>
-                                    <div class="mt-4 text-right">
+
+                                    <div class="mt-6 text-right">
                                         <button
-                                            class="close-modal-btn bg-red-500 hover:bg-red-600 text-white font-bold py-1 px-3 rounded">
+                                            class="close-modal-btn bg-red-600 hover:bg-red-700 text-white font-semibold py-2 px-5 rounded-full shadow">
                                             Chiudi
                                         </button>
                                     </div>
@@ -138,6 +167,24 @@
     </div>
 
     <script>
+        /* SCRIPT MODALE REPORT */
+        const badge = document.getElementById('reportBadge');
+        const text = document.getElementById('reportText');
+
+        badge.addEventListener('mouseenter', () => {
+            badge.style.width = 'auto';
+            text.style.opacity = '1';
+        });
+
+        badge.addEventListener('mouseleave', () => {
+            badge.style.width = '1.8rem';
+            text.style.opacity = '0';
+        });
+
+
+
+
+
         document.addEventListener('DOMContentLoaded', () => {
             // Modale
             document.querySelectorAll('.open-modal-btn').forEach(button => {
