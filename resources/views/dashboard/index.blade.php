@@ -68,14 +68,14 @@
                                                 @csrf
                                                 <input type="hidden" name="technician_id"
                                                     value="{{ $ticket->technician->id }}">
-                                                <button type="submit"
-                                                    class="px-2 py-1 rounded-full bg-yellow-500">Rimuovi Assegnazione
+                                                <button type="submit" class="px-2 py-1 rounded bg-yellow-500">Rimuovi
+                                                    Assegnazione
                                                     Ticket</button>
                                             </form>
 
                                             <!-- Bottone che apre il modale -->
                                             <button type="button"
-                                                class="px-2 py-1 rounded-full bg-red-600 text-white close-ticket-btn"
+                                                class="px-2 py-1 rounded bg-red-600 text-white close-ticket-btn"
                                                 data-ticket-id="{{ $ticket->id }}"
                                                 data-ticket-title="{{ $ticket->titolo }}">
                                                 Chiudi Ticket

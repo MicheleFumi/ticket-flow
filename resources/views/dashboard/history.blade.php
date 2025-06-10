@@ -149,7 +149,7 @@
 
                                     <div class="mt-6 text-right">
                                         <button
-                                            class="close-modal-btn bg-red-600 hover:bg-red-700 text-white font-semibold py-2 px-5 rounded-full shadow">
+                                            class="close-modal-btn bg-red-600 hover:bg-red-700 text-white font-semibold py-2 px-5 rounded shadow">
                                             Chiudi
                                         </button>
                                     </div>
