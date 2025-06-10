@@ -5,21 +5,15 @@
             <h2 class="font-semibold text-xl text-gray-800 dark:text-gray-200 leading-tight">
                 {{ __('Lista Tecnici') }}
             </h2>
-            <div class="d flex items-center gap-4">
+            <div class="d flex items-center gap-2">
                 @if (auth()->check() && auth()->user()->is_superadmin)
                     <button id="openAddAdminModalButton"
-                        class="bg-blue-500 hover:bg-blue-600 text-white font-bold py-2 px-4 rounded focus:outline-none focus:shadow-outline transition duration-150 ease-in-out">Aggiungi
-                        Admin</button>
-                    <button id="openRemoveAdminModalButton"
-                        class="bg-red-500 hover:bg-red-600 text-white font-bold py-2 px-4 rounded focus:outline-none focus:shadow-outline transition duration-150 ease-in-out">Rimuovi
+                        class="bg-blue-500 hover:bg-blue-600 text-white font-bold py-2 px-2 rounded focus:outline-none focus:shadow-outline transition duration-150 ease-in-out">Aggiungi
                         Admin</button>
                 @endif
                 @if (auth()->check() && auth()->user()->is_admin)
                     <button id="openAddTechnicianModalButton"
-                        class="bg-blue-500 hover:bg-blue-600 text-white font-bold py-2 px-4 rounded focus:outline-none focus:shadow-outline transition duration-150 ease-in-out">Aggiungi
-                        Tecnico</button>
-                    <button id="openRemoveTechnicianModalButton"
-                        class="bg-red-500 hover:bg-red-600 text-white font-bold py-2 px-4 rounded focus:outline-none focus:shadow-outline transition duration-150 ease-in-out">Rimuovi
+                        class="bg-blue-500 hover:bg-blue-600 text-white font-bold py-2 px-2 rounded focus:outline-none focus:shadow-outline transition duration-150 ease-in-out">Aggiungi
                         Tecnico</button>
                 @endif
             </div>
@@ -36,23 +30,32 @@
                                 <tr>
                                     <th
                                         class="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">
-                                        Nome Completo</th>
+                                        Nome Completo
+                                    </th>
                                     <th
                                         class="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">
-                                        Email</th>
+                                        Email
+                                    </th>
                                     <th
-                                        class="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">
-                                        Disponibilità</th>
+                                        class="px-2 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">
+                                        Disponibilità
+                                    </th>
+                                    <th
+                                        class="px-6 py-3 text-center text-xs font-medium text-gray-500 uppercase tracking-wider">
+                                        Azioni
+                                    </th>
                                 </tr>
                             </thead>
                             <tbody class="bg-white dark:bg-gray-800 divide-y divide-gray-200">
                                 @foreach ($technicians as $technician)
                                     <tr>
-                                        <td class="px-6 py-4 whitespace-nowrap dark:text-white">{{ $technician->nome }}
-                                            {{ $technician->cognome }}</td>
-                                        <td class="px-6 py-4 whitespace-nowrap dark:text-white">{{ $technician->email }}
+                                        <td class="px-6 py-4 whitespace-nowrap dark:text-white">
+                                            {{ $technician->nome }} {{ $technician->cognome }}
                                         </td>
-                                        <td class="px-6 py-4 whitespace-nowrap ">
+                                        <td class="px-6 py-4 whitespace-nowrap dark:text-white">
+                                            {{ $technician->email }}
+                                        </td>
+                                        <td class="px-2 py-4 whitespace-nowrap ">
                                             @if ($technician->is_available === 1)
                                                 <span class="inline-block h-3 w-3 rounded-full bg-green-500"
                                                     title="Disponibile"></span>
@@ -61,6 +64,50 @@
                                                     title="Non Disponibile"></span>
                                             @endif
                                         </td>
+
+                                        <td class="px-2 py-4 whitespace-nowrap">
+                                            <div class="flex justify-end space-x-2">
+
+                                                @if (auth()->check())
+                                                    <div class="flex justify-end space-x-2">
+                                                        {{-- Logic for Superadmin --}}
+                                                        @if (auth()->user()->is_superadmin)
+                                                            {{-- Superadmin can remove Admin role from non-superadmin admins --}}
+                                                            @if ($technician->is_admin && !$technician->is_superadmin)
+                                                                <button data-id="{{ $technician->id }}"
+                                                                    data-nome="{{ $technician->nome }}"
+                                                                    data-cognome="{{ $technician->cognome }}"
+                                                                    class="openRemoveAdminModalButton bg-red-500 hover:bg-red-600 text-white font-bold py-2 px-4 rounded focus:outline-none focus:shadow-outline transition duration-150 ease-in-out">
+                                                                    Rimuovi Admin
+                                                                </button>
+                                                            @endif
+
+                                                            {{-- Superadmin can remove Technician role from any non-superadmin technician/admin --}}
+                                                            @if (!$technician->is_superadmin)
+                                                                <button data-id="{{ $technician->id }}"
+                                                                    data-nome="{{ $technician->nome }}"
+                                                                    data-cognome="{{ $technician->cognome }}"
+                                                                    class="openRemoveTechnicianModalButton bg-red-500 hover:bg-red-600 text-white font-bold py-2 px-4 rounded focus:outline-none focus:shadow-outline transition duration-150 ease-in-out">
+                                                                    Rimuovi Tecnico
+                                                                </button>
+                                                            @endif
+
+                                                            {{-- Logic for Admin (not Superadmin) --}}
+                                                        @elseif (auth()->user()->is_admin)
+                                                            {{-- Admin can only remove Technician role from non-admin technicians --}}
+                                                            @if (!$technician->is_admin && !$technician->is_superadmin)
+                                                                <button data-id="{{ $technician->id }}"
+                                                                    data-nome="{{ $technician->nome }}"
+                                                                    data-cognome="{{ $technician->cognome }}"
+                                                                    class="openRemoveTechnicianModalButton bg-red-500 hover:bg-red-600 text-white font-bold py-2 px-4 rounded focus:outline-none focus:shadow-outline transition duration-150 ease-in-out">
+                                                                    Rimuovi Tecnico
+                                                                </button>
+                                                            @endif
+                                                        @endif
+                                                    </div>
+                                                @endif
+                                            </div>
+                                        </td> {{-- Chiusura della cella delle azioni, spostata correttamente --}}
                                     </tr>
                                 @endforeach
                             </tbody>
@@ -77,7 +124,6 @@
             </div>
         </div>
     </div>
-
 
 
     {{-- Modale per Aggiungere Admin --}}
@@ -135,70 +181,49 @@
         </div>
     </div>
 
-
     {{-- Modale per Rimuovere Admin --}}
     <div id="removeAdminModal"
         class="fixed inset-0 bg-gray-600 bg-opacity-50 overflow-y-auto h-full w-full hidden z-50 flex items-center justify-center">
         <div class="relative p-5 border w-1/2 max-w-lg shadow-lg rounded-md bg-white dark:bg-gray-700">
             <div class="flex justify-between items-center pb-3 border-b border-gray-200 dark:border-gray-600">
-                <h3 class="text-lg font-semibold leading-6 text-gray-900 dark:text-gray-100">Rimuovi Admin</h3>
+                <h3 class="text-lg font-semibold leading-6 text-gray-900 dark:text-gray-100">Rimuovi Ruolo
+                    Amministratore</h3>
                 <button id="closeRemoveAdminModalButton"
                     class="text-gray-400 hover:text-gray-600 dark:text-gray-300 dark:hover:text-gray-100 text-2xl font-bold leading-none align-baseline">&times;</button>
             </div>
 
-            <div class="mt-4 text-gray-900 dark:text-gray-100">
-                <input type="text" id="adminRemoveSearchInput" placeholder="Cerca per nome, cognome o email..."
-                    class="mb-4 p-2 w-full border rounded-md dark:bg-gray-800 dark:border-gray-600 dark:text-gray-100 focus:ring-blue-500 focus:border-blue-500">
+            <div class="mt-4 text-gray-900 dark:text-gray-100 text-center">
+                <p class="text-base">Sei sicuro di voler rimuovere il ruolo di amministratore per
+                    <strong id="adminNameToRemove"></strong>?
+                </p>
 
-                <div class="max-h-64 overflow-y-auto border rounded-md dark:border-gray-600">
-                    <table class="min-w-full divide-y divide-gray-200 dark:divide-gray-600" id="adminRemoveTable">
-                        <tbody class="bg-white divide-y divide-gray-200 dark:bg-gray-800 dark:divide-gray-600">
-                            @if (isset($adminTechnicians) && $adminTechnicians->count() > 0)
-                                @foreach ($adminTechnicians as $technician)
-                                    <tr class="technician-row">
-                                        <td
-                                            class="px-4 py-2 whitespace-nowrap text-sm font-medium text-gray-900 dark:text-gray-100">
-                                            <span class="technician-name">{{ $technician->nome }}</span> <span
-                                                class="technician-lastname">{{ $technician->cognome ?? '' }}</span>
-                                            <br>
-                                            <span
-                                                class="text-xs text-gray-500 dark:text-gray-400">{{ $technician->email }}</span>
-                                        </td>
-                                        <td class="px-4 py-2 whitespace-nowrap text-right text-sm font-medium">
-                                            <form method="POST" action="{{ route('admin-to-technician') }}">
-                                                @csrf
-                                                <input type="hidden" name="technician_id"
-                                                    value="{{ $technician->id }}">
-                                                <button type="submit"
-                                                    class="remove-tech-btn bg-red-500 hover:bg-red-600 text-white py-1 px-3 rounded-md text-xs focus:outline-none focus:shadow-outline transition duration-150 ease-in-out"
-                                                    data-technician-id="{{ $technician->id }}">
-                                                    Retrocedi
-                                                </button>
-                                            </form>
-                                        </td>
-                                    </tr>
-                                @endforeach
-                            @else
-                                <tr>
-                                    <td colspan="2"
-                                        class="px-4 py-2 text-sm text-gray-500 text-center dark:text-gray-400">Nessun
-                                        admin trovato da rimuovere.</td>
-                                </tr>
-                            @endif
-                        </tbody>
-                    </table>
+                <div class="mt-6 flex justify-center space-x-4">
+                    {{-- Form per la conferma di rimozione --}}
+                    <form id="confirmRemoveAdminForm" method="POST" action="{{ route('admin-to-technician') }}">
+                        @csrf
+                        <input type="hidden" name="technician_id" id="hiddenAdminIdToRemove">
+                        <button type="submit"
+                            class="bg-red-600 hover:bg-red-700 text-white font-bold py-2 px-4 rounded-md focus:outline-none focus:shadow-outline transition duration-150 ease-in-out">
+                            Sì
+                        </button>
+                    </form>
+                    {{-- Bottone per annullare --}}
+                    <button type="button" id="cancelRemoveAdminButton"
+                        class="bg-gray-300 hover:bg-gray-400 text-gray-800 font-bold py-2 px-4 rounded-md focus:outline-none focus:shadow-outline transition duration-150 ease-in-out dark:bg-gray-600 dark:hover:bg-gray-500 dark:text-gray-100">
+                        No
+                    </button>
                 </div>
             </div>
         </div>
     </div>
-
 
     {{-- Modale per Aggiungere Tecnico --}}
     <div id="addTechnicianModal"
         class="fixed inset-0 bg-gray-600 bg-opacity-50 overflow-y-auto h-full w-full hidden z-50 flex items-center justify-center">
         <div class="relative p-5 border w-1/2 max-w-lg shadow-lg rounded-md bg-white dark:bg-gray-700">
             <div class="flex justify-between items-center pb-3 border-b border-gray-200 dark:border-gray-600">
-                <h3 class="text-lg font-semibold leading-6 text-gray-900 dark:text-gray-100">Aggiungi Nuovo Tecnico</h3>
+                <h3 class="text-lg font-semibold leading-6 text-gray-900 dark:text-gray-100">Aggiungi Nuovo Tecnico
+                </h3>
                 <button id="closeAddModalButton"
                     class="text-gray-400 hover:text-gray-600 dark:text-gray-300 dark:hover:text-gray-100 text-2xl font-bold leading-none align-baseline">&times;</button>
             </div>
@@ -254,53 +279,31 @@
         <div class="relative p-5 border w-1/2 max-w-lg shadow-lg rounded-md bg-white dark:bg-gray-700">
             <div class="flex justify-between items-center pb-3 border-b border-gray-200 dark:border-gray-600">
                 <h3 class="text-lg font-semibold leading-6 text-gray-900 dark:text-gray-100">Rimuovi Tecnico</h3>
-                <button id="closeRemoveModalButton"
+                <button id="closeRemoveTechnicianModalButton"
                     class="text-gray-400 hover:text-gray-600 dark:text-gray-300 dark:hover:text-gray-100 text-2xl font-bold leading-none align-baseline">&times;</button>
             </div>
 
-            <div class="mt-4 text-gray-900 dark:text-gray-100">
-                <input type="text" id="technicianRemoveSearchInput"
-                    placeholder="Cerca per nome, cognome o email..."
-                    class="mb-4 p-2 w-full border rounded-md dark:bg-gray-800 dark:border-gray-600 dark:text-gray-100 focus:ring-blue-500 focus:border-blue-500">
+            <div class="mt-4 text-gray-900 dark:text-gray-100 text-center">
+                <p class="text-base">Sei sicuro di voler rimuovere il ruolo di tecnico per
+                    <strong id="technicianNameToRemove"></strong>?
+                </p>
 
-                <div class="max-h-64 overflow-y-auto border rounded-md dark:border-gray-600">
-                    <table class="min-w-full divide-y divide-gray-200 dark:divide-gray-600"
-                        id="techniciansRemoveTable">
-                        <tbody class="bg-white divide-y divide-gray-200 dark:bg-gray-800 dark:divide-gray-600">
-                            @if (isset($nonAdminTechnicians) && $nonAdminTechnicians->count() > 0)
-                                @foreach ($nonAdminTechnicians as $technician)
-                                    <tr class="technician-row">
-                                        <td
-                                            class="px-4 py-2 whitespace-nowrap text-sm font-medium text-gray-900 dark:text-gray-100">
-                                            <span class="technician-name">{{ $technician->nome }}</span> <span
-                                                class="technician-lastname">{{ $technician->cognome ?? '' }}</span>
-                                            <br>
-                                            <span
-                                                class="text-xs text-gray-500 dark:text-gray-400">{{ $technician->email }}</span>
-                                        </td>
-                                        <td class="px-4 py-2 whitespace-nowrap text-right text-sm font-medium">
-                                            <form method="POST" action="{{ route('technician-to-user') }}">
-                                                @csrf
-                                                <input type="hidden" name="technician_id"
-                                                    value="{{ $technician->id }}">
-                                                <button type="submit"
-                                                    class="remove-tech-btn bg-red-500 hover:bg-red-600 text-white py-1 px-3 rounded-md text-xs focus:outline-none focus:shadow-outline transition duration-150 ease-in-out"
-                                                    data-technician-id="{{ $technician->id }}">
-                                                    Rimuovi
-                                                </button>
-                                            </form>
-                                        </td>
-                                    </tr>
-                                @endforeach
-                            @else
-                                <tr>
-                                    <td colspan="2"
-                                        class="px-4 py-2 text-sm text-gray-500 text-center dark:text-gray-400">Nessun
-                                        tecnico trovato da rimuovere.</td>
-                                </tr>
-                            @endif
-                        </tbody>
-                    </table>
+                <div class="mt-6 flex justify-center space-x-4">
+                    {{-- Form per la conferma di rimozione --}}
+                    <form id="confirmRemoveTechnicianForm" method="POST"
+                        action="{{ route('technician-to-user') }}">
+                        @csrf
+                        <input type="hidden" name="technician_id" id="hiddenTechnicianIdToRemove">
+                        <button type="submit"
+                            class="bg-red-600 hover:bg-red-700 text-white font-bold py-2 px-4 rounded-md focus:outline-none focus:shadow-outline transition duration-150 ease-in-out">
+                            Sì
+                        </button>
+                    </form>
+                    {{-- Bottone per annullare --}}
+                    <button type="button" id="cancelRemoveTechnicianButton"
+                        class="bg-gray-300 hover:bg-gray-400 text-gray-800 font-bold py-2 px-4 rounded-md focus:outline-none focus:shadow-outline transition duration-150 ease-in-out dark:bg-gray-600 dark:hover:bg-gray-500 dark:text-gray-100">
+                        No
+                    </button>
                 </div>
             </div>
         </div>
@@ -318,11 +321,14 @@
             const usersTableBody = document.querySelector('#usersTable tbody');
 
             //Elementi Rimuovi Tecnico
-            const openRemoveModalButton = document.getElementById('openRemoveTechnicianModalButton');
-            const closeRemoveModalButton = document.getElementById('closeRemoveModalButton');
+            // Changed from getElementById to querySelectorAll
+            const openRemoveTechnicianModalButtons = document.querySelectorAll('.openRemoveTechnicianModalButton');
+            const closeRemoveTechnicianModalButton = document.getElementById('closeRemoveTechnicianModalButton');
             const removeTechnicianModal = document.getElementById('removeTechnicianModal');
-            const technicianRemoveSearchInput = document.getElementById('technicianRemoveSearchInput');
-            const techniciansRemoveTableBody = document.querySelector('#techniciansRemoveTable tbody');
+            const technicianNameToRemove = document.getElementById('technicianNameToRemove');
+            const hiddenTechnicianIdToRemove = document.getElementById('hiddenTechnicianIdToRemove');
+            const cancelRemoveTechnicianButton = document.getElementById('cancelRemoveTechnicianButton');
+
 
             // Elementi Aggiungi Admin
             const openAddAdminModalButton = document.getElementById('openAddAdminModalButton');
@@ -332,32 +338,114 @@
             const adminAddTableBody = document.querySelector('#adminAddTable tbody');
 
             // Elementi Rimuovi Admin
-            const openRemoveAdminModalButton = document.getElementById('openRemoveAdminModalButton');
-            const closeRemoveAdminModalButton = document.getElementById('closeRemoveAdminModalButton');
+            const openRemoveAdminModalButtons = document.querySelectorAll('.openRemoveAdminModalButton');
             const removeAdminModal = document.getElementById('removeAdminModal');
-            const adminRemoveSearchInput = document.getElementById('adminRemoveSearchInput');
-            const adminRemoveTableBody = document.querySelector('#adminRemoveTable tbody');
+            const closeRemoveAdminModalButton = document.getElementById('closeRemoveAdminModalButton');
+            const cancelRemoveAdminButton = document.getElementById('cancelRemoveAdminButton');
+            const adminNameToRemove = document.getElementById('adminNameToRemove');
+            const hiddenAdminIdToRemove = document.getElementById('hiddenAdminIdToRemove');
 
 
-            //Aggiungi Tecnico
+            // --- MODAL FUNCTIONS ---
+            function openModal(modalElement) {
+                modalElement.classList.remove('hidden');
+                modalElement.classList.add('flex', 'items-center', 'justify-center');
+            }
 
-            openAddModalButton.addEventListener('click', function() {
-                addTechnicianModal.classList.remove('hidden');
-                addTechnicianModal.classList.add('flex', 'items-center', 'justify-center');
-            });
+            function closeModal(modalElement) {
+                modalElement.classList.add('hidden');
+                modalElement.classList.remove('flex', 'items-center', 'justify-center');
+            }
 
-            closeAddModalButton.addEventListener('click', function() {
-                addTechnicianModal.classList.add('hidden');
-                addTechnicianModal.classList.remove('flex', 'items-center', 'justify-center');
-            });
-
-            addTechnicianModal.addEventListener('click', function(event) {
+            // Aggiungi Tecnico
+            openAddModalButton.addEventListener('click', () => openModal(addTechnicianModal));
+            closeAddModalButton.addEventListener('click', () => closeModal(addTechnicianModal));
+            addTechnicianModal.addEventListener('click', (event) => {
                 if (event.target === addTechnicianModal) {
-                    addTechnicianModal.classList.add('hidden');
-                    addTechnicianModal.classList.remove('flex', 'items-center', 'justify-center');
+                    closeModal(addTechnicianModal);
                 }
             });
 
+            // Rimuovi Tecnico
+            openRemoveTechnicianModalButtons.forEach(button => {
+                button.addEventListener('click', () => {
+                    const id = button.getAttribute('data-id');
+                    const nome = button.getAttribute('data-nome');
+                    const cognome = button.getAttribute('data-cognome');
+
+                    technicianNameToRemove.textContent = `${nome} ${cognome}`;
+                    hiddenTechnicianIdToRemove.value = id;
+                    openModal(removeTechnicianModal);
+                });
+            });
+
+            closeRemoveTechnicianModalButton.addEventListener('click', () => {
+                closeModal(removeTechnicianModal);
+                technicianNameToRemove.textContent = '';
+                hiddenTechnicianIdToRemove.value = '';
+            });
+
+            cancelRemoveTechnicianButton.addEventListener('click', () => {
+                closeModal(removeTechnicianModal);
+                technicianNameToRemove.textContent = '';
+                hiddenTechnicianIdToRemove.value = '';
+            });
+
+            removeTechnicianModal.addEventListener('click', (event) => {
+                if (event.target === removeTechnicianModal) {
+                    closeModal(removeTechnicianModal);
+                    technicianNameToRemove.textContent = '';
+                    hiddenTechnicianIdToRemove.value = '';
+                }
+            });
+
+
+            // Aggiungi Admin
+            openAddAdminModalButton.addEventListener('click', () => openModal(addAdminModal));
+            closeAddAdminModalButton.addEventListener('click', () => closeModal(addAdminModal));
+            addAdminModal.addEventListener('click', (event) => {
+                if (event.target === addAdminModal) {
+                    closeModal(addAdminModal);
+                }
+            });
+
+            // Rimuovi Admin
+            openRemoveAdminModalButtons.forEach(button => {
+                button.addEventListener('click', () => {
+                    const id = button.getAttribute('data-id');
+                    const nome = button.getAttribute('data-nome');
+                    const cognome = button.getAttribute('data-cognome');
+
+                    adminNameToRemove.textContent = `${nome} ${cognome}`;
+                    hiddenAdminIdToRemove.value = id;
+                    openModal(removeAdminModal);
+                });
+            });
+
+            closeRemoveAdminModalButton.addEventListener('click', () => {
+                closeModal(removeAdminModal);
+                adminNameToRemove.textContent = '';
+                hiddenAdminIdToRemove.value = '';
+            });
+
+            cancelRemoveAdminButton.addEventListener('click', () => {
+                closeModal(removeAdminModal);
+                adminNameToRemove.textContent = '';
+                hiddenAdminIdToRemove.value = '';
+            });
+
+            removeAdminModal.addEventListener('click', (event) => {
+                if (event.target === removeAdminModal) {
+                    closeModal(removeAdminModal);
+                    adminNameToRemove.textContent = '';
+                    hiddenAdminIdToRemove.value = '';
+                }
+            });
+
+
+            // --- SEARCH FUNCTIONS ---
+
+            // Search for adding Technicians
             userSearchInput.addEventListener('keyup', function() {
                 const searchValue = userSearchInput.value.toLowerCase();
                 const userRows = usersTableBody.querySelectorAll('.user-row');
@@ -377,108 +465,10 @@
                 });
             });
 
-
-            //Rimuovi Tecnico
-
-            openRemoveModalButton.addEventListener('click', function() {
-                removeTechnicianModal.classList.remove('hidden');
-                removeTechnicianModal.classList.add('flex', 'items-center', 'justify-center');
-            });
-
-            closeRemoveModalButton.addEventListener('click', function() {
-                removeTechnicianModal.classList.add('hidden');
-                removeTechnicianModal.classList.remove('flex', 'items-center', 'justify-center');
-            });
-
-            removeTechnicianModal.addEventListener('click', function(event) {
-                if (event.target === removeTechnicianModal) {
-                    removeTechnicianModal.classList.add('hidden');
-                    removeTechnicianModal.classList.remove('flex', 'items-center', 'justify-center');
-                }
-            });
-
-            technicianRemoveSearchInput.addEventListener('keyup', function() {
-                const searchValue = technicianRemoveSearchInput.value.toLowerCase();
-                const technicianRows = techniciansRemoveTableBody.querySelectorAll('.technician-row');
-
-                technicianRows.forEach(row => {
-                    const technicianName = row.querySelector('.technician-name').textContent
-                        .toLowerCase();
-                    const technicianLastname = row.querySelector('.technician-lastname').textContent
-                        .toLowerCase();
-                    const technicianEmail = row.querySelector('span.text-xs').textContent
-                        .toLowerCase();
-
-                    if (technicianName.includes(searchValue) || technicianLastname.includes(
-                            searchValue) || technicianEmail.includes(searchValue)) {
-                        row.style.display = '';
-                    } else {
-                        row.style.display = 'none';
-                    }
-                });
-            });
-
-
-            //Aggiungi Admin
-            openAddAdminModalButton.addEventListener('click', function() {
-                addAdminModal.classList.remove('hidden');
-                addAdminModal.classList.add('flex', 'items-center', 'justify-center');
-            });
-
-            closeAddAdminModalButton.addEventListener('click', function() {
-                addAdminModal.classList.add('hidden');
-                addAdminModal.classList.remove('flex', 'items-center', 'justify-center');
-            });
-
-            addAdminModal.addEventListener('click', function(event) {
-                if (event.target === addAdminModal) {
-                    addAdminModal.classList.add('hidden');
-                    addAdminModal.classList.remove('flex', 'items-center', 'justify-center');
-                }
-            });
-
+            // Search for adding Admins
             adminSearchInput.addEventListener('keyup', function() {
                 const searchValue = adminSearchInput.value.toLowerCase();
                 const adminRows = adminAddTableBody.querySelectorAll('.technician-row');
-
-                adminRows.forEach(row => {
-                    const technicianName = row.querySelector('.technician-name').textContent
-                        .toLowerCase();
-                    const technicianLastname = row.querySelector('.technician-lastname').textContent
-                        .toLowerCase();
-                    const technicianEmail = row.querySelector('span.text-xs').textContent
-                        .toLowerCase();
-
-                    if (technicianName.includes(searchValue) || technicianLastname.includes(
-                            searchValue) || technicianEmail.includes(searchValue)) {
-                        row.style.display = '';
-                    } else {
-                        row.style.display = 'none';
-                    }
-                });
-            });
-
-            //Rimuovi Admin
-            openRemoveAdminModalButton.addEventListener('click', function() {
-                removeAdminModal.classList.remove('hidden');
-                removeAdminModal.classList.add('flex', 'items-center', 'justify-center');
-            });
-
-            closeRemoveAdminModalButton.addEventListener('click', function() {
-                removeAdminModal.classList.add('hidden');
-                removeAdminModal.classList.remove('flex', 'items-center', 'justify-center');
-            });
-
-            removeAdminModal.addEventListener('click', function(event) {
-                if (event.target === removeAdminModal) {
-                    removeAdminModal.classList.add('hidden');
-                    removeAdminModal.classList.remove('flex', 'items-center', 'justify-center');
-                }
-            });
-
-            adminRemoveSearchInput.addEventListener('keyup', function() {
-                const searchValue = adminRemoveSearchInput.value.toLowerCase();
-                const adminRows = adminRemoveTableBody.querySelectorAll('.technician-row');
 
                 adminRows.forEach(row => {
                     const technicianName = row.querySelector('.technician-name').textContent
