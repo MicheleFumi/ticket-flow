@@ -70,36 +70,33 @@
 
                                                 @if (auth()->check())
                                                     <div class="flex justify-end space-x-2">
-                                                        {{-- Logic for Superadmin --}}
+                                                        {{-- superadmin --}}
                                                         @if (auth()->user()->is_superadmin)
-                                                            {{-- Superadmin can remove Admin role from non-superadmin admins --}}
                                                             @if ($technician->is_admin && !$technician->is_superadmin)
                                                                 <button data-id="{{ $technician->id }}"
                                                                     data-nome="{{ $technician->nome }}"
                                                                     data-cognome="{{ $technician->cognome }}"
-                                                                    class="openRemoveAdminModalButton bg-red-500 hover:bg-red-600 text-white font-bold py-2 px-4 rounded focus:outline-none focus:shadow-outline transition duration-150 ease-in-out">
+                                                                    class="openRemoveAdminModalButton bg-red-500 hover:bg-red-600 text-white font-bold py-2 px-4 mx-4 rounded focus:outline-none focus:shadow-outline transition duration-150 ease-in-out">
                                                                     Rimuovi Admin
                                                                 </button>
                                                             @endif
 
-                                                            {{-- Superadmin can remove Technician role from any non-superadmin technician/admin --}}
-                                                            @if (!$technician->is_superadmin)
+                                                            @if (!$technician->is_superadmin && !$technician->is_admin)
                                                                 <button data-id="{{ $technician->id }}"
                                                                     data-nome="{{ $technician->nome }}"
                                                                     data-cognome="{{ $technician->cognome }}"
-                                                                    class="openRemoveTechnicianModalButton bg-red-500 hover:bg-red-600 text-white font-bold py-2 px-4 rounded focus:outline-none focus:shadow-outline transition duration-150 ease-in-out">
+                                                                    class="openRemoveTechnicianModalButton bg-red-500 hover:bg-red-600 text-white font-bold py-2 px-4 mx-4 rounded focus:outline-none focus:shadow-outline transition duration-150 ease-in-out">
                                                                     Rimuovi Tecnico
                                                                 </button>
                                                             @endif
 
-                                                            {{-- Logic for Admin (not Superadmin) --}}
+                                                            {{-- admin --}}
                                                         @elseif (auth()->user()->is_admin)
-                                                            {{-- Admin can only remove Technician role from non-admin technicians --}}
                                                             @if (!$technician->is_admin && !$technician->is_superadmin)
                                                                 <button data-id="{{ $technician->id }}"
                                                                     data-nome="{{ $technician->nome }}"
                                                                     data-cognome="{{ $technician->cognome }}"
-                                                                    class="openRemoveTechnicianModalButton bg-red-500 hover:bg-red-600 text-white font-bold py-2 px-4 rounded focus:outline-none focus:shadow-outline transition duration-150 ease-in-out">
+                                                                    class="openRemoveTechnicianModalButton bg-red-500 hover:bg-red-600 text-white font-bold py-2 px-4 mx-4 rounded focus:outline-none focus:shadow-outline transition duration-150 ease-in-out">
                                                                     Rimuovi Tecnico
                                                                 </button>
                                                             @endif
@@ -107,7 +104,7 @@
                                                     </div>
                                                 @endif
                                             </div>
-                                        </td> {{-- Chiusura della cella delle azioni, spostata correttamente --}}
+                                        </td>
                                     </tr>
                                 @endforeach
                             </tbody>
@@ -198,7 +195,6 @@
                 </p>
 
                 <div class="mt-6 flex justify-center space-x-4">
-                    {{-- Form per la conferma di rimozione --}}
                     <form id="confirmRemoveAdminForm" method="POST" action="{{ route('admin-to-technician') }}">
                         @csrf
                         <input type="hidden" name="technician_id" id="hiddenAdminIdToRemove">
@@ -207,7 +203,6 @@
                             Sì
                         </button>
                     </form>
-                    {{-- Bottone per annullare --}}
                     <button type="button" id="cancelRemoveAdminButton"
                         class="bg-gray-300 hover:bg-gray-400 text-gray-800 font-bold py-2 px-4 rounded-md focus:outline-none focus:shadow-outline transition duration-150 ease-in-out dark:bg-gray-600 dark:hover:bg-gray-500 dark:text-gray-100">
                         No
@@ -272,7 +267,6 @@
         </div>
     </div>
 
-
     {{-- Modale per Rimuovere Tecnico --}}
     <div id="removeTechnicianModal"
         class="fixed inset-0 bg-gray-600 bg-opacity-50 overflow-y-auto h-full w-full hidden z-50 flex items-center justify-center">
@@ -289,7 +283,6 @@
                 </p>
 
                 <div class="mt-6 flex justify-center space-x-4">
-                    {{-- Form per la conferma di rimozione --}}
                     <form id="confirmRemoveTechnicianForm" method="POST"
                         action="{{ route('technician-to-user') }}">
                         @csrf
@@ -299,7 +292,6 @@
                             Sì
                         </button>
                     </form>
-                    {{-- Bottone per annullare --}}
                     <button type="button" id="cancelRemoveTechnicianButton"
                         class="bg-gray-300 hover:bg-gray-400 text-gray-800 font-bold py-2 px-4 rounded-md focus:outline-none focus:shadow-outline transition duration-150 ease-in-out dark:bg-gray-600 dark:hover:bg-gray-500 dark:text-gray-100">
                         No
@@ -321,7 +313,6 @@
             const usersTableBody = document.querySelector('#usersTable tbody');
 
             //Elementi Rimuovi Tecnico
-            // Changed from getElementById to querySelectorAll
             const openRemoveTechnicianModalButtons = document.querySelectorAll('.openRemoveTechnicianModalButton');
             const closeRemoveTechnicianModalButton = document.getElementById('closeRemoveTechnicianModalButton');
             const removeTechnicianModal = document.getElementById('removeTechnicianModal');
@@ -443,9 +434,9 @@
             });
 
 
-            // --- SEARCH FUNCTIONS ---
+            // searchbar
 
-            // Search for adding Technicians
+            // utenti
             userSearchInput.addEventListener('keyup', function() {
                 const searchValue = userSearchInput.value.toLowerCase();
                 const userRows = usersTableBody.querySelectorAll('.user-row');
@@ -465,7 +456,7 @@
                 });
             });
 
-            // Search for adding Admins
+            // tecnici
             adminSearchInput.addEventListener('keyup', function() {
                 const searchValue = adminSearchInput.value.toLowerCase();
                 const adminRows = adminAddTableBody.querySelectorAll('.technician-row');
