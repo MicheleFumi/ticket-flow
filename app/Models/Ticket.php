@@ -43,6 +43,11 @@ class Ticket extends Model
         return $this->belongsTo(Technician::class);
     }
 
+    public function AllTechnicians()
+    {
+        return $this->belongsTo(Technician::class, "technician_id")->withoutGlobalScopes();
+    }
+
     public function images()
     {
         return $this->hasMany(TicketImage::class);

@@ -23,9 +23,9 @@ class TechnicianController extends Controller
     public function userToTechnician(Request $request)
     {
 
-        $technician = auth()->guard()->user();
+        $admin = auth()->guard()->user();
 
-        if (!$technician->is_admin) {
+        if (!$admin->is_admin) {
             return Redirect::back()->with('error', 'Non sei autorizzato a eseguire questa operazione.');
         }
 
@@ -42,15 +42,27 @@ class TechnicianController extends Controller
         DB::beginTransaction();
 
         try {
-            $technician = Technician::create([
-                'nome' => $user->nome,
-                'cognome' => $user->cognome,
-                'email' => $user->email,
-                'password' => $user->password,
-                'telefono' => $user->telefono,
-                'is_admin' => $user->is_admin ?? false,
-                'is_available' => true,
-            ]);
+
+            $technician = Technician::withoutGlobalScopes()
+                ->where('email', $user->email)
+                ->first();
+
+            if ($technician) {
+                $technician->still_active = true;
+                $technician->is_available = true;
+                $technician->save();
+            } else {
+                $technician = Technician::create([
+                    'nome' => $user->nome,
+                    'cognome' => $user->cognome,
+                    'email' => $user->email,
+                    'password' => $user->password,
+                    'telefono' => $user->telefono,
+                    'is_admin' => $user->is_admin ?? false,
+                    'is_available' => true,
+                    'still_active' => true,
+                ]);
+            }
 
             $user->update([
                 'is_technician' => true,
@@ -101,7 +113,8 @@ class TechnicianController extends Controller
                 $user->update(['is_technician' => false]);
             }
 
-            $technician->delete();
+            $technician->still_active = false;
+            $technician->save();
 
             DB::commit();
 

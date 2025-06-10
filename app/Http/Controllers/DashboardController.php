@@ -42,14 +42,16 @@ class DashboardController extends Controller
 
         $technicianId = $technician->id;
 
-        $tickets = Ticket::with(['technician', 'status', "closedBy"])
+        $tickets = Ticket::withoutGlobalScopes()
+            ->with(['allTechnicians', 'status', 'closedBy'])
             ->where('technician_id', $technicianId)
             ->where('status_id', 3)
             ->orderBy('data_chiusura', 'desc')
             ->get();
 
         if ($technician->is_admin) {
-            $tickets = Ticket::with(['technician', 'status', "closedBy"])
+            $tickets = Ticket::withoutGlobalScopes()
+                ->with(['allTechnicians', 'status', 'closedBy'])
                 ->where('status_id', 3)
                 ->orderBy('data_chiusura', 'desc')
                 ->get();

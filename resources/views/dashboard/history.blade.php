@@ -45,7 +45,7 @@
                     <div class="p-2 text-gray-900 dark:text-gray-100 space-y-4" id="ticketContainer">
                         @foreach ($tickets as $ticket)
                             <div class="ticket-card bg-white shadow-md rounded-2xl p-4 border border-gray-200"
-                                data-technician="{{ strtolower($ticket->technician->nome . ' ' . $ticket->technician->cognome) }}"
+                                data-technician="{{ strtolower($ticket->allTechnicians->nome . ' ' . $ticket->allTechnicians->cognome) }}"
                                 data-date="{{ $ticket->data_chiusura->format('Y-m-d') }}">
                                 <div class="flex items-center justify-between mb-2">
                                     <h2 class="text-xl font-semibold text-gray-800">{{ $ticket->titolo }}</h2>
