@@ -16,9 +16,9 @@ class TicketController extends Controller
     public function index()
     {
         $technician = Auth::guard()->user();
-        $tickets = Ticket::with('status', 'technician')->where('is_reported', false)->orderBy('id', 'ASC')->get();
+        $tickets = Ticket::with('status', 'technician')->where('is_reported', false)->where("is_deleted", false)->orderBy('id', 'ASC')->get();
         $reportedTickets = Ticket::with('status', 'technician')->where('is_reported', true)->orderBy('id', 'ASC')->get();
-        $allTickets = Ticket::with('status', 'technician')->orderBy('id', 'ASC')->get();
+        $allTickets = Ticket::with('status', 'technician')->where("is_deleted", false)->orderBy('id', 'ASC')->get();
         return view("tickets.index", compact("tickets", "technician", "reportedTickets", "allTickets"));
     }
     /**
@@ -92,7 +92,8 @@ class TicketController extends Controller
 
         DB::beginTransaction();
         try {
-            $ticket->status_id = 3;
+            $ticket->is_deleted = true;
+            $ticket->save();
 
             DB::commit();
             return redirect()->route('tickets.index')->with('success', 'Ticket eliminato con successo.');

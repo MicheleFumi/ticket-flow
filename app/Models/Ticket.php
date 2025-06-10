@@ -20,7 +20,8 @@ class Ticket extends Model
         'is_reported',
         'commento_report',
         'reportato_da',
-        'repot_date'
+        'repot_date',
+        'is_deleted',
     ];
 
     protected $casts = [
