@@ -28,7 +28,7 @@ class User extends Authenticatable
 
     public function tickets()
     {
-        return $this->hasMany(Ticket::class)->orderBy('created_at');
+        return $this->hasMany(Ticket::class)->where("is_deleted", false)->orderBy('created_at');
     }
 
     public function sendPasswordResetNotification($token)

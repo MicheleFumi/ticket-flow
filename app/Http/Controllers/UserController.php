@@ -23,9 +23,9 @@ class UserController extends Controller
         ]);
 
         $ticketsByStatus = [
-            'aperti' => $user->tickets->where('status_id', 1),
-            'in_lavorazione' => $user->tickets->where('status_id', 2),
-            'chiusi' => $user->tickets->where('status_id', 3),
+            'aperti' => $user->tickets->where('status_id', 1)->where("is_deleted", false),
+            'in_lavorazione' => $user->tickets->where('status_id', 2)->where("is_deleted", false),
+            'chiusi' => $user->tickets->where('status_id', 3)->where("is_deleted", false),
         ];
 
         return view('users.show', compact('user', 'ticketsByStatus'));
