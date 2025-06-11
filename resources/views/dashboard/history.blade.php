@@ -50,7 +50,7 @@
                                 <div class="flex items-center justify-between mb-2">
                                     <h2 class="text-xl font-semibold text-gray-800">{{ $ticket->titolo }}</h2>
                                     <span class="text-sm text-gray-500">
-                                        Assegnato a: {{ $ticket->technician->nome }} {{ $ticket->technician->cognome }}
+                                        Assegnato a: {{ $ticket->allTechnicians->nome }} {{ $ticket->allTechnicians->cognome }}
                                         il: {{ $ticket->data_assegnazione->format('d/m/Y H:i') }}
                                     </span>
                                 </div>
@@ -108,7 +108,7 @@
                                         <p><span class="font-bold">Data Apertura:</span>
                                             {{ $ticket->created_at->format('d/m/Y H:i') }}</p>
                                         <p><span class="font-bold">Tecnico assegnato:</span>
-                                            {{ $ticket->technician->nome }} {{ $ticket->technician->cognome }}</p>
+                                            {{ $ticket->allTechnicians->nome }} {{ $ticket->allTechnicians->cognome }}</p>
                                         <p><span class="font-bold">Data Assegnazione:</span>
                                             {{ $ticket->data_assegnazione->format('d/m/Y H:i') }}</p>
                                         <p><span class="font-bold">Chiuso da:</span>
@@ -120,7 +120,7 @@
                                         @if ($ticket->is_reported)
                                             <div class="border-t pt-3 mt-3">
                                                 <p><span class="font-bold">Segnalato da:</span>
-                                                    {{ $ticket->technician->nome }} {{ $ticket->technician->cognome }}
+                                                    {{ $ticket->allTechnicians->nome }} {{ $ticket->allTechnicians->cognome }}
                                                 </p>
                                                 <p><span class="font-bold">Data segnalazione:</span>
                                                     {{ $ticket->report_date }}</p>

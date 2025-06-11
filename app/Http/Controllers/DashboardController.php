@@ -50,12 +50,14 @@ class DashboardController extends Controller
             ->get();
 
         if ($technician->is_admin) {
-            $tickets = Ticket::withoutGlobalScopes()
+            $tickets = Ticket::withoutGlobalScopes(["still_active"])
                 ->with(['allTechnicians', 'status', 'closedBy'])
                 ->where('status_id', 3)
                 ->orderBy('data_chiusura', 'desc')
                 ->get();
         }
+
+        // dd($tickets);
 
         return view('dashboard.history', compact("technician", 'tickets'));
     }
