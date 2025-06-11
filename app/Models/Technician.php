@@ -3,6 +3,7 @@
 namespace App\Models;
 
 use Illuminate\Contracts\Auth\MustVerifyEmail;
+use Illuminate\Database\Eloquent\Builder;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Foundation\Auth\User as Authenticatable;
 use Illuminate\Notifications\Notifiable;
@@ -25,6 +26,7 @@ class Technician extends Authenticatable implements MustVerifyEmail
         'telefono',
         'is_admin',
         'is_available',
+        "still_active",
     ];
 
     /**
@@ -50,6 +52,12 @@ class Technician extends Authenticatable implements MustVerifyEmail
         ];
     }
 
+    protected static function booted()
+    {
+        static::addGlobalScope('still_active', function (Builder $builder) {
+            $builder->where('still_active', true);
+        });
+    }
 
     public function tickets()
     {

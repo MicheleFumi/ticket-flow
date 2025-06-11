@@ -43,6 +43,11 @@ class Ticket extends Model
         return $this->belongsTo(Technician::class);
     }
 
+    public function allTechnicians()
+    {
+        return $this->belongsTo(Technician::class, "technician_id")->withoutGlobalScopes(["still_active"]);
+    }
+
     public function images()
     {
         return $this->hasMany(TicketImage::class);
@@ -77,9 +82,11 @@ class Ticket extends Model
         $technician->is_available = true;
         $technician->save();
 
-        $this->technician_id = null;
-        $this->status_id = 1;
-        $this->data_assegnazione = null;
+        if ($this->status_id === 2) {
+            $this->status_id = 1;
+            $this->technician_id = null;
+            $this->data_assegnazione = null;
+        }
         $this->save();
 
         return $this;

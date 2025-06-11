@@ -22,6 +22,7 @@ return new class extends Migration
             $table->boolean('is_admin')->default(false);
             $table->boolean('is_superadmin')->default(false);
             $table->boolean('is_available')->default(true);
+            $table->boolean("still_active")->default(true);
             $table->rememberToken();
             $table->timestamps();
         });
