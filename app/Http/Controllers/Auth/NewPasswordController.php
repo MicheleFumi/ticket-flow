@@ -31,7 +31,7 @@ class NewPasswordController extends Controller
 
         if ($email) {
             $user = \App\Models\User::where('email', $email)->first();
-            if ($user && $user->is_technician) {
+            if ($user && \App\Models\Technician::where('user_id', $user->id)->exists()) {
                 $isTechnician = true;
             }
         }
@@ -41,6 +41,7 @@ class NewPasswordController extends Controller
             'isTechnician' => $isTechnician,
         ]);
     }
+
 
     /**
      * Handle an incoming new password request.
