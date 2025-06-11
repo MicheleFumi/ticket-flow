@@ -8,13 +8,13 @@
             <div class="d flex items-center gap-2">
                 @if (auth()->check() && auth()->user()->is_superadmin)
                     <button id="openAddAdminModalButton"
-                        class="bg-blue-500 hover:bg-blue-600 text-white font-bold py-2 px-2 rounded focus:outline-none focus:shadow-outline transition duration-150 ease-in-out">Aggiungi
-                        Admin</button>
+                        class="bg-blue-500 hover:bg-blue-600 text-white font-bold py-2 px-2 rounded focus:outline-none focus:shadow-outline transition duration-150 ease-in-out">Aggiungi Admin
+                    </button>
                 @endif
                 @if (auth()->check() && auth()->user()->is_admin)
-                    <button id="openAddTechnicianModalButton"
-                        class="bg-blue-500 hover:bg-blue-600 text-white font-bold py-2 px-2 rounded focus:outline-none focus:shadow-outline transition duration-150 ease-in-out">Aggiungi
-                        Tecnico</button>
+                    <button id="openCreateNewTechnicianModalButton"
+                        class="bg-green-500 hover:bg-green-600 text-white font-bold py-2 px-2 rounded focus:outline-none focus:shadow-outline transition duration-150 ease-in-out">Aggiungi Tecnico
+                    </button>
                 @endif
             </div>
         </div>
@@ -212,60 +212,121 @@
         </div>
     </div>
 
-    {{-- Modale per Aggiungere Tecnico --}}
-    <div id="addTechnicianModal"
+    {{-- Modale per creare un Tecnico --}}
+    <div id="createNewTechnicianModal"
         class="fixed inset-0 bg-gray-600 bg-opacity-50 overflow-y-auto h-full w-full hidden z-50 flex items-center justify-center">
         <div class="relative p-5 border w-1/2 max-w-lg shadow-lg rounded-md bg-white dark:bg-gray-700">
             <div class="flex justify-between items-center pb-3 border-b border-gray-200 dark:border-gray-600">
-                <h3 class="text-lg font-semibold leading-6 text-gray-900 dark:text-gray-100">Aggiungi Nuovo Tecnico
-                </h3>
-                <button id="closeAddModalButton"
+                <h3 class="text-lg font-semibold leading-6 text-gray-900 dark:text-gray-100">Crea Nuovo Tecnico</h3>
+                <button id="closeCreateNewTechnicianModal"
                     class="text-gray-400 hover:text-gray-600 dark:text-gray-300 dark:hover:text-gray-100 text-2xl font-bold leading-none align-baseline">&times;</button>
             </div>
 
             <div class="mt-4 text-gray-900 dark:text-gray-100">
-                <input type="text" id="userSearchInput" placeholder="Cerca per nome o cognome..."
-                    class="mb-4 p-2 w-full border rounded-md dark:bg-gray-800 dark:border-gray-600 dark:text-gray-100 focus:ring-blue-500 focus:border-blue-500">
+                <form method="POST" action="{{ route('user-to-technician') }}">
+                    @csrf
 
-                <div class="max-h-64 overflow-y-auto border rounded-md dark:border-gray-600">
-                    <table class="min-w-full divide-y divide-gray-200 dark:divide-gray-600" id="usersTable">
-                        <tbody class="bg-white divide-y divide-gray-200 dark:bg-gray-800 dark:divide-gray-600">
-                            @if (isset($users) && $users->count() > 0)
-                                @foreach ($users as $user)
-                                    <tr class="user-row">
-                                        <td
-                                            class="px-4 py-2 whitespace-nowrap text-sm font-medium text-gray-900 dark:text-gray-100">
-                                            <span class="user-name">{{ $user->nome }}</span> <span
-                                                class="user-lastname">{{ $user->cognome ?? '' }}</span>
-                                            <br>
-                                            <span
-                                                class="text-xs text-gray-500 dark:text-gray-400">{{ $user->email }}</span>
-                                        </td>
-                                        <td class="px-4 py-2 whitespace-nowrap text-right text-sm font-medium">
-                                            <form method="POST" action="{{ route('user-to-technician') }}">
-                                                @csrf
-                                                <input type="hidden" name="user_id" value="{{ $user->id }}">
-                                                <button type="submit"
-                                                    class="add-to-tech-btn bg-green-500 hover:bg-green-600 text-white py-1 px-3 rounded-md text-xs focus:outline-none focus:shadow-outline transition duration-150 ease-in-out">
-                                                    Aggiungi
-                                                </button>
-                                            </form>
-                                        </td>
-                                    </tr>
-                                @endforeach
-                            @else
-                                <tr>
-                                    <td colspan="2"
-                                        class="px-4 py-2 text-sm text-gray-500 text-center dark:text-gray-400">Nessun
-                                        utente trovato.</td>
-                                </tr>
-                            @endif
-                        </tbody>
-                    </table>
-                </div>
+                    <div class="mb-4">
+                        <label for="new_technician_nome"
+                            class="block text-sm font-medium text-gray-700 dark:text-gray-300">Nome</label>
+                        <input type="text" id="new_technician_nome" name="nome" value="{{ old('nome') }}"
+                            required autocomplete="given-name"
+                            class="mt-1 block w-full rounded-md border-gray-300 shadow-sm focus:border-blue-300 focus:ring focus:ring-blue-200 focus:ring-opacity-50 dark:bg-gray-800 dark:border-gray-600 dark:text-gray-100
+                            @error('nome') border-red-500 @enderror">
+                        @error('nome')
+                            <p class="text-red-500 text-xs mt-1">{{ $message }}</p>
+                        @enderror
+                    </div>
+
+                    <div class="mb-4">
+                        <label for="new_technician_cognome"
+                            class="block text-sm font-medium text-gray-700 dark:text-gray-300">Cognome</label>
+                        <input type="text" id="new_technician_cognome" name="cognome"
+                            value="{{ old('cognome') }}" required autocomplete="family-name"
+                            class="mt-1 block w-full rounded-md border-gray-300 shadow-sm focus:border-blue-300 focus:ring focus:ring-blue-200 focus:ring-opacity-50 dark:bg-gray-800 dark:border-gray-600 dark:text-gray-100
+                            @error('cognome') border-red-500 @enderror">
+                        @error('cognome')
+                            <p class="text-red-500 text-xs mt-1">{{ $message }}</p>
+                        @enderror
+                    </div>
+
+                    <div class="mb-4">
+                        <label for="new_technician_email"
+                            class="block text-sm font-medium text-gray-700 dark:text-gray-300">Email</label>
+                        <input type="email" id="new_technician_email" name="email" value="{{ old('email') }}"
+                            required autocomplete="email"
+                            class="mt-1 block w-full rounded-md border-gray-300 shadow-sm focus:border-blue-300 focus:ring focus:ring-blue-200 focus:ring-opacity-50 dark:bg-gray-800 dark:border-gray-600 dark:text-gray-100
+                            @error('email') border-red-500 @enderror">
+                        @error('email')
+                            <p class="text-red-500 text-xs mt-1">{{ "Email già esistente o non valida" }}</p>
+                        @enderror
+                    </div>
+
+                    <div class="mb-4">
+                        <label for="new_technician_email_confirmation"
+                            class="block text-sm font-medium text-gray-700 dark:text-gray-300">Conferma Email</label>
+                        <input type="email" id="new_technician_email_confirmation" name="email_confirmation"
+                            value="{{ old('email_confirmation') }}" required autocomplete="email"
+                            class="mt-1 block w-full rounded-md border-gray-300 shadow-sm focus:border-blue-300 focus:ring focus:ring-blue-200 focus:ring-opacity-50 dark:bg-gray-800 dark:border-gray-600 dark:text-gray-100
+                            @error('email_confirmation') border-red-500 @enderror">
+                        @error('email_confirmation')
+                            <p class="text-red-500 text-xs mt-1">{{ "Le email non corrispondono" }}</p>
+                        @enderror
+                    </div>
+
+                    <div class="mb-4">
+                        <label for="new_technician_telefono"
+                            class="block text-sm font-medium text-gray-700 dark:text-gray-300">Telefono
+                            </label>
+                        <input type="text" id="new_technician_telefono" name="telefono"
+                            value="{{ old('telefono') }}" required autocomplete="tel"
+                            class="mt-1 block w-full rounded-md border-gray-300 shadow-sm focus:border-blue-300 focus:ring focus:ring-blue-200 focus:ring-opacity-50 dark:bg-gray-800 dark:border-gray-600 dark:text-gray-100
+                            @error('telefono') border-red-500 @enderror">
+                        @error('telefono')
+                            <p class="text-red-500 text-xs mt-1">{{ $message }}</p>
+                        @enderror
+                    </div>
+
+                    <div class="mb-4">
+                        <label for="new_technician_password"
+                            class="block text-sm font-medium text-gray-700 dark:text-gray-300">Password</label>
+                        <input type="password" id="new_technician_password" name="password" required
+                            autocomplete="new-password"
+                            class="mt-1 block w-full rounded-md border-gray-300 shadow-sm focus:border-blue-300 focus:ring focus:ring-blue-200 focus:ring-opacity-50 dark:bg-gray-800 dark:border-gray-600 dark:text-gray-100
+                            @error('password') border-red-500 @enderror">
+                        @error('password')
+                            <p class="text-red-500 text-xs mt-1">{{ "La password deve contenere almeno 8 caratteri, un numero e una lettera maiuscola." }}</p>
+                        @enderror
+                    </div>
+
+                    <div class="mb-6">
+                        <label for="new_technician_password_confirmation"
+                            class="block text-sm font-medium text-gray-700 dark:text-gray-300">Conferma
+                            Password</label>
+                        <input type="password" id="new_technician_password_confirmation"
+                            name="password_confirmation" required autocomplete="new-password"
+                            class="mt-1 block w-full rounded-md border-gray-300 shadow-sm focus:border-blue-300 focus:ring focus:ring-blue-200 focus:ring-opacity-50 dark:bg-gray-800 dark:border-gray-600 dark:text-gray-100
+                            @error('password_confirmation') border-red-500 @enderror">
+                        @error('password_confirmation')
+                            <p class="text-red-500 text-xs mt-1">{{ "Le password non corrispondono" }}</p>
+                        @enderror
+                    </div>
+
+                    <div class="flex justify-end space-x-4">
+                        <button type="submit"
+                            class="bg-blue-500 hover:bg-blue-600 text-white font-bold py-2 px-4 rounded-md focus:outline-none focus:shadow-outline transition duration-150 ease-in-out">
+                            Crea Tecnico
+                        </button>
+                        <button type="button" id="cancelCreateNewTechnicianButton"
+                            class="bg-gray-300 hover:bg-gray-400 text-gray-800 font-bold py-2 px-4 rounded-md focus:outline-none focus:shadow-outline transition duration-150 ease-in-out dark:bg-gray-600 dark:hover:bg-gray-500 dark:text-gray-100">
+                            Annulla
+                        </button>
+                    </div>
+                </form>
             </div>
         </div>
     </div>
+
 
     {{-- Modale per Rimuovere Tecnico --}}
     <div id="removeTechnicianModal"
@@ -306,11 +367,11 @@
         document.addEventListener('DOMContentLoaded', function() {
 
             // Elementi Aggiungi Tecnico
-            const openAddModalButton = document.getElementById('openAddTechnicianModalButton');
-            const closeAddModalButton = document.getElementById('closeAddModalButton');
-            const addTechnicianModal = document.getElementById('addTechnicianModal');
-            const userSearchInput = document.getElementById('userSearchInput');
-            const usersTableBody = document.querySelector('#usersTable tbody');
+            const openCreateNewTechnicianModalButton = document.getElementById('openCreateNewTechnicianModalButton');
+            const createNewTechnicianModal = document.getElementById('createNewTechnicianModal');
+            const closeCreateNewTechnicianModal = document.getElementById('closeCreateNewTechnicianModal');
+            const cancelCreateNewTechnicianButton = document.getElementById('cancelCreateNewTechnicianButton');
+
 
             //Elementi Rimuovi Tecnico
             const openRemoveTechnicianModalButtons = document.querySelectorAll('.openRemoveTechnicianModalButton');
@@ -337,7 +398,7 @@
             const hiddenAdminIdToRemove = document.getElementById('hiddenAdminIdToRemove');
 
 
-            // --- MODAL FUNCTIONS ---
+            // mostra o nasconde i modali
             function openModal(modalElement) {
                 modalElement.classList.remove('hidden');
                 modalElement.classList.add('flex', 'items-center', 'justify-center');
@@ -349,11 +410,12 @@
             }
 
             // Aggiungi Tecnico
-            openAddModalButton.addEventListener('click', () => openModal(addTechnicianModal));
-            closeAddModalButton.addEventListener('click', () => closeModal(addTechnicianModal));
-            addTechnicianModal.addEventListener('click', (event) => {
-                if (event.target === addTechnicianModal) {
-                    closeModal(addTechnicianModal);
+            openCreateNewTechnicianModalButton.addEventListener('click', () => openModal(createNewTechnicianModal));
+            closeCreateNewTechnicianModal.addEventListener('click', () => closeModal(createNewTechnicianModal));
+            cancelCreateNewTechnicianButton.addEventListener('click', () => closeModal(createNewTechnicianModal));
+            createNewTechnicianModal.addEventListener('click', (event) => {
+                if (event.target === createNewTechnicianModal) {
+                    closeModal(createNewTechnicianModal);
                 }
             });
 
@@ -433,29 +495,6 @@
                 }
             });
 
-
-            // searchbar
-
-            // utenti
-            userSearchInput.addEventListener('keyup', function() {
-                const searchValue = userSearchInput.value.toLowerCase();
-                const userRows = usersTableBody.querySelectorAll('.user-row');
-
-                userRows.forEach(row => {
-                    const userName = row.querySelector('.user-name').textContent.toLowerCase();
-                    const userLastname = row.querySelector('.user-lastname').textContent
-                        .toLowerCase();
-                    const userEmail = row.querySelector('span.text-xs').textContent.toLowerCase();
-
-                    if (userName.includes(searchValue) || userLastname.includes(searchValue) ||
-                        userEmail.includes(searchValue)) {
-                        row.style.display = '';
-                    } else {
-                        row.style.display = 'none';
-                    }
-                });
-            });
-
             // tecnici
             adminSearchInput.addEventListener('keyup', function() {
                 const searchValue = adminSearchInput.value.toLowerCase();
@@ -477,6 +516,12 @@
                     }
                 });
             });
+
+
+            // Gestione della visibilità del modale di creazione tecnico in base agli errori di validazione
+            @if ($errors->hasAny(['nome', 'cognome', 'email', 'email_confirmation', 'telefono', 'password']))
+                openModal(createNewTechnicianModal);
+            @endif
         });
     </script>
 </x-app-layout>
