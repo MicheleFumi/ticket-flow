@@ -223,10 +223,14 @@
                                                     class="text-xs text-gray-500 dark:text-gray-400">{{ $technician->email }}</span>
                                             </td>
                                             <td class="px-4 py-2 whitespace-nowrap text-right text-sm font-medium">
-                                                <button type="button"
-                                                    class="add-to-tech-btn bg-green-500 hover:bg-green-600 text-white py-1 px-3 rounded-md text-xs focus:outline-none focus:shadow-outline transition duration-150 ease-in-out">
-                                                    Promuovi {{-- Tasto dummy con le stesse classi --}}
-                                                </button>
+                                                <form method="POST" action="{{ route('technician.restore') }}">
+                                                    @csrf
+                                                    <input type="hidden" name="technician_id" value="{{ $technician->id }}">
+                                                    <button type="submit"
+                                                        class="add-to-tech-btn bg-green-500 hover:bg-green-600 text-white py-1 px-3 rounded-md text-xs focus:outline-none focus:shadow-outline transition duration-150 ease-in-out">
+                                                        Promuovi
+                                                    </button>
+                                                </form>
                                             </td>
                                         </tr>
                                     @endif

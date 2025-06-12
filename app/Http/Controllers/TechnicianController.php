@@ -115,6 +115,38 @@ class TechnicianController extends Controller
         }
     }
 
+    public function restore(Request $request)
+    {
+        $superadmin = auth()->guard()->user();
+
+        if (!$superadmin || !$superadmin->is_superadmin) {
+            return Redirect::back()->with('error', 'Non sei autorizzato a eseguire questa operazione.');
+        }
+
+        $request->validate([
+            'technician_id' => 'required|exists:technicians,id',
+        ]);
+
+        $technician = Technician::withoutGlobalScopes()->find($request->technician_id);
+
+        if (!$technician) {
+            return Redirect::back()->with('error', 'Tecnico non trovato.');
+        }
+
+        DB::beginTransaction();
+
+        try {
+            $technician->still_active = true;
+            $technician->is_available = true;
+            $technician->save();
+            DB::commit();
+            return Redirect::back()->with('success', 'Tecnico ripristinato con successo!');
+        } catch (\Exception $e) {
+            DB::rollBack();
+            return Redirect::back()->with('error', 'Errore durante il ripristino del tecnico: ' . $e->getMessage());
+        }
+    }
+
     public function technicianToAdmin(Request $request)
     {
         $authTechnician = auth()->guard()->user();
