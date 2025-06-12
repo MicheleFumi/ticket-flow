@@ -17,8 +17,10 @@
                 <h3 class="text-lg font-semibold mb-4 text-gray-900 dark:text-white">Ticket</h3>
 
                 <div class="mb-4">
-                    <label for="filter" class="block text-sm font-medium text-gray-700 dark:text-gray-200">Filtra per stato:</label>
-                    <select id="filter" class="mt-1 block w-full border-gray-300 dark:bg-gray-700 dark:text-white rounded-md shadow-sm">
+                    <label for="filter" class="block text-sm font-medium text-gray-700 dark:text-gray-200">Filtra per
+                        stato:</label>
+                    <select id="filter"
+                        class="mt-1 block w-full border-gray-300 dark:bg-gray-700 dark:text-white rounded-md shadow-sm">
                         <option value="tutti">Tutti</option>
                         <option value="aperti">Aperti</option>
                         <option value="in_lavorazione">In Lavorazione</option>
@@ -27,22 +29,26 @@
                 </div>
 
                 <div id="ticket-list">
-                    @foreach($ticketsByStatus as $status => $tickets)
+                    @foreach ($ticketsByStatus as $status => $tickets)
                         <div class="ticket-group" data-status="{{ $status }}">
-                            <h4 class="font-semibold text-md mb-2 text-gray-800 dark:text-gray-100 capitalize">{{ str_replace('_', ' ', $status) }}</h4>
+                            <h4 class="font-semibold text-md mb-2 text-gray-800 dark:text-gray-100 capitalize">
+                                {{ str_replace('_', ' ', $status) }}</h4>
                             @forelse($tickets as $ticket)
-                                <a href="{{ route('tickets.show', $ticket->id) }}" class="block p-4 mb-2 border rounded-md bg-gray-100 dark:bg-gray-700 dark:border-gray-600 hover:bg-gray-200 dark:hover:bg-gray-600 transition">
-                                    <p><strong>Titolo:</strong> {{ $ticket->titolo }}</p>
+                                <a href="{{ route('tickets.show', $ticket->id) }}"
+                                    class="block p-4 mb-2 border rounded-md bg-gray-100 dark:bg-gray-700 dark:border-gray-600 hover:bg-gray-200 dark:hover:bg-gray-600 transition">
+                                    <p class="dark:text-white"><strong>Titolo:</strong> {{ $ticket->titolo }}</p>
                                     <div class="mt-2">
-                                        <strong>Stato:</strong>
-                                        <div class="inline-block px-2 py-1 rounded-full text-sm font-medium
+                                        <strong class="dark:text-white">Stato:</strong>
+                                        <div
+                                            class="inline-block px-2 py-1 rounded-full text-sm font-medium
                                             @if ($ticket->status->titolo === 'Aperto') bg-green-100 text-green-700
                                             @elseif($ticket->status->titolo === 'In Lavorazione') bg-yellow-100 text-yellow-700
                                             @else bg-red-100 text-red-700 @endif">
                                             {{ ucfirst($ticket->status->titolo) }}
                                         </div>
                                     </div>
-                                    <p><strong>Creato il:</strong> {{ $ticket->created_at->format('d/m/Y H:i') }}</p>
+                                    <p class="dark:text-white"><strong>Creato il:</strong>
+                                        {{ $ticket->created_at->format('d/m/Y H:i') }}</p>
                                 </a>
                             @empty
                                 <p class="text-gray-500 dark:text-gray-400">Nessun ticket.</p>
@@ -55,10 +61,11 @@
     </div>
 
     <script>
-        document.getElementById('filter').addEventListener('change', function () {
+        document.getElementById('filter').addEventListener('change', function() {
             const selected = this.value;
             document.querySelectorAll('.ticket-group').forEach(group => {
-                group.style.display = (selected === 'tutti' || group.dataset.status === selected) ? 'block' : 'none';
+                group.style.display = (selected === 'tutti' || group.dataset.status === selected) ?
+                    'block' : 'none';
             });
         });
     </script>
