@@ -14,14 +14,15 @@ class TechnicianController extends Controller
     public function index()
     {
         $technicians = Technician::all();
+        $allTechnicians = Technician::withoutGlobalScopes()->get();
         $users = User::all();
         $nonAdminTechnicians = Technician::where('is_admin', false)->get();
         $adminTechnicians = Technician::where('is_admin', true)->where("is_superadmin", false)->get();
-        // dd($nonAdminTechnicians);
-        return view('technicians.index', compact('technicians', 'users', 'nonAdminTechnicians', 'adminTechnicians'));
+        // dd($allTechnicians);
+        return view('technicians.index', compact('technicians', "allTechnicians", 'users', 'nonAdminTechnicians', 'adminTechnicians'));
     }
 
-    public function userToTechnician(Request $request)
+    public function create(Request $request)
     {
         $admin = auth()->guard()->user();
 
@@ -71,7 +72,7 @@ class TechnicianController extends Controller
     }
 
 
-    public function technicianToUser(Request $request)
+    public function destroy(Request $request)
     {
 
         $authTechnician = auth()->guard()->user();

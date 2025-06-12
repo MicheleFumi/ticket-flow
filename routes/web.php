@@ -24,8 +24,8 @@ Route::middleware(['auth', 'verified'])->group(function () {
 
     //TECNICI
     Route::get('/technicians', [TechnicianController::class, 'index'])->name("technicians.index");
-    Route::post('/user-to-technician', [TechnicianController::class, 'userToTechnician'])->name('user-to-technician');
-    Route::post('/technician-to-user', [TechnicianController::class, 'technicianToUser'])->name('technician-to-user');
+    Route::post('/technician/create', [TechnicianController::class, 'create'])->name('technician.create');
+    Route::post('/technician/destroy', [TechnicianController::class, 'destroy'])->name('technician.destroy');
     Route::post("/technician-to-admin", [TechnicianController::class, 'technicianToAdmin'])->name("technician-to-admin");
     Route::post("/admin-to-technician", [TechnicianController::class, 'adminToTechnician'])->name("admin-to-technician");
 
