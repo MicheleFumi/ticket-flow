@@ -6,6 +6,7 @@ use App\Models\User;
 use App\Models\Technician;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\DB;
+use Illuminate\Support\Facades\Hash;
 use Illuminate\Support\Facades\Redirect;
 
 class TechnicianController extends Controller
@@ -13,71 +14,65 @@ class TechnicianController extends Controller
     public function index()
     {
         $technicians = Technician::all();
-        $users = $this->getUsers();
+        $allTechnicians = Technician::withoutGlobalScopes()->get();
+        $users = User::all();
         $nonAdminTechnicians = Technician::where('is_admin', false)->get();
         $adminTechnicians = Technician::where('is_admin', true)->where("is_superadmin", false)->get();
-        // dd($nonAdminTechnicians);
-        return view('technicians.index', compact('technicians', 'users', 'nonAdminTechnicians', 'adminTechnicians'));
+        // dd($allTechnicians);
+        return view('technicians.index', compact('technicians', "allTechnicians", 'users', 'nonAdminTechnicians', 'adminTechnicians'));
     }
 
-    public function userToTechnician(Request $request)
+    public function create(Request $request)
     {
-
         $admin = auth()->guard()->user();
 
         if (!$admin->is_admin) {
             return Redirect::back()->with('error', 'Non sei autorizzato a eseguire questa operazione.');
         }
 
-        $user = User::where('id', $request->input('user_id'))->firstOrFail();
+        $validated = $request->validate([
+            'nome' => 'required|string|max:255',
+            'cognome' => 'required|string|max:255',
+            'email' => 'required|email|max:255|unique:technicians,email',
+            'email_confirmation' => 'required|email|max:255|same:email',
+            'telefono' => 'nullable|string|max:20',
+            'password' => 'required|string|min:8|confirmed',
+        ]);
 
-        if (!$user) {
-            return Redirect::back()->with('error', 'Utente non trovato.');
-        }
+        $exists = Technician::withoutGlobalScopes()
+            ->where('email', $validated['email'])
+            ->exists();
 
-        if ($user->is_technician) {
-            return Redirect::back()->with("error", "L'utente è già un tecnico.");
+        if ($exists) {
+            return Redirect::back()->with('error', 'Esiste già un tecnico con questa email.');
         }
 
         DB::beginTransaction();
 
         try {
-
-            $technician = Technician::withoutGlobalScopes()
-                ->where('email', $user->email)
-                ->first();
-
-            if ($technician) {
-                $technician->still_active = true;
-                $technician->is_available = true;
-                $technician->save();
-            } else {
-                $technician = Technician::create([
-                    'nome' => $user->nome,
-                    'cognome' => $user->cognome,
-                    'email' => $user->email,
-                    'password' => $user->password,
-                    'telefono' => $user->telefono,
-                    'is_admin' => $user->is_admin ?? false,
-                    'is_available' => true,
-                    'still_active' => true,
-                ]);
-            }
-
-            $user->update([
-                'is_technician' => true,
+            Technician::create([
+                'nome' => $validated['nome'],
+                'cognome' => $validated['cognome'],
+                'email' => $validated['email'],
+                'password' => Hash::make($validated['password']),
+                'telefono' => $validated['telefono'],
+                'is_admin' => false,
+                'is_superadmin' => false,
+                'is_available' => true,
+                'still_active' => true,
             ]);
 
             DB::commit();
 
-            return Redirect::back()->with('success', 'Utente promosso e tecnico creato con successo!');
+            return Redirect::back()->with('success', 'Tecnico creato con successo!');
         } catch (\Exception $e) {
             DB::rollBack();
-            return Redirect::back()->with('error', 'Errore durante la promozione dell\'utente a tecnico: ' . $e->getMessage());
+            return Redirect::back()->with('error', 'Errore durante la creazione del tecnico: ' . $e->getMessage());
         }
     }
 
-    public function technicianToUser(Request $request)
+
+    public function destroy(Request $request)
     {
 
         $authTechnician = auth()->guard()->user();
@@ -108,11 +103,6 @@ class TechnicianController extends Controller
                 $ticket->removeFromTechnician($technician);
             }
 
-            $user = User::where('email', $technician->email)->first();
-            if ($user) {
-                $user->update(['is_technician' => false]);
-            }
-
             $technician->still_active = false;
             $technician->save();
 
@@ -122,6 +112,38 @@ class TechnicianController extends Controller
         } catch (\Exception $e) {
             DB::rollBack();
             return Redirect::back()->with('error', 'Errore durante la rimozione del tecnico: ' . $e->getMessage());
+        }
+    }
+
+    public function restore(Request $request)
+    {
+        $superadmin = auth()->guard()->user();
+
+        if (!$superadmin || !$superadmin->is_superadmin) {
+            return Redirect::back()->with('error', 'Non sei autorizzato a eseguire questa operazione.');
+        }
+
+        $request->validate([
+            'technician_id' => 'required|exists:technicians,id',
+        ]);
+
+        $technician = Technician::withoutGlobalScopes()->find($request->technician_id);
+
+        if (!$technician) {
+            return Redirect::back()->with('error', 'Tecnico non trovato.');
+        }
+
+        DB::beginTransaction();
+
+        try {
+            $technician->still_active = true;
+            $technician->is_available = true;
+            $technician->save();
+            DB::commit();
+            return Redirect::back()->with('success', 'Tecnico ripristinato con successo!');
+        } catch (\Exception $e) {
+            DB::rollBack();
+            return Redirect::back()->with('error', 'Errore durante il ripristino del tecnico: ' . $e->getMessage());
         }
     }
 
@@ -197,11 +219,5 @@ class TechnicianController extends Controller
             DB::rollBack();
             return Redirect::back()->with('error', 'Errore durante la degradazione dell\'amministratore: ' . $e->getMessage());
         }
-    }
-
-
-    private function getUsers()
-    {
-        return User::where('is_technician', false)->get();
     }
 }

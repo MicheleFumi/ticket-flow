@@ -18,7 +18,6 @@ return new class extends Migration
             $table->string('email')->unique();
             $table->string('password');
             $table->string('telefono')->nullable();
-            $table->boolean('is_technician')->default(false);
             $table->timestamps();
         });
     }
