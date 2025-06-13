@@ -72,7 +72,7 @@
                         @enderror
                     </div>
 
-                    <div class="mb-4">
+                    {{-- <div class="mb-4">
                         <label for="new_technician_password"
                             class="block text-sm font-medium text-gray-700 dark:text-gray-300">Password</label>
                         <input type="password" id="new_technician_password" name="password" required
@@ -84,9 +84,9 @@
                                 {{ 'La password deve contenere almeno 8 caratteri, un numero e una lettera maiuscola.' }}
                             </p>
                         @enderror
-                    </div>
+                    </div> --}}
 
-                    <div class="mb-6">
+                    {{-- <div class="mb-6">
                         <label for="new_technician_password_confirmation"
                             class="block text-sm font-medium text-gray-700 dark:text-gray-300">Conferma
                             Password</label>
@@ -97,7 +97,7 @@
                         @error('password_confirmation')
                             <p class="text-red-500 text-xs mt-1">{{ 'Le password non corrispondono' }}</p>
                         @enderror
-                    </div>
+                    </div> --}}
 
                     <div class="flex justify-end space-x-4">
                         <button type="submit"

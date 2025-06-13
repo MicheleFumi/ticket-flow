@@ -8,6 +8,7 @@ use Illuminate\Http\Request;
 use Illuminate\Support\Facades\DB;
 use Illuminate\Support\Facades\Hash;
 use Illuminate\Support\Facades\Redirect;
+use Illuminate\Support\Str;
 
 class TechnicianController extends Controller
 {
@@ -36,7 +37,6 @@ class TechnicianController extends Controller
             'email' => 'required|email|max:255|unique:technicians,email',
             'email_confirmation' => 'required|email|max:255|same:email',
             'telefono' => 'nullable|string|max:20',
-            'password' => 'required|string|min:8|confirmed',
         ]);
 
         $exists = Technician::withoutGlobalScopes()
@@ -50,11 +50,14 @@ class TechnicianController extends Controller
         DB::beginTransaction();
 
         try {
+
+            $randomPassword = Str::random(12);
+
             Technician::create([
                 'nome' => $validated['nome'],
                 'cognome' => $validated['cognome'],
                 'email' => $validated['email'],
-                'password' => Hash::make($validated['password']),
+                'password' => Hash::make($randomPassword),
                 'telefono' => $validated['telefono'],
                 'is_admin' => false,
                 'is_superadmin' => false,
