@@ -175,7 +175,7 @@
 
         <!-- Modale per reportare ticket -->
         <div id="reportTicketModal"
-            class="fixed inset-0 bg-gray-600 bg-opacity-50 overflow-y-auto h-full w-full hidden z-50 flex items-center justify-center">
+            class="fixed inset-0 bg-gray-600 bg-opacity-50 overflow-y-auto backdrop-blur-sm h-full w-full hidden z-50 flex items-center justify-center">
             <div class="relative p-5 border w-1/2 max-w-lg shadow-lg rounded-md bg-white dark:bg-gray-700">
                 <div class="flex justify-between items-center pb-3 border-b border-gray-200 dark:border-gray-600">
                     <h3 class="text-lg font-semibold leading-6 text-gray-900 dark:text-gray-100">Segnala Ticket</h3>
@@ -206,7 +206,7 @@
         </div>
 
 
-        <!-- Modale di conferma TECNICO-->
+        <!-- Modale per prendere in carico-->
         <div id="takeInChargeModal" class="fixed inset-0 z-50 hidden bg-black bg-opacity-50 backdrop-blur-sm">
             <div
                 class="bg-white dark:bg-gray-800 rounded-lg p-6 w-full max-w-md mx-auto my-auto mt-40 shadow-xl scale-95 transition-all duration-300">
@@ -234,7 +234,7 @@
 
         <!-- Modale di assegnazione tecnico ADMIN ONLY-->
         <div id="assignTicketTechnicianSearchModal"
-            class="fixed inset-0 bg-gray-600 bg-opacity-50 overflow-y-auto h-full w-full hidden z-50 flex items-center justify-center">
+            class="fixed inset-0 bg-gray-600 bg-opacity-50 overflow-y-auto h-full w-full hidden z-50 backdrop-blur-sm flex items-center justify-center">
             <div class="relative p-5 border w-1/2 max-w-lg shadow-lg rounded-md bg-white dark:bg-gray-700">
                 <div class="flex justify-between items-center pb-3 border-b border-gray-200 dark:border-gray-600">
                     <h3 class="text-lg font-semibold leading-6 text-gray-900 dark:text-gray-100">Assegna Tecnico</h3>

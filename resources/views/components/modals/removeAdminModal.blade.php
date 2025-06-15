@@ -1,5 +1,5 @@
 <div id="removeAdminModal"
-        class="fixed inset-0 bg-gray-600 bg-opacity-50 overflow-y-auto h-full w-full hidden z-50 flex items-center justify-center">
+        class="fixed inset-0 bg-gray-600 bg-opacity-50 overflow-y-auto h-full w-full backdrop-blur-sm hidden z-50 flex items-center justify-center">
         <div class="relative p-5 border w-1/2 max-w-lg shadow-lg rounded-md bg-white dark:bg-gray-700">
             <div class="flex justify-between items-center pb-3 border-b border-gray-200 dark:border-gray-600">
                 <h3 class="text-lg font-semibold leading-6 text-gray-900 dark:text-gray-100">Rimuovi Ruolo
