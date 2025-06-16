@@ -5,6 +5,7 @@
         </h2>
     </x-slot>
 
+
     <div class="py-12">
         <div class="max-w-7xl mx-auto sm:px-6 lg:px-8">
             <div class="bg-white dark:bg-gray-800 overflow-hidden shadow-sm sm:rounded-lg">
@@ -55,6 +56,7 @@
                 <!-- LISTA TICKET -->
                 <div class="p-2 text-gray-900 dark:text-gray-100">
                     <div class="space-y-4">
+
                         @if (!$technician->is_admin)
                             @foreach ($tickets as $ticket)
                                 @if ($ticket->status->titolo === 'Aperto')
@@ -63,9 +65,20 @@
                                         data-date="{{ $ticket->created_at->format('Y-m-d') }}">
                                         <div class="flex items-center justify-between mb-2">
                                             <h2 class="text-xl font-semibold text-gray-800 dark:text-gray-200">
-                                                {{ $ticket['titolo'] }}</h2>
-                                            <span
-                                                class="text-sm text-gray-500 dark:text-gray-400">{{ $ticket['created_at']->format('d/m/Y H:i') }}</span>
+                                                {{ $ticket['titolo'] }}
+                                            </h2>
+                                            <div>
+                                                <span class="text-sm text-gray-500 dark:text-gray-200">Aperto da:
+
+                                                    {{ $ticket->user->nome }} {{ $ticket->user->cognome }}
+
+                                                </span>
+                                                <span class="text-sm text-gray-500 dark:text-gray-200">Il:
+                                                    {{ $ticket['created_at']->format('d/m/Y H:i') }}
+                                                </span>
+                                            </div>
+
+
                                         </div>
                                         <div class="flex items-center justify-between text-sm">
                                             <div>
@@ -104,9 +117,18 @@
                                         <div class="flex items-center justify-between mb-2">
                                             <h2 class="text-xl font-semibold text-gray-800 dark:text-gray-200">
                                                 {{ $ticket['titolo'] }}</h2>
-                                            <span
-                                                class="text-sm text-gray-500 dark:text-gray-400">{{ $ticket['created_at']->format('d/m/Y H:i') }}</span>
+                                            <div>
+                                                <span class="text-sm text-gray-500 dark:text-gray-200">Aperto da:
+
+                                                    {{ $ticket->user->nome }} {{ $ticket->user->cognome }}
+
+                                                </span>
+                                                <span class="text-sm text-gray-500 dark:text-gray-200">Il:
+                                                    {{ $ticket['created_at']->format('d/m/Y H:i') }}
+                                                </span>
+                                            </div>
                                         </div>
+
                                         <div class="flex items-center justify-between text-sm">
                                             <div>
                                                 <span
