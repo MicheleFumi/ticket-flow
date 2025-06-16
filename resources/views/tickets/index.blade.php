@@ -5,14 +5,12 @@
         </h2>
     </x-slot>
 
-
     <div class="py-12">
         <div class="max-w-7xl mx-auto sm:px-6 lg:px-8">
             <div class="bg-white dark:bg-gray-800 overflow-hidden shadow-sm sm:rounded-lg">
 
                 <!-- FILTRI E MESSAGGIO -->
                 <div class="p-6 text-gray-900 dark:text-gray-100 flex items-center justify-between flex-wrap">
-
                     <div>
                         @if ($tickets->where('status.titolo', 'Aperto')->count() > 0)
                             {{ __('Stai visualizzando la lista dei ticket') }}
@@ -23,19 +21,21 @@
 
                     <div class="flex gap-6 items-center">
                         <!-- Filtro report -->
-                        <div class="flex flex-col">
-                            <label for="reportFilter" class="mb-1 text-gray-700 dark:text-gray-300">
-                                Filtra per report
-                            </label>
-                            <select id="reportFilter"
-                                class="rounded border-gray-300 dark:bg-gray-700 dark:border-gray-600 dark:text-gray-100 px-2 py-1">
-                                <option value="all">Tutti</option>
-                                <option value="reported">Solo reportati</option>
-                                <option value="not_reported">Non reportati</option>
-                            </select>
-                        </div>
+                        @if ($technician->is_admin || $technician->is_superAdmin)
+                            <div class="flex flex-col">
+                                <label for="reportFilter" class="mb-1 text-gray-700 dark:text-gray-300">
+                                    Filtra per segnalazione
+                                </label>
+                                <select id="reportFilter"
+                                    class="rounded border-gray-300 dark:bg-gray-700 dark:border-gray-600 dark:text-gray-100 px-2 py-1">
+                                    <option value="all">Tutti</option>
+                                    <option value="reported">Solo reportati</option>
+                                    <option value="not_reported">Non reportati</option>
+                                </select>
+                            </div>
+                        @endif
 
-                        <!-- Filtro data relativa -->
+                        <!-- Filtro data -->
                         <div class="flex flex-col">
                             <label for="dateFilter" class="mb-1 text-gray-700 dark:text-gray-300">
                                 Filtra per data
@@ -48,37 +48,40 @@
                                 <option value="30">Ultimo mese</option>
                             </select>
                         </div>
+
+                        <!-- Filtro per nome/cognome -->
+                        <div class="flex flex-col">
+                            <label for="userSearch" class="mb-1 text-gray-700 dark:text-gray-300">
+                                Filtra per nome o cognome
+                            </label>
+                            <input type="text" id="userSearch" placeholder="Mario Rossi"
+                                class="w-full px-4 py-2 border rounded-md dark:bg-gray-700 dark:text-white">
+                        </div>
                     </div>
-
                 </div>
-
 
                 <!-- LISTA TICKET -->
                 <div class="p-2 text-gray-900 dark:text-gray-100">
                     <div class="space-y-4">
-
                         @if (!$technician->is_admin)
                             @foreach ($tickets as $ticket)
                                 @if ($ticket->status->titolo === 'Aperto')
-                                    <div class="bg-white shadow-md rounded-2xl p-4 border border-gray-200 dark:bg-gray-700 dark:border-gray-600 ticket-card"
+                                    <div class="ticket-card bg-white shadow-md rounded-2xl p-4 border border-gray-200 dark:bg-gray-700 dark:border-gray-600"
                                         data-is-reported="{{ $ticket->is_reported ? 'true' : 'false' }}"
-                                        data-date="{{ $ticket->created_at->format('Y-m-d') }}">
+                                        data-date="{{ $ticket->created_at->format('Y-m-d') }}"
+                                        data-userfullname="{{ strtolower($ticket->user->nome . ' ' . $ticket->user->cognome) }}">
                                         <div class="flex items-center justify-between mb-2">
                                             <h2 class="text-xl font-semibold text-gray-800 dark:text-gray-200">
                                                 {{ $ticket['titolo'] }}
                                             </h2>
                                             <div>
                                                 <span class="text-sm text-gray-500 dark:text-gray-200">Aperto da:
-
                                                     {{ $ticket->user->nome }} {{ $ticket->user->cognome }}
-
                                                 </span>
                                                 <span class="text-sm text-gray-500 dark:text-gray-200">Il:
                                                     {{ $ticket['created_at']->format('d/m/Y H:i') }}
                                                 </span>
                                             </div>
-
-
                                         </div>
                                         <div class="flex items-center justify-between text-sm">
                                             <div>
@@ -111,24 +114,23 @@
                         @else
                             @foreach ($allTickets as $ticket)
                                 @if ($ticket->status->titolo === 'Aperto')
-                                    <div class="bg-white shadow-md rounded-2xl p-4 border border-gray-200 dark:bg-gray-700 dark:border-gray-600 ticket-card"
+                                    <div class="ticket-card bg-white shadow-md rounded-2xl p-4 border border-gray-200 dark:bg-gray-700 dark:border-gray-600"
                                         data-is-reported="{{ $ticket->is_reported ? 'true' : 'false' }}"
-                                        data-date="{{ $ticket->created_at->format('Y-m-d') }}">
+                                        data-date="{{ $ticket->created_at->format('Y-m-d') }}"
+                                        data-userfullname="{{ strtolower($ticket->user->nome . ' ' . $ticket->user->cognome) }}">
                                         <div class="flex items-center justify-between mb-2">
                                             <h2 class="text-xl font-semibold text-gray-800 dark:text-gray-200">
-                                                {{ $ticket['titolo'] }}</h2>
+                                                {{ $ticket['titolo'] }}
+                                            </h2>
                                             <div>
                                                 <span class="text-sm text-gray-500 dark:text-gray-200">Aperto da:
-
                                                     {{ $ticket->user->nome }} {{ $ticket->user->cognome }}
-
                                                 </span>
                                                 <span class="text-sm text-gray-500 dark:text-gray-200">Il:
                                                     {{ $ticket['created_at']->format('d/m/Y H:i') }}
                                                 </span>
                                             </div>
                                         </div>
-
                                         <div class="flex items-center justify-between text-sm">
                                             <div>
                                                 <span
@@ -160,45 +162,48 @@
                         @endif
                     </div>
                 </div>
-
             </div>
         </div>
     </div>
 </x-app-layout>
 
+<!-- SCRIPT -->
 <script>
     const reportFilter = document.getElementById('reportFilter');
     const dateFilter = document.getElementById('dateFilter');
+    const userSearch = document.getElementById('userSearch');
     const ticketCards = document.querySelectorAll('.ticket-card');
 
     function filterTickets() {
-        const reportValue = reportFilter.value;
-        const dateValue = dateFilter.value;
-        const now = new Date();
+        const reportValue = reportFilter?.value;
+        const dateValue = parseInt(dateFilter?.value);
+        const nameQuery = userSearch?.value.toLowerCase().trim();
+        const today = new Date();
 
         ticketCards.forEach(card => {
             const isReported = card.dataset.isReported === 'true';
-            const createdDate = new Date(card.dataset.date);
+            const ticketDate = new Date(card.dataset.date);
+            const diffDays = Math.floor((today - ticketDate) / (1000 * 60 * 60 * 24));
+            const userFullName = (card.dataset.userfullname || '').toLowerCase();
 
-            // filtro report
-            const matchReport =
-                reportValue === 'all' ||
-                (reportValue === 'reported' && isReported) ||
-                (reportValue === 'not_reported' && !isReported);
+            let show = true;
 
-            // filtro data
-            let matchDate = true;
-            if (dateValue !== 'all') {
-                const daysAgo = parseInt(dateValue);
-                const diffTime = now - createdDate;
-                const diffDays = diffTime / (1000 * 60 * 60 * 24);
-                matchDate = diffDays <= daysAgo;
-            }
+            // Filtro report
+            if (reportValue === 'reported' && !isReported) show = false;
+            if (reportValue === 'not_reported' && isReported) show = false;
 
-            card.style.display = (matchReport && matchDate) ? 'block' : 'none';
+            // Filtro data
+            if (!isNaN(dateValue) && diffDays > dateValue) show = false;
+
+            // Filtro nome/cognome
+            if (nameQuery && !userFullName.includes(nameQuery)) show = false;
+
+            card.style.display = show ? 'block' : 'none';
         });
     }
 
-    reportFilter.addEventListener('change', filterTickets);
-    dateFilter.addEventListener('change', filterTickets);
+    // Event listeners
+    reportFilter?.addEventListener('change', filterTickets);
+    dateFilter?.addEventListener('change', filterTickets);
+    userSearch?.addEventListener('input', filterTickets);
 </script>
