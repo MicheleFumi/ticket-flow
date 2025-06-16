@@ -35,6 +35,13 @@ class TicketController extends Controller
      */
     public function store(Request $request)
     {
+        $request->validate([
+            'titolo' => 'required|string|max:255',
+            'commento' => 'required|string',
+            'status_id' => 'nullable|exists:statuses,id',
+            'images.*' => 'image|mimes:jpeg,png,jpg,gif,svg|max:2048' // 2MB max per immagine
+        ]);
+
         $ticket = Ticket::create([
             'user_id' => $request->user()->id,
             'titolo' => $request->titolo,
@@ -43,11 +50,13 @@ class TicketController extends Controller
 
         ]);
         if ($request->has('images') && is_array($request->images)) {
-            foreach ($request->images as $imageUrl) {
-                $ticket->images()->create([
-                    'file_path' => $imageUrl,
-                ]);
-            }
+            foreach ($request->file('images') as $image) {
+          
+            $path = $image->store('ticket_images', 'public');
+
+            $ticket->images()->create([
+                'file_path' => $path, 
+            ]);
         }
 
         $ticket->load('images');

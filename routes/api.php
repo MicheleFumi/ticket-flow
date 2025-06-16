@@ -20,7 +20,7 @@ Route::post("/password/reset", [PasswordResetController::class, 'resetPassword']
 //TICKETS
 
 Route::get('/tickets', [TicketController::class, 'index'])->middleware('auth:sanctum');
-Route::post('/ticket/open', [TicketController::class, 'store'])->middleware('auth:sanctum');
+Route::post('/ticket/open', [TicketController::class, 'store'])/* ->middleware('auth:sanctum') */;
 Route::get('/ticket/detail/{ticket}', [TicketController::class, 'show'])->middleware('auth:sanctum');
 Route::patch('/ticket/update/{ticket}', [TicketController::class, 'update'])->middleware('auth:sanctum');
 Route::delete('/ticket/delete/{ticket}', [TicketController::class, 'destroy'])->middleware('auth:sanctum');
