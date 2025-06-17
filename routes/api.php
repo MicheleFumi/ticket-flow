@@ -20,6 +20,7 @@ Route::group(['middleware' => ['auth:sanctum', CheckTokenExpiration::class]], fu
     Route::post('/logout', [AuthController::class, 'logout']);
     Route::post('/user/delete', [UserController::class, 'destroy']);
     Route::patch('/password/update', [UserController::class, 'updatePassword']);
+    Route::get('/me', [AuthController::class, 'me']);
 
     // Tickets
     Route::get('/tickets', [TicketController::class, 'index']);
