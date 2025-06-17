@@ -7,9 +7,6 @@ use App\Models\Status;
 use App\Models\Ticket;
 
 use Illuminate\Http\Request;
-use Mockery\Undefined;
-
-use function Laravel\Prompts\error;
 
 class TicketController extends Controller
 {
@@ -47,16 +44,16 @@ class TicketController extends Controller
             'titolo' => $request->titolo,
             'commento' => $request->commento,
             'status_id' => $request->status_id ?? 1,
-
         ]);
-        if ($request->has('images') && is_array($request->images)) {
-            foreach ($request->file('images') as $image) {
-          
-            $path = $image->store('ticket_images', 'public');
 
-            $ticket->images()->create([
-                'file_path' => $path, 
-            ]);
+        if ($request->has('images') && is_array($request->file('images'))) {
+            foreach ($request->file('images') as $image) {
+                $path = $image->store('ticket_images', 'public');
+
+                $ticket->images()->create([
+                    'file_path' => $path,
+                ]);
+            }
         }
 
         $ticket->load('images');
@@ -66,7 +63,6 @@ class TicketController extends Controller
             'data' => $ticket
         ]);
     }
-
 
     /**
      * Display the specified resource.
@@ -78,7 +74,6 @@ class TicketController extends Controller
             $ticket->load('status', "images");
             return response()->json([
                 'data' => $ticket
-
             ]);
         }
         return response()->json([
@@ -104,10 +99,10 @@ class TicketController extends Controller
         $ticket->commento = $data['commento'];
 
         if (!isset($data['status_id']) || $data['status_id'] === null) {
-            $ticket->status_id;
+            // qui non cambi niente
         } else {
             $ticket->status_id = $data['status_id'];
-        };
+        }
         $ticket->update();
 
         return response()->json([
@@ -122,11 +117,10 @@ class TicketController extends Controller
     {
         $user_id = $request->user()->id;
 
-        if ($request->ticket->user_id === $user_id && $request->ticket->status_id === 1) {
+        if ($ticket->user_id === $user_id && $ticket->status_id === 1) {
 
             $ticket->delete();
-            $ticketList = Ticket::where('user_id', $request->user()->id)->get();
-
+            $ticketList = Ticket::where('user_id', $user_id)->get();
 
             return response()->json([
                 'data' => $ticketList

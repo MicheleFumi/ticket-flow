@@ -25,11 +25,11 @@ class TechnicianController extends Controller
 
     public function create(Request $request)
     {
-        $admin = auth()->guard()->user();
+        /*  $admin = auth()->guard()->user();
 
         if (!$admin->is_admin) {
             return Redirect::back()->with('error', 'Non sei autorizzato a eseguire questa operazione.');
-        }
+        } */
 
         $validated = $request->validate([
             'nome' => 'required|string|max:255',
@@ -78,11 +78,11 @@ class TechnicianController extends Controller
     public function destroy(Request $request)
     {
 
-        $authTechnician = auth()->guard()->user();
+        /*  $authTechnician = auth()->guard()->user();
 
         if (!$authTechnician || !$authTechnician->is_admin) {
             return Redirect::back()->with('error', 'Non sei autorizzato a eseguire questa operazione.');
-        }
+        } */
 
         $request->validate([
             'technician_id' => 'required|exists:technicians,id',
@@ -120,11 +120,11 @@ class TechnicianController extends Controller
 
     public function restore(Request $request)
     {
-        $superadmin = auth()->guard()->user();
+        /*  $superadmin = auth()->guard()->user();
 
         if (!$superadmin || !$superadmin->is_superadmin) {
             return Redirect::back()->with('error', 'Non sei autorizzato a eseguire questa operazione.');
-        }
+        } */
 
         $request->validate([
             'technician_id' => 'required|exists:technicians,id',
@@ -152,11 +152,11 @@ class TechnicianController extends Controller
 
     public function technicianToAdmin(Request $request)
     {
-        $authTechnician = auth()->guard()->user();
+        /*  $authTechnician = auth()->guard()->user();
 
         if (!$authTechnician || !$authTechnician->is_superadmin) {
             return Redirect::back()->with('error', 'Non sei autorizzato a eseguire questa operazione.');
-        }
+        } */
 
         $request->validate([
             'technician_id' => 'required|exists:technicians,id',
@@ -187,11 +187,11 @@ class TechnicianController extends Controller
 
     public function adminToTechnician(Request $request)
     {
-        $authTechnician = auth()->guard()->user();
+        /* $authTechnician = auth()->guard()->user();
 
         if (!$authTechnician || !$authTechnician->is_superadmin) {
             return Redirect::back()->with('error', 'Non sei autorizzato a eseguire questa operazione.');
-        }
+        } */
 
         $request->validate([
             'technician_id' => 'required|exists:technicians,id',

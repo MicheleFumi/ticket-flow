@@ -5,6 +5,8 @@ use App\Http\Controllers\ProfileController;
 use App\Http\Controllers\TechnicianController;
 use App\Http\Controllers\TicketController;
 use App\Http\Controllers\UserController;
+use App\Http\Middleware\VerifyAdmin;
+use App\Http\Middleware\VerifySuperAdmin;
 use Illuminate\Support\Facades\Route;
 
 
@@ -24,22 +26,22 @@ Route::middleware(['auth', 'verified'])->group(function () {
 
     //TECNICI
     Route::get('/technicians', [TechnicianController::class, 'index'])->name("technicians.index");
-    Route::post('/technician/create', [TechnicianController::class, 'create'])->name('technician.create');
-    Route::post('/technician/destroy', [TechnicianController::class, 'destroy'])->name('technician.destroy');
-    Route::post("/technician/restore", [TechnicianController::class, 'restore'])->name("technician.restore");
-    Route::post("/technician-to-admin", [TechnicianController::class, 'technicianToAdmin'])->name("technician-to-admin");
-    Route::post("/admin-to-technician", [TechnicianController::class, 'adminToTechnician'])->name("admin-to-technician");
+    Route::post('/technician/create', [TechnicianController::class, 'create'])->name('technician.create')->middleware([VerifyAdmin::class, VerifySuperAdmin::class]);
+    Route::post('/technician/destroy', [TechnicianController::class, 'destroy'])->name('technician.destroy')->middleware(VerifyAdmin::class);
+    Route::post("/technician/restore", [TechnicianController::class, 'restore'])->name("technician.restore")->middleware(VerifySuperAdmin::class);
+    Route::post("/technician-to-admin", [TechnicianController::class, 'technicianToAdmin'])->name("technician-to-admin")->middleware(VerifySuperAdmin::class);
+    Route::post("/admin-to-technician", [TechnicianController::class, 'adminToTechnician'])->name("admin-to-technician")->middleware(VerifySuperAdmin::class);
 
     //TICKET
     Route::get('/tickets', [TicketController::class, 'index'])->name("tickets.index");
     Route::post("/ticket/report/{ticket}", [TicketController::class, 'report'])->name("tickets.report");
     Route::get('/ticket/detail/{ticket}', [TicketController::class, 'show'])->name("tickets.show");
     Route::post('/ticket/assign/{ticket}', [TicketController::class, 'assign'])->name("tickets.assign");
-    Route::post("/ticket/unassignTo", [TicketController::class, 'unassign'])->name("tickets.unassign");
+    Route::post("/ticket/unassignTo", [TicketController::class, 'unassign'])->name("tickets.unassign")->middleware([VerifyAdmin::class, VerifySuperAdmin::class]);
     Route::post("/ticket/close", [TicketController::class, 'close'])->name("tickets.close");
 
-    Route::post("/ticket/delete/{ticket}", [TicketController::class, 'destroy'])->name("tickets.delete");
-    Route::post("/ticket/assign-to/{ticket}", [TicketController::class, 'assignTo'])->name("tickets.assignTo");
+    Route::post("/ticket/delete/{ticket}", [TicketController::class, 'destroy'])->name("tickets.delete")->middleware([VerifyAdmin::class, VerifySuperAdmin::class]);
+    Route::post("/ticket/assign-to/{ticket}", [TicketController::class, 'assignTo'])->name("tickets.assignTo")->middleware([VerifyAdmin::class, VerifySuperAdmin::class]);
 });
 //PROFILE
 Route::middleware('auth')->group(function () {

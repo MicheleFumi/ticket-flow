@@ -72,13 +72,13 @@ class TicketController extends Controller
     public function destroy(Ticket $ticket, Request $request)
     {
 
-        $technician = Auth::guard()->user();
+        /*   $technician = Auth::guard()->user();
 
 
         if (!$technician || !$technician->is_admin) {
 
             return redirect()->back()->with('error', 'Non sei autorizzato a eseguire questa operazione.');
-        }
+        } */
         if (!$ticket) {
             return redirect()->back()->with('error', 'Ticket non trovato.');
         }
@@ -107,7 +107,7 @@ class TicketController extends Controller
     {
         $technician = Auth::guard()->user();
 
-        if (!$technician && !$request->filled('commento_report')) {
+        /*  if (!$technician && !$request->filled('commento_report')) {
 
             return redirect()->back()->with('error', 'Non sei autorizzato a eseguire questa operazione.');
         }
@@ -115,7 +115,7 @@ class TicketController extends Controller
         if (!$technician && $request->filled('commento_report')) {
 
             return redirect()->back()->with('error', 'Non sei autorizzato a eseguire questa operazione.');
-        }
+        } */
 
         if ($ticket->status_id === 3 || $ticket->status_id === 2 || $ticket->is_reported === true || $ticket->commento_report) {
 
@@ -185,13 +185,13 @@ class TicketController extends Controller
     {
 
         $admin = Auth::guard()->user();
-        if (!$admin) {
+        /* if (!$admin) {
             return redirect()->back()->with('error', 'Utente non autenticato come tecnico.');
         }
 
         if (!$admin->is_admin) {
             return redirect()->back()->with('error', 'Non sei autorizzato a eseguire questa operazione.');
-        }
+        } */
 
         $request->validate([
             'technician_id' => 'required|exists:technicians,id',
@@ -225,13 +225,13 @@ class TicketController extends Controller
         /** @var \App\Models\Technician $admin */
         $admin = Auth::guard()->user();
 
-        if (!$admin) {
+        /*  if (!$admin) {
             return redirect()->back()->with('error', 'Utente non autenticato come tecnico.');
-        }
+        } */
 
-        if (!$admin->is_admin) {
+        /*  if (!$admin->is_admin) {
             return redirect()->back()->with('error', 'Non sei autorizzato a eseguire questa operazione.');
-        }
+        } */
 
         $request->validate([
             'technician_id' => 'required|exists:technicians,id',
