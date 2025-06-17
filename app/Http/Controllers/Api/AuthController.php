@@ -34,6 +34,10 @@ class AuthController extends Controller
 
         $token = $user->createToken('auth_token')->plainTextToken;
 
+        $accessToken = $user->tokens()->latest()->first();
+        $accessToken->expires_at = now()->addHours(4);
+        $accessToken->save();
+
         return response()->json([
             'message' => 'Utente registrato con successo!',
             'user' => $user,
@@ -57,6 +61,10 @@ class AuthController extends Controller
         }
 
         $token = $user->createToken('auth_token')->plainTextToken;
+
+        $accessToken = $user->tokens()->latest()->first();
+        $accessToken->expires_at = now()->addHours(4);
+        $accessToken->save();
 
         return response()->json([
             'message' => 'Login eseguito con successo!',
