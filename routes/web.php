@@ -1,5 +1,6 @@
 <?php
 
+use App\Http\Controllers\AdminController;
 use App\Http\Controllers\DashboardController;
 use App\Http\Controllers\ProfileController;
 use App\Http\Controllers\TechnicianController;
@@ -29,8 +30,8 @@ Route::middleware(['auth', 'verified'])->group(function () {
     Route::post('/technician/create', [TechnicianController::class, 'create'])->name('technician.create')->middleware([VerifyAdmin::class, VerifySuperAdmin::class]);
     Route::post('/technician/destroy', [TechnicianController::class, 'destroy'])->name('technician.destroy')->middleware(VerifyAdmin::class);
     Route::post("/technician/restore", [TechnicianController::class, 'restore'])->name("technician.restore")->middleware(VerifySuperAdmin::class);
-    Route::post("/technician-to-admin", [TechnicianController::class, 'technicianToAdmin'])->name("technician-to-admin")->middleware(VerifySuperAdmin::class);
-    Route::post("/admin-to-technician", [TechnicianController::class, 'adminToTechnician'])->name("admin-to-technician")->middleware(VerifySuperAdmin::class);
+    Route::post("/technician-to-admin", [AdminController::class, 'technicianToAdmin'])->name("technician-to-admin")->middleware(VerifySuperAdmin::class);
+    Route::post("/admin-to-technician", [AdminController::class, 'adminToTechnician'])->name("admin-to-technician")->middleware(VerifySuperAdmin::class);
 
     //TICKET
     Route::get('/tickets', [TicketController::class, 'index'])->name("tickets.index");
