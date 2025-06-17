@@ -35,7 +35,7 @@ class AuthController extends Controller
         $token = $user->createToken('auth_token')->plainTextToken;
 
         $accessToken = $user->tokens()->latest()->first();
-        $accessToken->expires_at = now()->addHours(4);
+        $accessToken->expires_at = now()->addMinutes(30);
         $accessToken->save();
 
         return response()->json([
@@ -63,7 +63,7 @@ class AuthController extends Controller
         $token = $user->createToken('auth_token')->plainTextToken;
 
         $accessToken = $user->tokens()->latest()->first();
-        $accessToken->expires_at = now()->addHours(4);
+        $accessToken->expires_at = now()->addMinutes(30);
         $accessToken->save();
 
         return response()->json([
