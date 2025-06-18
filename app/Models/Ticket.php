@@ -22,6 +22,9 @@ class Ticket extends Model
         'reportato_da',
         'repot_date',
         'is_deleted',
+        'is_reopened',
+        'data_riapertura',
+        'ragione_riapertura',
     ];
 
     protected $casts = [

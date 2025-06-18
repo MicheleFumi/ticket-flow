@@ -301,4 +301,39 @@ class TicketController extends Controller
             return redirect()->back()->with('error', 'Errore durante la chiusura del ticket: ' . $e->getMessage());
         }
     }
+
+    public function reopen(Request $request, Ticket $ticket)
+    {
+        /** @var \App\Models\Technician $technician */
+        $technician = Auth::guard()->user();
+
+        if (!$technician) {
+            return redirect()->back()->with('error', 'Utente non autenticato come tecnico.');
+        }
+
+        if ($ticket->status_id !== 3) {
+            return redirect()->back()->with('error', 'Il ticket non è chiuso e non può essere riaperto.');
+        }
+
+        $request->validate([
+            'ragione_riapertura' => 'required|string|max:255',
+        ]);
+
+        DB::beginTransaction();
+
+        try {
+            $ticket->is_reopened = true;
+            $ticket->data_riapertura = now();
+            $ticket->ragione_riapertura = $request->input('ragione_riapertura');
+            $ticket->status_id = 1;
+            $ticket->save();
+
+            DB::commit();
+
+            return redirect()->route('tickets.index')->with('success', 'Ticket riaperto con successo.');
+        } catch (\Exception $e) {
+            DB::rollBack();
+            return redirect()->back()->with('error', 'Errore durante la riapertura del ticket: ' . $e->getMessage());
+        }
+    }
 }

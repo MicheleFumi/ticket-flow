@@ -16,7 +16,9 @@ class VerifySuperAdmin
     public function handle(Request $request, Closure $next): Response
     {
 
-        if (!$user = $request->user() || !$$user = $request->user()->is_superAdmin) {
+        $user = $request->user();
+
+        if (!$user || !$user->is_superAdmin) {
             return redirect()->route('login');
         }
         return $next($request);

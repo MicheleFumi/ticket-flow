@@ -27,6 +27,9 @@ return new class extends Migration
             $table->foreignId('reportato_da')->nullable()->constrained('technicians')->onDelete('set null');
             $table->timestamp('report_date')->nullable();
             $table->boolean("is_deleted")->default(0);
+            $table->boolean("is_reopened")->default(0);
+            $table->timestamp('data_riapertura')->nullable();
+            $table->text("ragione_riapertura")->nullable();
             $table->timestamps();
         });
     }
