@@ -14,16 +14,25 @@ return new class extends Migration
         Schema::create('ticket_logs', function (Blueprint $table) {
             $table->id();
             $table->foreignId('ticket_id')->constrained()->onDelete('cascade');
-            $table->foreignId('assegnato_a')->constrained('technicians')->nullable()->onDelete('set null');
-            $table->foreignId("riaperto_da_user")->constrained("users")->nullable()->onDelete('set null');
-            $table->foreignId("riaperto_da_admin")->constrained("technicians")->nullable()->onDelete('set null');
-            $table->foreignId("chiuso_da")->constrained('technicians')->nullable()->onDelete('set null');
-            $table->text("note_riapertura");
+
+            $table->unsignedBigInteger('assegnato_a')->nullable();
+            $table->foreign('assegnato_a')->references('id')->on('technicians')->onDelete('set null');
+
+            $table->unsignedBigInteger('riaperto_da_user')->nullable();
+            $table->foreign('riaperto_da_user')->references('id')->on('users')->onDelete('set null');
+
+            $table->unsignedBigInteger('riaperto_da_admin')->nullable();
+            $table->foreign('riaperto_da_admin')->references('id')->on('technicians')->onDelete('set null');
+
+            $table->unsignedBigInteger('chiuso_da')->nullable();
+            $table->foreign('chiuso_da')->references('id')->on('technicians')->onDelete('set null');
+
+            $table->text("note_riapertura")->nullable();
             $table->text("note_chiusura")->nullable();
             $table->timestamp('data_assegnazione')->nullable();
             $table->timestamp('data_riapertura')->nullable();
             $table->timestamp('data_chiusura')->nullable();
-            $table->$table->timestamps();
+            $table->timestamps();
         });
     }
 

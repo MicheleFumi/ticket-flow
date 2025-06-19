@@ -5,7 +5,7 @@ namespace App\Http\Controllers\Api;
 use App\Http\Controllers\Controller;
 use App\Models\Status;
 use App\Models\Ticket;
-
+use App\Models\TicketLog;
 use Illuminate\Http\Request;
 
 class TicketController extends Controller
@@ -46,6 +46,19 @@ class TicketController extends Controller
             'status_id' => $request->status_id ?? 1,
         ]);
 
+        $log = TicketLog::create([
+            'ticket_id' => $ticket->id,
+            'assegnato_a' => null,
+            'riaperto_da_user' => null,
+            'riaperto_da_admin' => null,
+            'chiuso_da' => null,
+            'note_riapertura' => null,
+            'note_chiusura' => null,
+            'data_assegnazione' => null,
+            'data_riapertura' => null,
+            'data_chiusura' => null,
+        ]);
+
         if ($request->has('images') && is_array($request->file('images'))) {
             foreach ($request->file('images') as $image) {
                 $path = $image->store('ticket_images', 'public');
@@ -60,7 +73,8 @@ class TicketController extends Controller
 
         return response()->json([
             'message' => 'Ticket creato',
-            'data' => $ticket
+            'data' => $ticket,
+            'log' => $log
         ]);
     }
 
