@@ -212,9 +212,13 @@
                 class="bg-white dark:bg-gray-800 rounded-lg p-6 w-full max-w-md mx-auto my-auto mt-40 shadow-xl scale-95 transition-all duration-300">
                 <h2 class="text-xl font-semibold text-gray-800 dark:text-gray-100 mb-4 text-center">Vuoi prendere in
                     carico questo ticket?</h2>
-                <p class="text-gray-600 dark:text-gray-300 mb-6 text-center">
-                    Una volta preso in carico dovrai contattare il tuo supervisore per rimuoverlo.
-                </p>
+
+                @if (!$technician->is_admin || !$technician->is_superadmin)
+                    <p class="text-gray-600 dark:text-gray-300 mb-6 text-center"> Una volta preso in carico dovrai
+                        contattare il tuo supervisore per rimuoverlo. </p>
+                @endif
+
+
                 <div class="flex justify-center space-x-4">
                     <form method="POST" action="{{ route('tickets.assign', $ticket) }}">
                         @csrf
