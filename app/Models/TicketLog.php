@@ -65,20 +65,21 @@ class TicketLog extends Model
         return $this;
     }
 
-    public function removeFromTechnician(Technician $technician)
+    public function removeFromTechnician(Technician $technician, Ticket $ticket)
     {
-        if ($this->technician_id !== $technician->id) {
+        if ($this->assegnato_a !== $technician->id) {
             throw new \Exception("Il ticket non è assegnato a questo tecnico.");
         }
 
         $technician->is_available = true;
         $technician->save();
 
-        if ($this->status_id === 2) {
-            $this->status_id = 1;
-            $this->technician_id = null;
+        if ($ticket->status_id === 2) {
+            $ticket->status_id = 1;
+            $this->assegnato_a = null;
             $this->data_assegnazione = null;
         }
+        $ticket->save();
         $this->save();
 
         return $this;

@@ -187,18 +187,8 @@ class TicketController extends Controller
         }
     }
 
-    public function unassign(Request $request)
+    public function unassign(Request $request, Ticket $ticket)
     {
-        /** @var \App\Models\Technician $admin */
-        $admin = Auth::guard()->user();
-
-        /*  if (!$admin) {
-            return redirect()->back()->with('error', 'Utente non autenticato come tecnico.');
-        } */
-
-        /*  if (!$admin->is_admin) {
-            return redirect()->back()->with('error', 'Non sei autorizzato a eseguire questa operazione.');
-        } */
 
         $request->validate([
             'technician_id' => 'required|exists:technicians,id',
@@ -210,18 +200,26 @@ class TicketController extends Controller
             return redirect()->back()->with('error', 'Tecnico non trovato.');
         }
 
-        $tickets = Ticket::where('technician_id', $technician->id)->get();
-
-        if ($tickets->isEmpty()) {
-            return redirect()->back()->with('info', 'Nessun ticket assegnato a questo tecnico.');
+        if ($ticket->status_id === 1) {
+            return redirect()->back()->with('error', 'Il ticket non è assegnato a nessun tecnico.');
         }
+
+        if ($ticket->status_id === 3) {
+            return redirect()->back()->with('error', 'Il ticket è già chiuso e non può essere disassegnato.');
+        }
+
+        $latestLog = $ticket->logs()->where('assegnato_a', $technician->id)->latest()->first();
+
+        if (!$latestLog) {
+            return redirect()->back()->with('error', 'Nessun log trovato per questo tecnico.');
+        }
+        // dd($ticket);
 
         DB::beginTransaction();
 
         try {
-            foreach ($tickets as $ticket) {
-                $ticket->removeFromTechnician($technician);
-            }
+            $latestLog->removeFromTechnician($technician, $ticket);
+            $latestLog->save();
 
             DB::commit();
             return redirect()->back()->with('success', 'Tecnico rimosso da tutti i ticket con successo.');
