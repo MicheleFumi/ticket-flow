@@ -260,13 +260,27 @@
                                         <tr class="technician-row">
                                             <td
                                                 class="px-4 py-2 whitespace-nowrap text-sm font-medium text-gray-900 dark:text-gray-100">
-                                                <span class="technician-name">{{ $technician->nome }}</span> <span
-                                                    class="technician-lastname">{{ $technician->cognome ?? '' }}</span>
-                                                <br>
-                                                <span
-                                                    class="text-xs text-gray-500 dark:text-gray-400">{{ $technician->email }}</span>
+                                                {{-- Riga nome + badge --}}
+                                                <div class="flex justify-between items-center">
+                                                    <div>
+                                                        <span class="technician-name">{{ $technician->nome }}
+                                                        </span>
+                                                        <span
+                                                            class="technician-lastname">{{ $technician->cognome ?? '' }}</span>
+                                                    </div>
+
+                                                </div>
+
+                                                {{-- Riga email --}}
+                                                <div class="mt-1">
+                                                    <span
+                                                        class="text-xs text-gray-500 dark:text-gray-400">{{ $technician->email }}</span>
+                                                </div>
                                             </td>
-                                            <td class="px-4 py-2 whitespace-nowrap text-right text-sm font-medium">
+
+                                            <td
+                                                class="px-4 py-2 whitespace-nowrap text-right text-sm font-medium flex justify-between">
+                                                <span><x-role-badge :user="$technician" /></span>
                                                 <form method="POST"
                                                     action="{{ route('tickets.assignTo', $ticket) }}">
                                                     @csrf
