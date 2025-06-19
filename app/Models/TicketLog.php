@@ -85,9 +85,9 @@ class TicketLog extends Model
         return $this;
     }
 
-    public function close(Technician $technician, $note_chiusura)
+    public function close(Technician $technician, $note_chiusura, Ticket $ticket)
     {
-        if ($this->status_id !== 2) {
+        if ($ticket->status_id !== 2) {
             throw new \Exception("Il ticket non può essere chiuso perché non è assegnato.");
         }
 
@@ -95,7 +95,7 @@ class TicketLog extends Model
             throw new \Exception("Il ticket è già chiuso.");
         }
 
-        if (!$technician->is_admin && $this->technician_id !== $technician->id) {
+        if (!$technician->is_admin && $this->assegnato_a !== $technician->id) {
             throw new \Exception("Il ticket non è assegnato a questo tecnico.");
         }
 
@@ -107,10 +107,11 @@ class TicketLog extends Model
 
         // $this->technician_id = null;
         $this->chiuso_da = $technician->id;
-        $this->status_id = 3;
+        $ticket->status_id = 3;
         $this->data_chiusura = Carbon::now();
         $this->note_chiusura = $note_chiusura;
         $this->save();
+        $ticket->save();
 
 
 

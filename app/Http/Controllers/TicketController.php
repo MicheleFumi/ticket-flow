@@ -229,9 +229,9 @@ class TicketController extends Controller
         }
     }
 
-    public function close(Request $request)
+    public function close(Request $request, Ticket $ticket)
     {
-        /** @var \App\Models\Technician $technician */
+
         $technician = Auth::guard()->user();
 
         if (!$technician) {
@@ -248,6 +248,8 @@ class TicketController extends Controller
         }
         $note_chiusura = $request->input('note_chiusura');
 
+        $latestLog = $ticket->logs()->latest()->first();
+
         // if (!$technician->is_admin && $ticket->technician_id !== $technician->id) {
         //     return redirect()->back()->with('error', 'Non sei autorizzato a chiudere questo ticket.');
         // }
@@ -256,7 +258,7 @@ class TicketController extends Controller
         DB::beginTransaction();
 
         try {
-            $ticket->close($technician, $note_chiusura);
+            $latestLog->close($technician, $note_chiusura, $ticket);
 
             DB::commit();
 
