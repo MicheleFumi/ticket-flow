@@ -97,7 +97,7 @@
                                                                 <button data-id="{{ $technician->id }}"
                                                                     data-nome="{{ $technician->nome }}"
                                                                     data-cognome="{{ $technician->cognome }}"
-                                                                    class="openRemoveAdminModalButton bg-red-500 hover:bg-red-600 text-white font-bold py-2 px-4 mx-4 rounded focus:outline-none focus:shadow-outline transition duration-150 ease-in-out">
+                                                                    class="openRemoveAdminModalButton min-w-[160px] bg-red-500 hover:bg-red-600 text-white font-bold py-2 px-4 mx-4 rounded focus:outline-none focus:shadow-outline transition duration-150 ease-in-out">
                                                                     Rimuovi Admin
                                                                 </button>
                                                             @endif
@@ -106,7 +106,7 @@
                                                                 <button data-id="{{ $technician->id }}"
                                                                     data-nome="{{ $technician->nome }}"
                                                                     data-cognome="{{ $technician->cognome }}"
-                                                                    class="openRemoveTechnicianModalButton bg-red-500 hover:bg-red-600 text-white font-bold py-2 px-4 mx-4 rounded focus:outline-none focus:shadow-outline transition duration-150 ease-in-out">
+                                                                    class="openRemoveTechnicianModalButton min-w-[160px] bg-red-500 hover:bg-red-600 text-white font-bold py-2 px-4 mx-4 rounded focus:outline-none focus:shadow-outline transition duration-150 ease-in-out">
                                                                     Rimuovi Tecnico
                                                                 </button>
                                                             @endif
@@ -117,7 +117,7 @@
                                                                 <button data-id="{{ $technician->id }}"
                                                                     data-nome="{{ $technician->nome }}"
                                                                     data-cognome="{{ $technician->cognome }}"
-                                                                    class="openRemoveTechnicianModalButton bg-red-500 hover:bg-red-600 text-white font-bold py-2 px-4 mx-4 rounded focus:outline-none focus:shadow-outline transition duration-150 ease-in-out">
+                                                                    class="openRemoveTechnicianModalButton min-w-[160px] bg-red-500 hover:bg-red-600 text-white font-bold py-2 px-4 mx-4 rounded focus:outline-none focus:shadow-outline transition duration-150 ease-in-out">
                                                                     Rimuovi Tecnico
                                                                 </button>
                                                             @endif
