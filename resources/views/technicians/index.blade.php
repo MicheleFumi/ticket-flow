@@ -69,22 +69,9 @@
                                             </div>
 
                                         </td>
-                                        <td
-                                            class="px-6 py-4 whitespace-nowrap dark:text-white w-1 text-center align-middle">
-                                            <div
-                                                class="rounded-full mx-0 text-xs @if ($technician->is_admin && $technician->is_superadmin) bg-yellow-400  dark:text-black
-                                                    @elseif($technician->is_admin && !$technician->is_superadmin)
-                                                        bg-orange-500 
-                                                    @else
-                                                       bg-rose-400 @endif text-black dark:text-white px-2 py-1 text-sm">
-                                                @if ($technician->is_admin && $technician->is_superadmin)
-                                                    Super Amministratore
-                                                @elseif($technician->is_admin && !$technician->is_superadmin)
-                                                    Amministratore
-                                                @else
-                                                    Tecnico
-                                                @endif
-                                            </div>
+                                        <td class="px-6 py-4 whitespace-nowrap dark:text-white w-1 text-center">
+                                            <x-role-badge :user="$technician" />
+
                                         </td>
                                         <td class="px-6 py-4 whitespace-nowrap dark:text-white technician-email">
                                             {{ $technician->email }}
