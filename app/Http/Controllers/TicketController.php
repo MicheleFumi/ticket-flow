@@ -110,6 +110,10 @@ class TicketController extends Controller
             return redirect()->back()->with('error', 'Utente non autenticato come tecnico.');
         }
 
+        if (!$technician->is_available) {
+            return redirect()->back()->with('error', 'Tecnico non disponibile.');
+        }
+
         if ($ticket->status_id === 3) {
             return redirect()->back()->with('error', 'Impossibile assegnare un ticket già chiuso.');
         }
@@ -119,6 +123,15 @@ class TicketController extends Controller
         }
 
         $latestLog = $ticket->logs()->latest()->first();
+
+        if (!$latestLog) {
+            return redirect()->back()->with('error', 'Nessun log trovato per questo ticket.');
+        }
+
+        if ($latestLog->assegnato_a) {
+            return redirect()->back()->with('error', 'Il ticket è già assegnato a un tecnico.');
+        }
+
 
         DB::beginTransaction();
 
@@ -152,10 +165,20 @@ class TicketController extends Controller
             return redirect()->back()->with('error', 'Il ticket è già stato chiuso.');
         }
 
+        $latestLog = $ticket->logs()->latest()->first();
+
+        if (!$latestLog) {
+            return redirect()->back()->with('error', 'Nessun log trovato per questo ticket.');
+        }
+
+        if ($latestLog->assegnato_a) {
+            return redirect()->back()->with('error', 'Il ticket è già assegnato a un tecnico.');
+        }
+
         DB::beginTransaction();
         try {
 
-            $ticket->assignToTechnician($technician);
+            $latestLog->assignToTechnician($technician, $ticket);
             DB::commit();
             return redirect()->route('tickets.index')->with('success', 'Tecnico assegnato con successo.');
         } catch (\Exception $e) {
