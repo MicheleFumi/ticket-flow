@@ -7,12 +7,14 @@
             <div class="d flex items-center gap-2">
                 @if (auth()->check() && auth()->user()->is_superadmin)
                     <button id="openAddAdminModalButton"
-                        class="bg-blue-500 hover:bg-blue-600 text-white font-bold py-2 px-2 rounded focus:outline-none focus:shadow-outline transition duration-150 ease-in-out">Aggiungi Admin
+                        class="bg-blue-500 hover:bg-blue-600 text-white font-bold py-2 px-2 rounded focus:outline-none focus:shadow-outline transition duration-150 ease-in-out">Aggiungi
+                        Admin
                     </button>
                 @endif
                 @if (auth()->check() && auth()->user()->is_admin)
                     <button id="openCreateNewTechnicianModalButton"
-                        class="bg-green-500 hover:bg-green-600 text-white font-bold py-2 px-2 rounded focus:outline-none focus:shadow-outline transition duration-150 ease-in-out">Aggiungi Tecnico
+                        class="bg-green-500 hover:bg-green-600 text-white font-bold py-2 px-2 rounded focus:outline-none focus:shadow-outline transition duration-150 ease-in-out">Aggiungi
+                        Tecnico
                     </button>
                 @endif
             </div>
@@ -24,7 +26,8 @@
             <div class="bg-white dark:bg-gray-800 overflow-hidden shadow-sm sm:rounded-lg">
                 {{-- searchbar --}}
                 <div class="p-6">
-                    <input type="text" id="technicianSearchBar" placeholder="Cerca tecnici per nome, cognome o email..."
+                    <input type="text" id="technicianSearchBar"
+                        placeholder="Cerca tecnici per nome, cognome o email..."
                         class="p-2 w-full border rounded-md dark:bg-gray-700 dark:border-gray-600 dark:text-gray-100 focus:ring-blue-500 focus:border-blue-500">
                 </div>
 
@@ -55,9 +58,29 @@
                                 @foreach ($technicians as $technician)
                                     <tr class="technician-row">
                                         <td class="px-6 py-4 whitespace-nowrap dark:text-white">
-                                            <span class="technician-name">{{ $technician->nome }}</span> <span
-                                                class="technician-lastname">{{ $technician->cognome }}</span>
+                                            <div class="flex justify-start items-center">
+                                                <div class="pe-5">
+                                                    <span class="technician-name">{{ $technician->nome }}</span>
+                                                    <span class="technician-lastname">{{ $technician->cognome }}</span>
+                                                </div>
+
+                                                <div
+                                                    class="rounded-full mx-0 text-xs @if ($technician->is_admin && $technician->is_superadmin) bg-lime-600
+                                                    @elseif($technician->is_admin && !$technician->is_superadmin)
+                                                        bg-cyan-300  dark:text-black
+                                                    @else
+                                                       bg-blue-500 @endif text-black dark:text-white px-2 py-1 text-sm">
+                                                    @if ($technician->is_admin && $technician->is_superadmin)
+                                                        Super Amministratore
+                                                    @elseif($technician->is_admin && !$technician->is_superadmin)
+                                                        Amministratore
+                                                    @else
+                                                        Tecnico
+                                                    @endif
+                                                </div>
+                                            </div>
                                         </td>
+
                                         <td class="px-6 py-4 whitespace-nowrap dark:text-white technician-email">
                                             {{ $technician->email }}
                                         </td>
@@ -125,7 +148,7 @@
 
                 </div>
             </div>
-            
+
             @if (auth()->check() && auth()->user()->is_superadmin)
                 <div class="flex justify-center mt-6">
                     <button id="openExTechniciansModalButton"

@@ -32,11 +32,27 @@
                 <x-dropdown align="right" width="48">
                     <x-slot name="trigger">
                         <button
-                            class="inline-flex items-center px-3 py-2 border border-transparent text-sm leading-4 font-medium rounded-md text-gray-500 dark:text-gray-400 bg-white dark:bg-gray-800 hover:text-gray-700 dark:hover:text-gray-300 focus:outline-none transition ease-in-out duration-150">
-                            <div>{{ Auth::user()->nome }} {{ Auth::user()->cognome }} @if (Auth::user()->is_admin && !Auth::user()->is_superadmin)
-                                    (Amministratore)
-                                @elseif(Auth::user()->is_superadmin && Auth::user()->is_admin)
-                                    (Super Amministratore )
+                            class="inline-flex justify-between items-center gap-1 w-full px-0 py-2 border border-transparent text-sm leading-4 font-medium rounded-md text-gray-500 dark:text-gray-400 bg-white dark:bg-gray-800 hover:text-gray-700 dark:hover:text-gray-300 focus:outline-none transition ease-in-out duration-150">
+
+                            {{-- Nome e cognome --}}
+                            <div class="whitespace-nowrap">
+                                {{ Auth::user()->nome }} {{ Auth::user()->cognome }}
+                            </div>
+
+                            {{-- Badge ruolo --}}
+                            <div
+                                class="rounded-full px-2 py-1 text-xs
+        @if (Auth::user()->is_superadmin && Auth::user()->is_admin) bg-lime-600 text-white
+        @elseif(Auth::user()->is_admin && !Auth::user()->is_superadmin)
+            bg-cyan-300 text-black dark:text-black
+        @else
+            bg-blue-500 text-white @endif">
+                                @if (Auth::user()->is_superadmin && Auth::user()->is_admin)
+                                    Super Amministratore
+                                @elseif(Auth::user()->is_admin && !Auth::user()->is_superadmin)
+                                    Amministratore
+                                @else
+                                    Tecnico
                                 @endif
                             </div>
                             <div class="ms-1">
