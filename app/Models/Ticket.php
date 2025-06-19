@@ -12,19 +12,19 @@ class Ticket extends Model
         'titolo',
         'commento',
         'status_id',
-        'technician_id',
-        'data_assegnazione',
-        'data_chiusura',
-        'chiuso_da',
-        'note_chiusura',
+        // 'technician_id',
+        // 'data_assegnazione',
+        // 'data_chiusura',
+        // 'chiuso_da',
+        // 'note_chiusura',
         'is_reported',
         'commento_report',
         'reportato_da',
         'repot_date',
         'is_deleted',
         'is_reopened',
-        'data_riapertura',
-        'ragione_riapertura',
+        // 'data_riapertura',
+        // 'ragione_riapertura',
     ];
 
     protected $casts = [
@@ -55,6 +55,12 @@ class Ticket extends Model
     {
         return $this->hasMany(TicketImage::class);
     }
+
+    public function logs()
+    {
+        return $this->hasMany(TicketLog::class);
+    }
+
     public function reportatoDa()
     {
         return $this->belongsTo(Technician::class, 'reportato_da');

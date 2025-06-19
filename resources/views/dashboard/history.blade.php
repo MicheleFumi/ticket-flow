@@ -82,6 +82,12 @@
                                         @endif
                                     </div>
                                     <div class="flex gap-2">
+                                        @if ($technician->is_admin)
+                                            <button type="button" class="px-2 py-1 rounded bg-red-500 text-white"
+                                                data-reopen-modal-id="reopen-modal-{{ $ticket->id }}">
+                                                    Riapri
+                                            </button>
+                                        @endif
                                         <button type="button"
                                             class="px-2 py-1 rounded bg-blue-500 text-white open-modal-btn"
                                             data-modal-id="modal-{{ $ticket->id }}">
@@ -91,7 +97,7 @@
                                 </div>
                             </div>
 
-                            <!-- Modale -->
+                            <!-- Modale dettagli -->
                             <div id="modal-{{ $ticket->id }}"
                                 class="modal hidden fixed bg-black bg-opacity-50 backdrop-blur-sm z-50 flex items-center justify-center"
                                 style="inset: -20px">
@@ -159,6 +165,42 @@
                                     </div>
                                 </div>
                             </div>
+
+                            <!-- Modale riapertura -->
+                            <div id="reopen-modal-{{ $ticket->id }}"
+                                class="modal hidden fixed bg-black bg-opacity-50 backdrop-blur-sm z-50 flex items-center justify-center"
+                                style="inset: -20px">
+                                <div class="modal-content bg-white dark:bg-gray-800 rounded-2xl shadow-2xl w-full max-w-md p-6 relative border border-gray-200 dark:border-gray-700">
+                                    <h2 class="text-2xl font-bold text-gray-800 dark:text-white mb-6">Riapri Ticket #{{ $ticket->id }}</h2>
+
+                                    <form method="POST" action="{{ route('tickets.reopen', $ticket->id) }}">
+                                        @csrf
+                                        <div class="mb-4">
+                                            <label for="ragione_riapertura_{{ $ticket->id }}" class="block text-gray-700 dark:text-gray-300 text-sm font-bold mb-2">
+                                                Motivazione della riapertura:
+                                            </label>
+                                            <textarea name="ragione_riapertura" id="ragione_riapertura_{{ $ticket->id }}" rows="4"
+                                                    class="shadow appearance-none border rounded w-full py-2 px-3 text-gray-700 dark:bg-gray-700 dark:text-white leading-tight focus:outline-none focus:shadow-outline"
+                                                    placeholder="Inserisci la motivazione per la riapertura del ticket." required></textarea>
+                                            @error('ragione_riapertura')
+                                                <p class="text-red-500 text-xs italic">{{ $message }}</p>
+                                            @enderror
+                                        </div>
+
+                                        <div class="flex items-center justify-end gap-3">
+                                            <button type="button"
+                                                    class="close-reopen-modal-btn bg-gray-500 hover:bg-gray-600 text-white font-semibold py-2 px-4 rounded shadow">
+                                                Annulla
+                                            </button>
+                                            <button type="submit"
+                                                    class="bg-red-600 hover:bg-red-700 text-white font-semibold py-2 px-4 rounded shadow">
+                                                Conferma Riapertura
+                                            </button>
+                                        </div>
+                                    </form>
+                                </div>
+                            </div>
+
                         @endforeach
                     </div>
                 @else
@@ -171,26 +213,9 @@
     </div>
 
     <script>
-        /* SCRIPT MODALE REPORT */
-        const badge = document.getElementById('reportBadge');
-        const text = document.getElementById('reportText');
-
-        badge.addEventListener('mouseenter', () => {
-            badge.style.width = 'auto';
-            text.style.opacity = '1';
-        });
-
-        badge.addEventListener('mouseleave', () => {
-            badge.style.width = '1.8rem';
-            text.style.opacity = '0';
-        });
-
-
-
-
-
+        
         document.addEventListener('DOMContentLoaded', () => {
-            // Modale
+            // Modale dettagli
             document.querySelectorAll('.open-modal-btn').forEach(button => {
                 button.addEventListener('click', () => {
                     const modal = document.getElementById(button.dataset.modalId);
@@ -215,6 +240,35 @@
                     if (!e.target.closest('.modal-content')) {
                         modal.classList.add('hidden');
                     }
+                });
+            });
+
+            /* MODALE report */
+            const badge = document.getElementById('reportBadge');
+            const text = document.getElementById('reportText');
+
+            badge.addEventListener('mouseenter', () => {
+                badge.style.width = 'auto';
+                text.style.opacity = '1';
+            });
+
+            badge.addEventListener('mouseleave', () => {
+                badge.style.width = '1.8rem';
+                text.style.opacity = '0';
+            });
+
+            // Modale riapertura
+
+            document.querySelectorAll('[data-reopen-modal-id]').forEach(button => {
+                button.addEventListener('click', () => {
+                    const modal = document.getElementById(button.dataset.reopenModalId);
+                    if (modal) modal.classList.remove('hidden');
+                });
+            });
+
+            document.querySelectorAll('.close-reopen-modal-btn').forEach(button => {
+                button.addEventListener('click', () => {
+                    button.closest('.modal').classList.add('hidden');
                 });
             });
 

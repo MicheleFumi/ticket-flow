@@ -27,7 +27,7 @@ Route::middleware(['auth', 'verified'])->group(function () {
 
     //TECNICI
     Route::get('/technicians', [TechnicianController::class, 'index'])->name("technicians.index");
-    Route::post('/technician/create', [TechnicianController::class, 'create'])->name('technician.create')->middleware([VerifyAdmin::class, VerifySuperAdmin::class]);
+    Route::post('/technician/create', [TechnicianController::class, 'create'])->name('technician.create')->middleware([VerifyAdmin::class]);
     Route::post('/technician/destroy', [TechnicianController::class, 'destroy'])->name('technician.destroy')->middleware(VerifyAdmin::class);
     Route::post("/technician/restore", [TechnicianController::class, 'restore'])->name("technician.restore")->middleware(VerifySuperAdmin::class);
     Route::post("/technician-to-admin", [AdminController::class, 'technicianToAdmin'])->name("technician-to-admin")->middleware(VerifySuperAdmin::class);
