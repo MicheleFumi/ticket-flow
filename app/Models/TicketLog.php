@@ -38,15 +38,15 @@ class TicketLog extends Model
 
     public function technician()
     {
-        return $this->belongsTo(Technician::class);
+        return $this->belongsTo(Technician::class, "assegnato_a");
     }
 
     public function allTechnicians()
     {
-        return $this->belongsTo(Technician::class, "technician_id")->withoutGlobalScopes(["still_active"]);
+        return $this->belongsTo(Technician::class, "assegnato_a")->withoutGlobalScopes(["still_active"]);
     }
 
-    public function assignToTechnician(Technician $technician)
+    public function assignToTechnician(Technician $technician, Ticket $ticket)
     {
         if (!$technician->is_available) {
             throw new \Exception("Il tecnico non è disponibile.");
@@ -55,8 +55,10 @@ class TicketLog extends Model
         $technician->is_available = false;
         $technician->save();
 
-        $this->technician_id = $technician->id;
-        $this->status_id = 2;
+        $ticket->status_id = 2;
+        $ticket->save();
+
+        $this->assegnato_a = $technician->id;
         $this->data_assegnazione = Carbon::now();
         $this->save();
 

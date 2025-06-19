@@ -25,9 +25,9 @@
                                     <div class="text-sm text-gray-500">
                                         Creato da: {{ $ticket->user->nome }} {{ $ticket->user->cognome }} il:
                                         {{ $ticket->created_at->format('d/m/Y H:i') }} <br>
-                                        Assegnato a: {{ $ticket->technician->nome }} {{ $ticket->technician->cognome }}
+                                        Assegnato a: {{ $ticket->latestLog->technician->nome }} {{ $ticket->latestLog->technician->cognome }}
                                         il:
-                                        {{ $ticket->data_assegnazione->format('d/m/Y H:i') }}
+                                        {{ $ticket->latestLog->data_assegnazione->format('d/m/Y H:i') }}
                                     </div>
                                 </div>
 
@@ -60,8 +60,8 @@
                                         <button type="button"
                                             class="px-2 py-1 rounded bg-yellow-500 text-gray-900 remove-technician-btn"
                                             data-ticket-id="{{ $ticket->id }}"
-                                            data-technician-id="{{ $ticket->technician->id }}"
-                                            data-technician-name="{{ $ticket->technician->nome }} {{ $ticket->technician->cognome }}"> 
+                                            data-technician-id="{{ $ticket->latestLog->technician->id }}"
+                                            data-technician-name="{{ $ticket->latestLog->technician->nome }} {{ $ticket->latestLog->technician->cognome }}"> 
                                             Rimuovi Assegnazione
                                         </button>
 

@@ -4,6 +4,7 @@ namespace App\Http\Controllers;
 
 use App\Models\Technician;
 use App\Models\Ticket;
+use App\Models\TicketLog;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\DB;
@@ -18,23 +19,9 @@ class TicketController extends Controller
         $technician = Auth::guard()->user();
         $tickets = Ticket::with('status', 'technician', 'user')->where('is_reported', false)->where("is_deleted", false)->orderBy('id', 'ASC')->get();
         $reportedTickets = Ticket::with('status', 'technician')->where('is_reported', true)->orderBy('id', 'ASC')->get();
+        $reopenedTickets = Ticket::with('status', 'technician')->where('is_reopened', true)->where("is_deleted", false)->orderBy('id', 'ASC')->get();
         $allTickets = Ticket::with('status', 'technician')->where("is_deleted", false)->orderBy('id', 'ASC')->get();
-        return view("tickets.index", compact("tickets", "technician", "reportedTickets", "allTickets"));
-    }
-    /**
-     * Show the form for creating a new resource.
-     */
-    public function create()
-    {
-        //
-    }
-
-    /**
-     * Store a newly created resource in storage.
-     */
-    public function store(Request $request)
-    {
-        //
+        return view("tickets.index", compact("tickets", "technician", "reportedTickets", "reopenedTickets", "allTickets"));
     }
 
     /**
@@ -44,26 +31,11 @@ class TicketController extends Controller
     {
 
 
-        $ticket->load('status', 'technician', 'reportatoDa');
+        $ticket->load('status', 'technician', 'reportatoDa', "logs");
         $technician = Auth::guard()->user();
         $technicianList = Technician::where("is_available", 1)->get();
-        return view('tickets.show', compact('ticket', 'technician', 'technicianList'));
-    }
-
-    /**
-     * Show the form for editing the specified resource.
-     */
-    public function edit(string $id)
-    {
-        //
-    }
-
-    /**
-     * Update the specified resource in storage.
-     */
-    public function update(Request $request, string $id)
-    {
-        //
+        $logs = $ticket->logs()->with('technician')->get();
+        return view('tickets.show', compact('ticket', 'technician', 'technicianList', 'logs'));
     }
 
     /**
@@ -72,13 +44,6 @@ class TicketController extends Controller
     public function destroy(Ticket $ticket, Request $request)
     {
 
-        /*   $technician = Auth::guard()->user();
-
-
-        if (!$technician || !$technician->is_admin) {
-
-            return redirect()->back()->with('error', 'Non sei autorizzato a eseguire questa operazione.');
-        } */
         if (!$ticket) {
             return redirect()->back()->with('error', 'Ticket non trovato.');
         }
@@ -106,16 +71,6 @@ class TicketController extends Controller
     public function report(Ticket $ticket, Request $request)
     {
         $technician = Auth::guard()->user();
-
-        /*  if (!$technician && !$request->filled('commento_report')) {
-
-            return redirect()->back()->with('error', 'Non sei autorizzato a eseguire questa operazione.');
-        }
-
-        if (!$technician && $request->filled('commento_report')) {
-
-            return redirect()->back()->with('error', 'Non sei autorizzato a eseguire questa operazione.');
-        } */
 
         if ($ticket->status_id === 3 || $ticket->status_id === 2 || $ticket->is_reported === true || $ticket->commento_report) {
 
@@ -146,11 +101,8 @@ class TicketController extends Controller
     }
 
 
-
-
     public function assign(Ticket $ticket)
     {
-        /** @var \App\Models\Technician $technician */
 
         $technician = Auth::guard()->user();
 
@@ -166,11 +118,12 @@ class TicketController extends Controller
             return redirect()->back()->with('error', 'Impossibile assegnare un ticket già assegnato a un tecnico.');
         }
 
+        $latestLog = $ticket->logs()->latest()->first();
+
         DB::beginTransaction();
 
         try {
-            $ticket->assignToTechnician($technician);
-
+            $latestLog->assignToTechnician($technician, $ticket);
             DB::commit();
 
             return redirect()->route('dashboard.index')->with('success', 'Ticket assegnato con successo.');
@@ -183,15 +136,6 @@ class TicketController extends Controller
 
     public function assignTo(Request $request, Ticket $ticket)
     {
-
-        $admin = Auth::guard()->user();
-        /* if (!$admin) {
-            return redirect()->back()->with('error', 'Utente non autenticato come tecnico.');
-        }
-
-        if (!$admin->is_admin) {
-            return redirect()->back()->with('error', 'Non sei autorizzato a eseguire questa operazione.');
-        } */
 
         $request->validate([
             'technician_id' => 'required|exists:technicians,id',

@@ -61,6 +61,11 @@ class Ticket extends Model
         return $this->hasMany(TicketLog::class);
     }
 
+    public function latestLog()
+    {
+        return $this->hasOne(TicketLog::class)->latestOfMany();
+    }
+
     public function reportatoDa()
     {
         return $this->belongsTo(Technician::class, 'reportato_da');
