@@ -113,7 +113,6 @@ class TicketController extends Controller
         $ticket->commento = $data['commento'];
 
         if (!isset($data['status_id']) || $data['status_id'] === null) {
-            // qui non cambi niente
         } else {
             $ticket->status_id = $data['status_id'];
         }
@@ -133,11 +132,11 @@ class TicketController extends Controller
 
         if ($ticket->user_id === $user_id && $ticket->status_id === 1) {
 
-            $ticket->delete();
-            $ticketList = Ticket::where('user_id', $user_id)->get();
+            $ticket->is_deleted = true;
+            $ticket->save();
 
             return response()->json([
-                'data' => $ticketList
+                'message' => 'Ticket eliminato con successo',
             ]);
         } else {
             return response()->json([
