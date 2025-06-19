@@ -42,6 +42,10 @@
                                     </th>
                                     <th
                                         class="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">
+                                        Ruolo
+                                    </th>
+                                    <th
+                                        class="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">
                                         Email
                                     </th>
                                     <th
@@ -58,29 +62,30 @@
                                 @foreach ($technicians as $technician)
                                     <tr class="technician-row">
                                         <td class="px-6 py-4 whitespace-nowrap dark:text-white">
-                                            <div class="flex justify-start items-center">
-                                                <div class="pe-5">
-                                                    <span class="technician-name">{{ $technician->nome }}</span>
-                                                    <span class="technician-lastname">{{ $technician->cognome }}</span>
-                                                </div>
 
-                                                <div
-                                                    class="rounded-full mx-0 text-xs @if ($technician->is_admin && $technician->is_superadmin) bg-lime-600
+                                            <div>
+                                                <span class="technician-name">{{ $technician->nome }}</span>
+                                                <span class="technician-lastname">{{ $technician->cognome }}</span>
+                                            </div>
+
+                                        </td>
+                                        <td
+                                            class="px-6 py-4 whitespace-nowrap dark:text-white w-1 text-center align-middle">
+                                            <div
+                                                class="rounded-full mx-0 text-xs @if ($technician->is_admin && $technician->is_superadmin) bg-yellow-400  dark:text-black
                                                     @elseif($technician->is_admin && !$technician->is_superadmin)
-                                                        bg-cyan-300  dark:text-black
+                                                        bg-orange-500 
                                                     @else
-                                                       bg-blue-500 @endif text-black dark:text-white px-2 py-1 text-sm">
-                                                    @if ($technician->is_admin && $technician->is_superadmin)
-                                                        Super Amministratore
-                                                    @elseif($technician->is_admin && !$technician->is_superadmin)
-                                                        Amministratore
-                                                    @else
-                                                        Tecnico
-                                                    @endif
-                                                </div>
+                                                       bg-rose-400 @endif text-black dark:text-white px-2 py-1 text-sm">
+                                                @if ($technician->is_admin && $technician->is_superadmin)
+                                                    Super Amministratore
+                                                @elseif($technician->is_admin && !$technician->is_superadmin)
+                                                    Amministratore
+                                                @else
+                                                    Tecnico
+                                                @endif
                                             </div>
                                         </td>
-
                                         <td class="px-6 py-4 whitespace-nowrap dark:text-white technician-email">
                                             {{ $technician->email }}
                                         </td>
