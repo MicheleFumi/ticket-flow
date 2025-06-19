@@ -35,6 +35,7 @@ class TicketController extends Controller
         $technician = Auth::guard()->user();
         $technicianList = Technician::where("is_available", 1)->get();
         $logs = $ticket->logs()->with('technician')->get();
+        // dd($logs);
         return view('tickets.show', compact('ticket', 'technician', 'technicianList', 'logs'));
     }
 
@@ -249,10 +250,6 @@ class TicketController extends Controller
         $note_chiusura = $request->input('note_chiusura');
 
         $latestLog = $ticket->logs()->latest()->first();
-
-        // if (!$technician->is_admin && $ticket->technician_id !== $technician->id) {
-        //     return redirect()->back()->with('error', 'Non sei autorizzato a chiudere questo ticket.');
-        // }
 
 
         DB::beginTransaction();
