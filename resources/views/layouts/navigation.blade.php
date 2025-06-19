@@ -42,11 +42,11 @@
                             {{-- Badge ruolo --}}
                             <div
                                 class="rounded-full px-2 py-1 text-xs
-        @if (Auth::user()->is_superadmin && Auth::user()->is_admin) bg-lime-600 text-white
+        @if (Auth::user()->is_superadmin && Auth::user()->is_admin) bg-yellow-400  dark:text-black text-white
         @elseif(Auth::user()->is_admin && !Auth::user()->is_superadmin)
-            bg-cyan-300 text-black dark:text-black
+            bg-orange-500 text-black
         @else
-            bg-blue-500 text-white @endif">
+            bg-rose-400 text-white @endif">
                                 @if (Auth::user()->is_superadmin && Auth::user()->is_admin)
                                     Super Amministratore
                                 @elseif(Auth::user()->is_admin && !Auth::user()->is_superadmin)
