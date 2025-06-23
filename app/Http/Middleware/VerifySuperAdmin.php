@@ -18,7 +18,7 @@ class VerifySuperAdmin
 
         $user = $request->user();
 
-        if (!$user || !$user->is_superAdmin) {
+        if (!$user || !$user->is_superadmin) {
             return redirect()->route('login');
         }
         return $next($request);

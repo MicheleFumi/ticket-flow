@@ -146,14 +146,14 @@
 
 
     {{-- Modale per Rimuovere Admin --}}
-    <x-modals.removeAdminModal :technicians="$technicians" />
+    <x-modals.removeAdminModal />
 
     {{-- Modale per creare un Tecnico --}}
     <x-modals.createNewTechnicianModal />
 
 
     {{-- Modale per Rimuovere Tecnico --}}
-    <x-modals.removeTechnicianModal :technicians="$technicians" />
+    <x-modals.removeTechnicianModal />
 
 
     <script src="{{ asset('js/technician-page.js') }}"></script>

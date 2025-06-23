@@ -55,6 +55,8 @@ class AdminController extends Controller
             return Redirect::back()->with('error', 'Non sei autorizzato a eseguire questa operazione.');
         } */
 
+
+
         $request->validate([
             'technician_id' => 'required|exists:technicians,id',
         ]);
