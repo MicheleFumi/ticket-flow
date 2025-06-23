@@ -49,7 +49,6 @@
                                 <option value="30">Ultimo mese</option>
                             </select>
                             <div class="pointer-events-none absolute inset-y-0 right-0 flex items-center px-2 text-gray-700 dark:text-gray-300">
-                                <svg class="fill-current h-4 w-4" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 20 20"><path d="M9.293 12.95l.707.707L15.657 8l-1.414-1.414L10 10.828 6.757 7.586 5.343 9z"/></svg>
                             </div>
                         </div>
 
@@ -64,7 +63,6 @@
                                     <option value="not_reported">Non segnalati</option>
                                 </select>
                                 <div class="pointer-events-none absolute inset-y-0 right-0 flex items-center px-2 text-gray-700 dark:text-gray-300">
-                                    <svg class="fill-current h-4 w-4" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 20 20"><path d="M9.293 12.95l.707.707L15.657 8l-1.414-1.414L10 10.828 6.757 7.586 5.343 9z"/></svg>
                                 </div>
                             </div>
                         @endif
@@ -103,7 +101,7 @@
                             <div class="mt-5 flex items-center justify-between">
                                 <div>
                                     <span
-                                        class="px-3 py-1 rounded-full text-xs font-semibold
+                                        class="px-2.5 py-0.5 rounded-full text-xs font-semibold
                                         @if ($ticket->status->titolo === 'Aperto') bg-green-100 text-green-700 dark:bg-green-700 dark:text-green-100
                                         @elseif($ticket->status->titolo === 'In Lavorazione') bg-yellow-100 text-yellow-700 dark:bg-yellow-700 dark:text-yellow-100
                                         @else bg-red-100 text-red-700 dark:bg-red-700 dark:text-red-100 @endif"
@@ -111,10 +109,11 @@
                                         {{ ucfirst($ticket->status->titolo) }}
                                     </span>
                                     @if ($ticket->is_reported)
-                                        <span class="relative group inline-flex items-center ml-2 px-3 py-1 rounded-full bg-red-100 text-red-700 dark:bg-red-700 dark:text-red-100 text-xs font-semibold">
-                                            <svg class="w-4 h-4 mr-1" fill="currentColor" viewBox="0 0 20 20" xmlns="http://www.w3.org/2000/svg"><path fill-rule="evenodd" d="M8.257 3.099c.765-1.542 2.766-1.542 3.532 0l7.243 14.51c.769 1.549-.217 3.25-1.928 3.25H3.002c-1.71 0-2.697-1.701-1.928-3.25L8.257 3.099zM10 13a1 1 0 100-2 1 1 0 000 2zm-1-4a1 1 0 000 2h2a1 1 0 100-2h-2z" clip-rule="evenodd"></path></svg>
-                                            <span class="whitespace-nowrap">Segnalato</span>
-                                            <span class="absolute -top-8 left-1/2 -translate-x-1/2 scale-0 group-hover:scale-100 transition-transform bg-gray-800 text-white text-xs px-2 py-1 rounded shadow-md z-10 whitespace-nowrap">
+                                        <span
+                                            class="relative group ms-2 px-2.5 py-0.5 rounded-full bg-yellow-100 text-yellow-700 inline-flex items-center justify-center">
+                                            <i class="bi bi-exclamation-triangle-fill text-xs"></i>
+                                            <span
+                                                class="absolute -top-8 left-1/2 -translate-x-1/2 scale-0 group-hover:scale-100 transition-transform bg-gray-800 text-white text-xs px-2 py-1 rounded shadow-md z-10 whitespace-nowrap">
                                                 Ticket reportato
                                             </span>
                                         </span>
@@ -173,13 +172,12 @@
                 // Filtro nome/cognome
                 if (nameQuery && !userFullName.includes(nameQuery)) show = false;
 
-                card.style.display = show ? 'flex' : 'none'; // Use flex for card display
+                card.style.display = show ? 'flex' : 'none';
                 if (show) {
                     hasVisibleTickets = true;
                 }
             });
 
-            // Mostra un messaggio se nessun ticket corrisponde ai filtri
             const noTicketsMessage = ticketContainer.querySelector('.col-span-full.p-8.text-center');
             if (noTicketsMessage) {
                 if (hasVisibleTickets) {
@@ -188,7 +186,6 @@
                     noTicketsMessage.style.display = 'block';
                 }
             } else if (!hasVisibleTickets) {
-                // Se non esiste già un messaggio, lo creiamo
                 const messageDiv = document.createElement('div');
                 messageDiv.className = 'col-span-full p-8 text-center text-gray-600 dark:text-gray-400';
                 messageDiv.innerHTML = '<p class="text-lg">Non ci sono ticket aperti che corrispondono ai criteri di filtro.</p>';
@@ -201,7 +198,6 @@
         dateFilter?.addEventListener('change', filterTickets);
         userSearch?.addEventListener('input', filterTickets);
 
-        // Chiamata iniziale per applicare i filtri se ci sono valori predefiniti o per mostrare il messaggio "no tickets"
         filterTickets();
     });
 </script>
