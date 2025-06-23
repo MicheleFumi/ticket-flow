@@ -155,6 +155,8 @@
         <x-modals.deleteTicketModal :ticket="$ticket"/>
 
         <!-- Modale per visualizzare i logs del ticket -->
+        <x-modals.logsModal :logs="$logs" :ticket="$ticket"/>
+
     </div>
 
     <script src="{{ asset('js/ticket-show-page.js') }}"></script>

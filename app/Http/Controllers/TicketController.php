@@ -34,7 +34,15 @@ class TicketController extends Controller
         $ticket->load('status', 'technician', 'reportatoDa', "logs");
         $technician = Auth::guard()->user();
         $technicianList = Technician::where("is_available", 1)->get();
-        $logs = $ticket->logs()->with('technician')->get();
+        $logs = TicketLog::where('ticket_id', $ticket->id)
+            ->with([
+                'assignedTechnician', // assegnato_a
+                'userWhoReopened',    // riaperto_da_user
+                'adminWhoReopened',   // riaperto_da_admin
+                'technicianWhoClosed' // chiuso_da
+            ])
+            ->latest()
+            ->get();
         // dd($logs);
         return view('tickets.show', compact('ticket', 'technician', 'technicianList', 'logs'));
     }

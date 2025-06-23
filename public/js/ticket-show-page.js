@@ -37,7 +37,7 @@ document.addEventListener('DOMContentLoaded', function () {
     });
 });
 
-/* MODALE PER ASSEGNAZIONE TICKET FATTO DA ADMIN SOLO */
+/* MODALE PER ASSEGNAZIONE TICKET ADMIN ONLY */
 
 document.addEventListener('DOMContentLoaded', function () {
     // Elementi modale ricerca tecnico assegnazione ticket
@@ -93,7 +93,7 @@ document.addEventListener('DOMContentLoaded', function () {
     });
 });
 
-/* MODALE PER RIMOZIONE TICKET FATTO DA ADMIN SOLO */
+/* MODALE PER RIMOZIONE TICKET ADMIN ONLY */
 document.getElementById('openDeleteModalButton')?.addEventListener('click', function () {
     document.getElementById('deleteTicketModal').classList.remove('hidden');
 });
@@ -107,4 +107,28 @@ document.getElementById('openReportTicketModalButton')?.addEventListener('click'
 });
 document.getElementById('closeReportTicketModalButton')?.addEventListener('click', function () {
     document.getElementById('reportTicketModal').classList.add('hidden');
+});
+
+/* MODALE LOGS */
+document.addEventListener('DOMContentLoaded', () => {
+    const openButton = document.getElementById('openLogsModalButton');
+    const closeButton = document.getElementById('closeLogsModalButton');
+    const modal = document.getElementById('logsModal');
+
+    openButton?.addEventListener('click', () => {
+        modal.classList.remove('hidden');
+        modal.classList.add('flex');
+    });
+
+    closeButton?.addEventListener('click', () => {
+        modal.classList.add('hidden');
+        modal.classList.remove('flex');
+    });
+
+    modal?.addEventListener('click', (e) => {
+        if (e.target === modal) {
+            modal.classList.add('hidden');
+            modal.classList.remove('flex');
+        }
+    });
 });

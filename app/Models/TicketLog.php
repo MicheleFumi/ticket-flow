@@ -46,6 +46,31 @@ class TicketLog extends Model
         return $this->belongsTo(Technician::class, "assegnato_a")->withoutGlobalScopes(["still_active"]);
     }
 
+
+
+
+    public function assignedTechnician()
+    {
+        return $this->belongsTo(Technician::class, 'assegnato_a')->withoutGlobalScopes(['still_active']);
+    }
+
+    public function userWhoReopened()
+    {
+        return $this->belongsTo(User::class, 'riaperto_da_user');
+    }
+
+    public function adminWhoReopened()
+    {
+        return $this->belongsTo(Technician::class, 'riaperto_da_admin')->withoutGlobalScopes(['still_active']);
+    }
+
+    public function technicianWhoClosed()
+    {
+        return $this->belongsTo(Technician::class, 'chiuso_da')->withoutGlobalScopes(['still_active']);
+    }
+
+
+
     public function assignToTechnician(Technician $technician, Ticket $ticket)
     {
         if (!$technician->is_available) {
@@ -91,7 +116,7 @@ class TicketLog extends Model
             throw new \Exception("Il ticket non può essere chiuso perché non è assegnato.");
         }
 
-        if ($this->status_id === 3) {
+        if ($ticket->status_id === 3) {
             throw new \Exception("Il ticket è già chiuso.");
         }
 
