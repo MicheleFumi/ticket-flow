@@ -1,211 +1,101 @@
 <x-app-layout>
     <x-slot name="header">
         <div class="flex justify-between items-center">
-            <h2 class="font-semibold text-xl text-gray-800 dark:text-gray-200 leading-tight">
+            <h2 class="font-semibold text-3xl text-gray-800 dark:text-gray-200 leading-tight">
                 {{ __('Storico Ticket') }}
             </h2>
         </div>
     </x-slot>
 
-    <div class="py-12">
+    <div class="py-12 bg-gray-100 dark:bg-gray-900 min-h-screen">
         <div class="max-w-7xl mx-auto sm:px-6 lg:px-8">
-            <div class="bg-white dark:bg-gray-800 overflow-hidden shadow-sm sm:rounded-lg">
-                @if ($tickets->count() > 0)
-                    <div class="p-6 text-gray-900 dark:text-gray-100 flex justify-between items-center">
-                        <span>{{ __('Stai visualizzando lo storico dei ticket chiusi') }}</span>
-                        <div>
-                            @if (auth()->user()->is_admin)
-                                <div class="flex flex-col sm:flex-row sm:items-center sm:gap-4">
-                                    <div class="relative">
-                                        <input type="text" id="searchInput" placeholder="Filtra per tecnico..."
-                                            class="rounded-md px-3 py-1 border border-gray-300 dark:bg-gray-700 dark:text-white pr-8" />
-                                        <button type="button"
-                                            onclick="document.getElementById('searchInput').value='';"
-                                            class="absolute right-1 top-1/2 -translate-y-1/2 bg-gray-300 dark:bg-gray-600 hover:bg-gray-400 dark:hover:bg-gray-500 text-gray-700 dark:text-gray-200 rounded-full w-5 h-5 flex items-center justify-center text-md font-bold focus:outline-none"
-                                            aria-label="Clear text input">
-                                            &times;
-                                        </button>
-                                    </div>
+            <div class="bg-white dark:bg-gray-800 overflow-hidden shadow-xl sm:rounded-lg">
+                @if ($tickets->where('status_id', 3)->count())
+                    <div class="p-6 border-b border-gray-200 dark:border-gray-700 flex flex-col sm:flex-row justify-end items-center space-y-4 sm:space-y-0 sm:space-x-4">
+                        {{-- Search input tecnico --}}
+                        <div class="relative w-full sm:w-auto">
+                            <input
+                                type="text"
+                                id="searchInput"
+                                placeholder="Cerca tecnico..."
+                                class="w-full pl-10 pr-4 py-2 rounded-full border border-gray-300 dark:border-gray-600 dark:bg-gray-700 dark:text-white focus:ring-blue-500 focus:border-blue-500 transition duration-150 ease-in-out"
+                            />
+                            <div class="absolute inset-y-0 left-0 pl-3 flex items-center pointer-events-none">
+                                <svg class="h-5 w-5 text-gray-400" fill="none" stroke="currentColor" viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M21 21l-6-6m2-5a7 7 0 11-14 0 7 7 0 0114 0z"></path></svg>
+                            </div>
+                            <button
+                                type="button"
+                                onclick="document.getElementById('searchInput').value=''; filterTickets();"
+                                class="absolute right-3 top-1/2 -translate-y-1/2 bg-gray-200 dark:bg-gray-600 hover:bg-gray-300 dark:hover:bg-gray-500 text-gray-600 dark:text-gray-200 rounded-full w-6 h-6 flex items-center justify-center text-sm font-bold focus:outline-none transition duration-150 ease-in-out"
+                            >
+                                &times;
+                            </button>
+                        </div>
 
-                                    <div class="relative mt-2 sm:mt-0">
-                                        <input type="date" id="dateInput" max="{{ now()->toDateString() }}"
-                                            class="rounded-md px-3 py-1 border border-gray-300 dark:bg-gray-700 dark:text-white pr-8" />
-                                        <button type="button" onclick="document.getElementById('dateInput').value='';"
-                                            class="absolute right-1 top-1/2 -translate-y-1/2 bg-gray-300 dark:bg-gray-600 hover:bg-gray-400 dark:hover:bg-gray-500 text-gray-700 dark:text-gray-200 rounded-full w-5 h-5 flex items-center justify-center text-md font-bold focus:outline-none"
-                                            aria-label="Clear date input">
-                                            &times;
-                                        </button>
-                                    </div>
-                                </div>
-                            @endif
-
+                        {{-- Filtro data --}}
+                        <div class="relative w-full sm:w-auto">
+                            <input
+                                type="date"
+                                id="dateInput"
+                                max="{{ now()->toDateString() }}"
+                                class="w-full px-4 py-2 pr-10 rounded-full border border-gray-300 dark:border-gray-600 dark:bg-gray-700 dark:text-white focus:ring-blue-500 focus:border-blue-500 transition duration-150 ease-in-out"
+                            />
+                            <button
+                                type="button"
+                                onclick="document.getElementById('dateInput').value=''; filterTickets();"
+                                class="absolute right-3 top-1/2 -translate-y-1/2 bg-gray-200 dark:bg-gray-600 hover:bg-gray-300 dark:hover:bg-gray-500 text-gray-600 dark:text-gray-200 rounded-full w-6 h-6 flex items-center justify-center text-sm font-bold focus:outline-none transition duration-150 ease-in-out"
+                            >
+                                &times;
+                            </button>
                         </div>
                     </div>
 
-                    <div class="p-2 text-gray-900 dark:text-gray-100 space-y-4" id="ticketContainer">
-                        @foreach ($tickets as $ticket)
-                            <div class="ticket-card bg-white shadow-md rounded-2xl p-4 border border-gray-200"
-                                data-technician="{{ strtolower($ticket->allTechnicians->nome . ' ' . $ticket->allTechnicians->cognome) }}"
-                                data-date="{{ $ticket->data_chiusura->format('Y-m-d') }}">
-                                <div class="flex items-center justify-between mb-2">
-                                    <h2 class="text-xl font-semibold text-gray-800">{{ $ticket->titolo }}</h2>
-                                    <span class="text-sm text-gray-500">
-                                        Assegnato a: {{ $ticket->allTechnicians->nome }}
-                                        {{ $ticket->allTechnicians->cognome }}
-                                        il: {{ $ticket->data_assegnazione->format('d/m/Y H:i') }}
-                                    </span>
+                    <div class="p-6 grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6" id="ticketContainer">
+                        @foreach ($tickets->where('status_id', 3) as $ticket)
+                            <div
+                                class="ticket-card bg-white dark:bg-gray-700 shadow-lg rounded-2xl p-6 border border-gray-200 dark:border-gray-600 flex flex-col justify-between transform hover:scale-105 transition-all duration-300 ease-in-out"
+                                data-date="{{ $ticket->latestLog?->data_chiusura?->format('Y-m-d') ?? '' }}"
+                                data-technician="{{ $ticket->latestLog && $ticket->latestLog->technician ? strtolower($ticket->latestLog->technician->nome . ' ' . $ticket->latestLog->technician->cognome) : '' }}"
+                            >
+                                <div>
+                                    <h3 class="text-2xl font-bold text-gray-900 dark:text-gray-100 mb-3">{{ $ticket->titolo }}</h3>
+                                    <p class="text-gray-700 dark:text-gray-300 text-base mb-4 line-clamp-3">{{ $ticket->commento }}</p>
                                 </div>
 
-                                <div class="flex items-center justify-end mb-2">
-                                    <span class="text-sm text-gray-500">
-                                        Chiuso da:
-                                        {{ $ticket->closedBy ? $ticket->closedBy->nome . ' ' . $ticket->closedBy->cognome : 'N/D' }}
-                                        il: {{ $ticket->data_chiusura->format('d/m/Y H:i') }}
-                                    </span>
+                                <div class="border-t border-gray-200 dark:border-gray-600 pt-4 mt-4 text-sm text-gray-600 dark:text-gray-400 space-y-2">
+                                    <p>
+                                        <strong>Chiuso da:</strong>
+                                        <span class="font-medium text-gray-800 dark:text-gray-200">{{ $ticket->latestLog?->technicianWhoClosed ? $ticket->latestLog->technicianWhoClosed->nome . ' ' . $ticket->latestLog->technicianWhoClosed->cognome : 'N/A' }}</span>
+                                    </p>
+                                    <p>
+                                        <strong>Data chiusura:</strong>
+                                        <span class="font-medium text-gray-800 dark:text-gray-200">{{ $ticket->latestLog?->data_chiusura?->format('d/m/Y H:i') ?? 'N/A' }}</span>
+                                    </p>
+                                    <p>
+                                        <strong>Assegnato a:</strong>
+                                        <span class="font-medium text-gray-800 dark:text-gray-200">{{ $ticket->latestLog?->technician ? $ticket->latestLog->technician->nome . ' ' . $ticket->latestLog->technician->cognome : 'N/A' }}</span>
+                                    </p>
+                                    <p>
+                                        <strong>Data assegnazione:</strong>
+                                        <span class="font-medium text-gray-800 dark:text-gray-200">{{ $ticket->latestLog?->data_assegnazione?->format('d/m/Y H:i') ?? 'N/A' }}</span>
+                                    </p>
                                 </div>
 
-                                <div class="flex items-center justify-between text-sm">
-                                    <div>
-                                        <span class="px-2 py-1 rounded-full bg-red-100 text-red-700">
-                                            {{ ucfirst($ticket->status->titolo) }}
-
-                                        </span>
-                                        @if ($ticket->is_reported)
-                                            <span id="reportBadge"
-                                                class="inline-flex items-center rounded-full bg-yellow-100 text-yellow-700 mx-2 px-2 py-1 text-sm transition-all duration-300 overflow-hidden cursor-default"
-                                                style="width: 1.8rem;">
-                                                <i class="bi bi-exclamation-triangle-fill"></i>
-                                                <span id="reportText"
-                                                    class="ml-2 whitespace-nowrap opacity-0 transition-opacity duration-300">Ticket
-                                                    segnalato</span>
-                                            </span>
-                                        @endif
-                                    </div>
-                                    <div class="flex gap-2">
-                                        @if ($technician->is_admin)
-                                            <button type="button" class="px-2 py-1 rounded bg-red-500 text-white"
-                                                data-reopen-modal-id="reopen-modal-{{ $ticket->id }}">
-                                                    Riapri
-                                            </button>
-                                        @endif
-                                        <button type="button"
-                                            class="px-2 py-1 rounded bg-blue-500 text-white open-modal-btn"
-                                            data-modal-id="modal-{{ $ticket->id }}">
-                                            Dettagli
-                                        </button>
-                                    </div>
+                                <div class="mt-5 text-right">
+                                    <a
+                                        href="{{ route('tickets.show', $ticket->id) }}"
+                                        class="inline-flex items-center px-4 py-2 bg-blue-600 text-white font-semibold rounded-full shadow-md hover:bg-blue-700 focus:outline-none focus:ring-2 focus:ring-blue-500 focus:ring-offset-2 dark:focus:ring-offset-gray-800 transition duration-150 ease-in-out"
+                                    >
+                                        Dettagli
+                                        <svg class="ml-2 -mr-1 w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 5l7 7-7 7"></path></svg>
+                                    </a>
                                 </div>
                             </div>
-
-                            <!-- Modale dettagli -->
-                            <div id="modal-{{ $ticket->id }}"
-                                class="modal hidden fixed bg-black bg-opacity-50 backdrop-blur-sm z-50 flex items-center justify-center"
-                                style="inset: -20px">
-
-                                <div
-                                    class="modal-content bg-white dark:bg-gray-800 rounded-2xl shadow-2xl w-full max-w-xl p-6 sm:p-8 relative border border-gray-200 dark:border-gray-700">
-
-                                    <h2 class="text-2xl font-bold text-gray-800 dark:text-white mb-6">📋 Dettagli Ticket
-                                    </h2>
-
-                                    <div class="space-y-4 text-sm text-gray-700 dark:text-gray-300">
-                                        <p><span class="font-bold">Titolo:</span> {{ $ticket->titolo }}</p>
-                                        <p><span class="font-bold">Testo:</span> {{ $ticket->commento }}</p>
-                                        <p><span class="font-bold">Aperto da:</span> {{ $ticket->user->nome }}
-                                            {{ $ticket->user->cognome }}</p>
-                                        <p><span class="font-bold">Data Apertura:</span>
-                                            {{ $ticket->created_at->format('d/m/Y H:i') }}</p>
-                                        <p><span class="font-bold">Tecnico assegnato:</span>
-                                            {{ $ticket->allTechnicians->nome }} {{ $ticket->allTechnicians->cognome }}
-                                        </p>
-                                        <p><span class="font-bold">Data Assegnazione:</span>
-                                            {{ $ticket->data_assegnazione->format('d/m/Y H:i') }}</p>
-                                        <p><span class="font-bold">Chiuso da:</span>
-                                            {{ $ticket->closedBy ? $ticket->closedBy->nome . ' ' . $ticket->closedBy->cognome : 'N/D' }}
-                                        </p>
-                                        <p><span class="font-bold">Data Chiusura:</span>
-                                            {{ $ticket->data_chiusura->format('d/m/Y H:i') }}</p>
-
-                                        @if ($ticket->is_reported)
-                                            <div class="border-t pt-3 mt-3">
-                                                <p><span class="font-bold">Segnalato da:</span>
-                                                    {{ $ticket->allTechnicians->nome }}
-                                                    {{ $ticket->allTechnicians->cognome }}
-                                                </p>
-                                                <p><span class="font-bold">Data segnalazione:</span>
-                                                    {{ $ticket->report_date }}</p>
-                                                <p><span class="font-bold">Motivazione segnalazione:</span>
-                                                    {{ $ticket->commento_report }}</p>
-                                            </div>
-                                        @endif
-
-                                        @if (isset($ticket->images) && $ticket->images->count())
-                                            <div class="border-t pt-3 mt-3 space-y-1">
-                                                <span class="font-bold">Immagini:</span>
-                                                @foreach ($ticket->images as $image)
-                                                    <a href="{{ asset($image->file_path) }}" target="_blank"
-                                                        class="text-blue-600 hover:underline block">Visualizza immagine
-                                                        {{ $loop->iteration }}</a>
-                                                @endforeach
-                                            </div>
-                                        @endif
-
-                                        <div class="border-t pt-3 mt-3">
-                                            <p><span class="font-bold">Note di chiusura:</span>
-                                                {{ $ticket->note_chiusura ?? 'Non ci sono note di chiusura.' }}
-                                            </p>
-                                        </div>
-                                    </div>
-
-                                    <div class="mt-6 text-right">
-                                        <button
-                                            class="close-modal-btn bg-red-600 hover:bg-red-700 text-white font-semibold py-2 px-5 rounded shadow">
-                                            Chiudi
-                                        </button>
-                                    </div>
-                                </div>
-                            </div>
-
-                            <!-- Modale riapertura -->
-                            <div id="reopen-modal-{{ $ticket->id }}"
-                                class="modal hidden fixed bg-black bg-opacity-50 backdrop-blur-sm z-50 flex items-center justify-center"
-                                style="inset: -20px">
-                                <div class="modal-content bg-white dark:bg-gray-800 rounded-2xl shadow-2xl w-full max-w-md p-6 relative border border-gray-200 dark:border-gray-700">
-                                    <h2 class="text-2xl font-bold text-gray-800 dark:text-white mb-6">Riapri Ticket #{{ $ticket->id }}</h2>
-
-                                    <form method="POST" action="{{ route('tickets.reopen', $ticket->id) }}">
-                                        @csrf
-                                        <div class="mb-4">
-                                            <label for="ragione_riapertura_{{ $ticket->id }}" class="block text-gray-700 dark:text-gray-300 text-sm font-bold mb-2">
-                                                Motivazione della riapertura:
-                                            </label>
-                                            <textarea name="ragione_riapertura" id="ragione_riapertura_{{ $ticket->id }}" rows="4"
-                                                    class="shadow appearance-none border rounded w-full py-2 px-3 text-gray-700 dark:bg-gray-700 dark:text-white leading-tight focus:outline-none focus:shadow-outline"
-                                                    placeholder="Inserisci la motivazione per la riapertura del ticket." required></textarea>
-                                            @error('ragione_riapertura')
-                                                <p class="text-red-500 text-xs italic">{{ $message }}</p>
-                                            @enderror
-                                        </div>
-
-                                        <div class="flex items-center justify-end gap-3">
-                                            <button type="button"
-                                                    class="close-reopen-modal-btn bg-gray-500 hover:bg-gray-600 text-white font-semibold py-2 px-4 rounded shadow">
-                                                Annulla
-                                            </button>
-                                            <button type="submit"
-                                                    class="bg-red-600 hover:bg-red-700 text-white font-semibold py-2 px-4 rounded shadow">
-                                                Conferma Riapertura
-                                            </button>
-                                        </div>
-                                    </form>
-                                </div>
-                            </div>
-
                         @endforeach
                     </div>
                 @else
-                    <div class="p-6 text-gray-900 dark:text-gray-100">
-                        {{ __('Non hai ancora chiuso un ticket.') }}
+                    <div class="p-8 text-center text-gray-600 dark:text-gray-400">
+                        <p class="text-lg">Non hai ancora chiuso alcun ticket. <br> Forza, c'è sempre qualcosa da sistemare! 💪</p>
                     </div>
                 @endif
             </div>
@@ -213,92 +103,28 @@
     </div>
 
     <script>
-        
         document.addEventListener('DOMContentLoaded', () => {
-            // Modale dettagli
-            document.querySelectorAll('.open-modal-btn').forEach(button => {
-                button.addEventListener('click', () => {
-                    const modal = document.getElementById(button.dataset.modalId);
-                    if (modal) modal.classList.remove('hidden');
-                });
-            });
-
-            document.querySelectorAll('.close-modal-btn').forEach(button => {
-                button.addEventListener('click', () => {
-                    button.closest('.modal').classList.add('hidden');
-                });
-            });
-
-            window.addEventListener('keydown', (e) => {
-                if (e.key === 'Escape') {
-                    document.querySelectorAll('.modal').forEach(modal => modal.classList.add('hidden'));
-                }
-            });
-
-            document.querySelectorAll('.modal').forEach(modal => {
-                modal.addEventListener('click', (e) => {
-                    if (!e.target.closest('.modal-content')) {
-                        modal.classList.add('hidden');
-                    }
-                });
-            });
-
-            /* MODALE report */
-            const badge = document.getElementById('reportBadge');
-            const text = document.getElementById('reportText');
-
-            badge.addEventListener('mouseenter', () => {
-                badge.style.width = 'auto';
-                text.style.opacity = '1';
-            });
-
-            badge.addEventListener('mouseleave', () => {
-                badge.style.width = '1.8rem';
-                text.style.opacity = '0';
-            });
-
-            // Modale riapertura
-
-            document.querySelectorAll('[data-reopen-modal-id]').forEach(button => {
-                button.addEventListener('click', () => {
-                    const modal = document.getElementById(button.dataset.reopenModalId);
-                    if (modal) modal.classList.remove('hidden');
-                });
-            });
-
-            document.querySelectorAll('.close-reopen-modal-btn').forEach(button => {
-                button.addEventListener('click', () => {
-                    button.closest('.modal').classList.add('hidden');
-                });
-            });
-
-            // Calendario e searchbar
-            const searchInput = document.getElementById('searchInput');
             const dateInput = document.getElementById('dateInput');
+            const searchInput = document.getElementById('searchInput');
             const ticketCards = document.querySelectorAll('.ticket-card');
 
             function filterTickets() {
-                const searchValue = searchInput?.value.toLowerCase() || '';
-                const selectedDate = dateInput?.value || '';
+                const selectedDate = dateInput.value.toLowerCase();
+                const searchText = searchInput.value.toLowerCase();
 
                 ticketCards.forEach(card => {
-                    const tech = card.dataset.technician;
-                    const date = card.dataset.date;
+                    const cardDate = card.dataset.date.toLowerCase();
+                    const technicianName = card.dataset.technician.toLowerCase();
 
-                    const matchTech = tech.includes(searchValue);
-                    const matchDate = selectedDate === '' || date === selectedDate;
+                    const matchDate = !selectedDate || cardDate === selectedDate;
+                    const matchTechnician = !searchText || technicianName.includes(searchText);
 
-                    card.style.display = (matchTech && matchDate) ? 'block' : 'none';
+                    card.style.display = (matchDate && matchTechnician) ? 'flex' : 'none'; // Use flex for card display
                 });
             }
 
-            if (searchInput) {
-                searchInput.addEventListener('input', filterTickets);
-            }
-
-            if (dateInput) {
-                dateInput.addEventListener('change', filterTickets);
-            }
+            dateInput?.addEventListener('change', filterTickets);
+            searchInput?.addEventListener('input', filterTickets);
         });
     </script>
 </x-app-layout>

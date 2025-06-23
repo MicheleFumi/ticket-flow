@@ -17,8 +17,11 @@
                             @if (!$log->chiuso_da && !$log->data_chiusura && !$log->riaperto_da_user && !$log->riaperto_da_admin)
                                 <span class="inline-block bg-green-100 text-green-800 text-xs font-semibold px-2.5 py-0.5 rounded">Prima Apertura</span>
                             @endif
-                            @if (!$log->chiuso_da && !$log->data_chiusura && ($log->riaperto_da_user || $log->riaperto_da_admin))
-                                <span class="inline-block bg-yellow-100 text-yellow-800 text-xs font-semibold px-2.5 py-0.5 rounded">Riaperto</span>
+                            @if (!$log->chiuso_da && !$log->data_chiusura && $log->riaperto_da_user)
+                                <span class="inline-block bg-yellow-100 text-yellow-800 text-xs font-semibold px-2.5 py-0.5 rounded">Riaperto dal Cliente</span>
+                            @endif
+                            @if (!$log->chiuso_da && !$log->data_chiusura && $log->riaperto_da_admin)
+                                <span class="inline-block bg-orange-100 text-orange-800 text-xs font-semibold px-2.5 py-0.5 rounded">Riaperto da Admin</span>
                             @endif
                             @if ($log->chiuso_da && $log->data_chiusura)
                                 <span class="inline-block bg-red-100 text-red-800 text-xs font-semibold px-2.5 py-0.5 rounded">Chiuso</span>

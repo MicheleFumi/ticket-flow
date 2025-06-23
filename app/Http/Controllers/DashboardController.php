@@ -23,7 +23,6 @@ class DashboardController extends Controller
         if ($technician->is_admin) {
             $query->where('status_id', 2);
         } else {
-            // Per i tecnici non admin, vedi solo i ticket assegnati a loro e in lavorazione.
             $query->where('status_id', 2)
                 ->whereHas('latestLog', function ($q) use ($technician) {
                     $q->where('assegnato_a', $technician->id);
@@ -38,30 +37,27 @@ class DashboardController extends Controller
 
     public function history()
     {
-        $technician = Auth::guard()->user();
+        $technician = Auth::user();
+
         if (!$technician) {
             return redirect('/login')->with('error', 'Devi essere loggato come tecnico per accedere alla cronologia.');
         }
 
-        $technicianId = $technician->id;
-
-        $tickets = Ticket::withoutGlobalScopes()
-            ->with(['allTechnicians', 'status', 'closedBy'])
-            ->where('technician_id', $technicianId)
-            ->where('status_id', 3)
-            ->orderBy('data_chiusura', 'desc')
-            ->get();
-
         if ($technician->is_admin) {
-            $tickets = Ticket::withoutGlobalScopes(["still_active"])
-                ->with(['allTechnicians', 'status', 'closedBy'])
-                ->where('status_id', 3)
-                ->orderBy('data_chiusura', 'desc')
-                ->get();
+            $tickets = Ticket::join('ticket_logs as latest_logs', function ($join) {
+                $join->on('tickets.id', '=', 'latest_logs.ticket_id')
+                    ->whereRaw('latest_logs.id = (select max(id) from ticket_logs where ticket_id = tickets.id)');
+            })
+                ->where('tickets.status_id', 3)
+                ->orderBy('latest_logs.data_chiusura', 'desc')
+                ->with(['latestLog.technician', 'status', 'user']) // se la relazione latestLog è definita correttamente
+                ->get(['tickets.*']);
+        } else {
+            $tickets = collect();
         }
 
         // dd($tickets);
 
-        return view('dashboard.history', compact("technician", 'tickets'));
+        return view('dashboard.history', compact('technician', 'tickets'));
     }
 }
