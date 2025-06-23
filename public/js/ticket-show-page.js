@@ -132,3 +132,12 @@ document.addEventListener('DOMContentLoaded', () => {
         }
     });
 });
+
+// Modale riaperta ticket
+document.getElementById('openReopenTicketModalButton')?.addEventListener('click', () => {
+    document.getElementById('reopenTicketModal').classList.remove('hidden');
+});
+
+function closeReopenModal() {
+    document.getElementById('reopenTicketModal').classList.add('hidden');
+}

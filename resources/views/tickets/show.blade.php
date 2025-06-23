@@ -116,6 +116,12 @@
                                     @endif
                                 </div>
                                 <div class="flex items-center gap-2 ml-auto">
+                                    @if ($technician->is_admin && $ticket->status_id === 3)
+                                        <button id="openReopenTicketModalButton"
+                                            class="bg-blue-500 hover:bg-blue-600 text-white py-2 px-3 rounded text-sm items-center gap-2">
+                                            <i class="bi bi-arrow-counterclockwise"></i> Riapri Ticket
+                                        </button>
+                                    @endif
                                     @if ($technician->is_admin)
                                         <button id="openDeleteModalButton"
                                             class="bg-red-500 hover:bg-red-600 text-white font-bold py-2 px-3 rounded">
@@ -156,6 +162,9 @@
 
         <!-- Modale per visualizzare i logs del ticket -->
         <x-modals.logsModal :logs="$logs" :ticket="$ticket"/>
+
+        <!-- Modale riapertura ticket -->
+        <x-modals.reopenTicketModal :ticket="$ticket" />
 
     </div>
 

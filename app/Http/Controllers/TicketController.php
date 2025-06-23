@@ -287,18 +287,33 @@ class TicketController extends Controller
             return redirect()->back()->with('error', 'Il ticket non è chiuso e non può essere riaperto.');
         }
 
-        $request->validate([
+        $validated = $request->validate([
             'ragione_riapertura' => 'required|string|max:255',
         ]);
 
         DB::beginTransaction();
 
         try {
-            $ticket->is_reopened = true;
-            $ticket->data_riapertura = now();
-            $ticket->ragione_riapertura = $request->input('ragione_riapertura');
-            $ticket->status_id = 1;
-            $ticket->save();
+            // Log della riapertura
+            TicketLog::create([
+                'ticket_id' => $ticket->id,
+                'assegnato_a' => null,
+                'riaperto_da_user' => null,
+                'riaperto_da_admin' => $technician->id,
+                'chiuso_da' => null,
+                'note_riapertura' => $validated['ragione_riapertura'],
+                'note_chiusura' => null,
+                'data_assegnazione' => null,
+                'data_riapertura' => now(),
+                'data_chiusura' => null,
+            ]);
+
+            // Aggiornamento ticket
+            $ticket->update([
+                'is_reopened' => true,
+                'data_riapertura' => now(),
+                'status_id' => 1, // ad esempio "aperto"
+            ]);
 
             DB::commit();
 
