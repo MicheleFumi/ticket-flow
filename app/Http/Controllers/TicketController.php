@@ -17,11 +17,12 @@ class TicketController extends Controller
     public function index()
     {
         $technician = Auth::guard()->user();
-        $tickets = Ticket::with('status', 'technician', 'user')->where('is_reported', false)->where("is_deleted", false)->orderBy('id', 'ASC')->get();
-        $reportedTickets = Ticket::with('status', 'technician')->where('is_reported', true)->orderBy('id', 'ASC')->get();
-        $reopenedTickets = Ticket::with('status', 'technician')->where('is_reopened', true)->where("is_deleted", false)->orderBy('id', 'ASC')->get();
-        $allTickets = Ticket::with('status', 'technician')->where("is_deleted", false)->orderBy('id', 'ASC')->get();
-        return view("tickets.index", compact("tickets", "technician", "reportedTickets", "reopenedTickets", "allTickets"));
+        $tickets = Ticket::with('status', 'technician', 'user')->where("status_id", 1)->where('is_reported', false)->where("is_deleted", false)->orderBy('id', 'ASC')->get();
+        $allTickets = Ticket::with('status', 'technician')->where("status_id", 1)->where("is_deleted", false)->orderBy('id', 'ASC')->get();
+        $reportedTickets = Ticket::with('status', 'technician')->where("status_id", 1)->where('is_reported', true)->orderBy('id', 'ASC')->get();
+        $reopenedTickets = Ticket::with('status', 'technician')->where("status_id", 1)->where('is_reopened', true)->where("is_deleted", false)->orderBy('id', 'ASC')->get();
+        $visibleTickets = $technician->is_admin ? $allTickets->merge($reopenedTickets)->merge($reportedTickets) : $tickets->merge($reopenedTickets)->merge($reportedTickets);
+        return view("tickets.index", compact("technician", "reportedTickets", "reopenedTickets", "visibleTickets"));
     }
 
     /**

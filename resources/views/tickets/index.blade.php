@@ -11,7 +11,7 @@
 
                 <div class="p-6 border-b border-gray-200 dark:border-gray-700 flex flex-col sm:flex-row justify-between items-center space-y-4 sm:space-y-0 sm:space-x-4">
                     <div class="text-gray-900 dark:text-gray-100 text-lg font-medium">
-                        @if ($tickets->where('status.titolo', 'Aperto')->count() > 0)
+                        @if ($visibleTickets->count() > 0)
                             {{ __('Stai visualizzando la lista dei ticket aperti.') }}
                         @else
                             <p class="text-lg">Non ci sono nuovi ticket aperti. Ottimo lavoro! 🎉</p>
@@ -52,6 +52,20 @@
                             </div>
                         </div>
 
+                        <div class="relative w-full sm:w-auto">
+                            <select
+                                id="reopenFilter"
+                                class="w-full px-4 py-2 rounded-full border border-gray-300 dark:border-gray-600 dark:bg-gray-700 dark:text-white focus:ring-blue-500 focus:border-blue-500 transition duration-150 ease-in-out appearance-none pr-8"
+                            >
+                                <option value="all">Tutti i ticket</option>
+                                <option value="reopened">Solo riaperti</option>
+                                <option value="not_reopened">Non riaperti</option>
+                            </select>
+                            <div class="pointer-events-none absolute inset-y-0 right-0 flex items-center px-2 text-gray-700 dark:text-gray-300">
+                            </div>
+                        </div>
+
+
                         @if (isset($technician) && ($technician->is_admin || $technician->is_superAdmin))
                             <div class="relative w-full sm:w-auto">
                                 <select
@@ -70,15 +84,13 @@
                 </div>
 
                 <div class="p-6 grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6" id="ticketContainer">
-                    @php
-                        $filteredTickets = $technician->is_admin || $technician->is_superAdmin ? $allTickets : $tickets;
-                        $openTickets = $filteredTickets->where('status.titolo', 'Aperto');
-                    @endphp
+                    
 
-                    @forelse ($openTickets as $ticket)
+                    @forelse ($visibleTickets as $ticket)
                         <div
                             class="ticket-card bg-white dark:bg-gray-700 shadow-lg rounded-2xl p-6 border border-gray-200 dark:border-gray-600 flex flex-col justify-between transform hover:scale-105 transition-all duration-300 ease-in-out"
                             data-is-reported="{{ $ticket->is_reported ? 'true' : 'false' }}"
+                            data-is-reopened="{{ $ticket->is_reopened ? 'true' : 'false' }}"
                             data-date="{{ $ticket->created_at->format('Y-m-d') }}"
                             data-userfullname="{{ strtolower($ticket->user->nome . ' ' . $ticket->user->cognome) }}"
                         >
@@ -142,6 +154,7 @@
 <script>
     document.addEventListener('DOMContentLoaded', () => {
         const reportFilter = document.getElementById('reportFilter');
+        const reopenFilter = document.getElementById('reopenFilter');
         const dateFilter = document.getElementById('dateFilter');
         const userSearch = document.getElementById('userSearch');
         const ticketContainer = document.getElementById('ticketContainer');
@@ -151,10 +164,12 @@
             const dateValue = parseInt(dateFilter?.value);
             const nameQuery = userSearch?.value.toLowerCase().trim();
             const today = new Date();
-
+            const reopenValue = reopenFilter?.value;
+            
             let hasVisibleTickets = false;
-
+            
             Array.from(ticketContainer.children).forEach(card => {
+                const isReopened = card.dataset.isReopened === 'true';
                 const isReported = card.dataset.isReported === 'true';
                 const ticketDate = new Date(card.dataset.date);
                 const diffDays = Math.floor((today - ticketDate) / (1000 * 60 * 60 * 24));
@@ -165,6 +180,10 @@
                 // Filtro report
                 if (reportValue === 'reported' && !isReported) show = false;
                 if (reportValue === 'not_reported' && isReported) show = false;
+
+                // Filtro riapertura
+                if (reopenValue === 'reopened' && !isReopened) show = false;
+                if (reopenValue === 'not_reopened' && isReopened) show = false;
 
                 // Filtro data
                 if (!isNaN(dateValue) && diffDays > dateValue) show = false;
@@ -197,6 +216,8 @@
         reportFilter?.addEventListener('change', filterTickets);
         dateFilter?.addEventListener('change', filterTickets);
         userSearch?.addEventListener('input', filterTickets);
+        reopenFilter?.addEventListener('change', filterTickets);
+
 
         filterTickets();
     });
