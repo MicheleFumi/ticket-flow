@@ -133,6 +133,7 @@ class TicketLog extends Model
         // $this->technician_id = null;
         $this->chiuso_da = $technician->id;
         $ticket->status_id = 3;
+        $ticket->is_reopened = false;
         $this->data_chiusura = Carbon::now();
         $this->note_chiusura = $note_chiusura;
         $this->save();

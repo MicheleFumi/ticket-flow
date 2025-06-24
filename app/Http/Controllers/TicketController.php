@@ -294,7 +294,6 @@ class TicketController extends Controller
         DB::beginTransaction();
 
         try {
-            // Log della riapertura
             TicketLog::create([
                 'ticket_id' => $ticket->id,
                 'assegnato_a' => null,
@@ -308,11 +307,9 @@ class TicketController extends Controller
                 'data_chiusura' => null,
             ]);
 
-            // Aggiornamento ticket
             $ticket->update([
                 'is_reopened' => true,
-                'data_riapertura' => now(),
-                'status_id' => 1, // ad esempio "aperto"
+                'status_id' => 1,
             ]);
 
             DB::commit();
