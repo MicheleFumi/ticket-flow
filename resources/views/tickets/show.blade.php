@@ -55,27 +55,6 @@
                                             Visualizza tutti i Logs
                                         </button>
                                     </div>
-
-
-                                    {{-- @if ($ticket->status_id === 2)
-                                        <div class="text-sm text-gray-500"> Preso in carico da:
-                                            {{ $ticket->technician->nome }}
-                                            {{ $ticket->technician->cognome }} il:
-                                            {{ $ticket['data_assegnazione']->format('d/m/Y H:i') }}
-                                        </div>
-                                    @elseif($ticket->status_id === 3)
-                                        <div class="text-sm text-gray-500"> Preso in carico da:
-                                            {{ $ticket->technician->nome }}
-                                            {{ $ticket->technician->cognome }} il:
-                                            {{ $ticket['data_assegnazione']->format('d/m/Y H:i') }}
-                                        </div>
-                                        <div class="text-sm text-gray-500"> Chiuso da:
-                                            {{ $ticket->technician->nome }}
-                                            {{ $ticket->technician->cognome }} il:
-                                            {{ $ticket['data_chiusura']->format('d/m/Y H:i') }}
-                                        </div>
-                                    @endif --}}
-
                                 </div>
                             </div>
                             <p class="text-md text-gray-500 mb-2">{{ $ticket['commento'] }}</p>
