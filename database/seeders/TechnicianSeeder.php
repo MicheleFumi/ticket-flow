@@ -19,7 +19,7 @@ class TechnicianSeeder extends Seeder
                 'password' => Hash::make(env("SUPERADMIN_PASSWORD")),
                 'telefono' => '1234567890',
                 'is_admin' => true,
-                'is_available' => true,
+                'is_available' => false,
             ]
         );
         Technician::create(

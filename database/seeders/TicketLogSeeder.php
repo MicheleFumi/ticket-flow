@@ -23,6 +23,8 @@ class TicketLogSeeder extends Seeder
                 'data_assegnazione' => null,
                 'data_riapertura' => null,
                 'data_chiusura' => null,
+                "created_at" => Carbon::now()->subDays(2),
+                "updated_at" => Carbon::now()->subDays(2),
             ],
             // Ticket 2: assegnato e in lavorazione
             [
@@ -36,6 +38,8 @@ class TicketLogSeeder extends Seeder
                 'data_assegnazione' => Carbon::now()->subDays(3),
                 'data_riapertura' => null,
                 'data_chiusura' => null,
+                "created_at" => Carbon::now()->subDays(3),
+                "updated_at" => Carbon::now()->subDays(3),
             ],
             // Ticket 3: stato = 1 ma riaperto, quindi ha un log precedente chiuso + uno attuale
             // Log chiuso
@@ -50,6 +54,8 @@ class TicketLogSeeder extends Seeder
                 'data_assegnazione' => Carbon::now()->subDays(6),
                 'data_riapertura' => null,
                 'data_chiusura' => Carbon::now()->subDays(5),
+                "created_at" => Carbon::now()->subDays(6),
+                "updated_at" => Carbon::now()->subDays(5),
             ],
             // Log attuale riapertura (non ancora assegnato)
             [
@@ -63,6 +69,8 @@ class TicketLogSeeder extends Seeder
                 'data_assegnazione' => null,
                 'data_riapertura' => Carbon::now()->subDays(5),
                 'data_chiusura' => null,
+                "created_at" => Carbon::now()->subDays(5),
+                "updated_at" => Carbon::now()->subDays(5),
             ],
             // Ticket 4: appena aperto
             [
@@ -76,6 +84,8 @@ class TicketLogSeeder extends Seeder
                 'data_assegnazione' => null,
                 'data_riapertura' => null,
                 'data_chiusura' => null,
+                "created_at" => Carbon::now()->subDays(1),
+                "updated_at" => Carbon::now()->subDays(1),
             ],
             // Ticket 5: riaperto, quindi 2 log
             // Log chiuso
@@ -90,6 +100,8 @@ class TicketLogSeeder extends Seeder
                 'data_assegnazione' => Carbon::now()->subDays(1),
                 'data_riapertura' => null,
                 'data_chiusura' => Carbon::now()->subHours(18),
+                "created_at" => Carbon::now()->subDays(1),
+                "updated_at" => Carbon::now()->subHours(18),
             ],
             // Log attuale riapertura (non assegnato)
             [
@@ -103,6 +115,8 @@ class TicketLogSeeder extends Seeder
                 'data_assegnazione' => null,
                 'data_riapertura' => Carbon::now()->subHours(18),
                 'data_chiusura' => null,
+                "created_at" => Carbon::now()->subHours(18),
+                "updated_at" => Carbon::now()->subHours(18),
             ],
             // Ticket 6: appena aperto, mai riaperto
             [
@@ -116,6 +130,8 @@ class TicketLogSeeder extends Seeder
                 'data_assegnazione' => null,
                 'data_riapertura' => null,
                 'data_chiusura' => null,
+                "created_at" => Carbon::now(),
+                "updated_at" => Carbon::now(),
             ],
         ];
 
