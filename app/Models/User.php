@@ -30,6 +30,11 @@ class User extends Authenticatable
         return $this->hasMany(Ticket::class)->where("is_deleted", false)->orderBy('created_at');
     }
 
+    public function logs()
+    {
+        return $this->hasMany(TicketLog::class);
+    }
+
     public function sendPasswordResetNotification($token)
     {
         $this->notify(new ApiResetPasswordNotification($token));

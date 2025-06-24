@@ -77,13 +77,6 @@ class TechnicianController extends Controller
 
     public function destroy(Request $request)
     {
-
-        /*  $authTechnician = auth()->guard()->user();
-
-        if (!$authTechnician || !$authTechnician->is_admin) {
-            return Redirect::back()->with('error', 'Non sei autorizzato a eseguire questa operazione.');
-        } */
-
         $request->validate([
             'technician_id' => 'required|exists:technicians,id',
         ]);
@@ -101,9 +94,20 @@ class TechnicianController extends Controller
         DB::beginTransaction();
 
         try {
+            $assignedLogs = $technician->logs()
+                ->with('ticket')
+                ->where('assegnato_a', $technician->id)
+                ->get();
 
-            foreach ($technician->tickets as $ticket) {
-                $ticket->removeFromTechnician($technician);
+            $processedTicketsIds = [];
+
+            foreach ($assignedLogs as $log) {
+                $ticket = $log->ticket;
+
+                if ($ticket && !$ticket->is_deleted && !in_array($ticket->id, $processedTicketsIds)) {
+                    $log->removeFromTechnician($technician, $ticket);
+                    $processedTicketsIds[] = $ticket->id;
+                }
             }
 
             $technician->still_active = false;

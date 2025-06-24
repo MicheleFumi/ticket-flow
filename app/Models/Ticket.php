@@ -12,16 +12,19 @@ class Ticket extends Model
         'titolo',
         'commento',
         'status_id',
-        'technician_id',
-        'data_assegnazione',
-        'data_chiusura',
-        'chiuso_da',
-        'note_chiusura',
+        // 'technician_id',
+        // 'data_assegnazione',
+        // 'data_chiusura',
+        // 'chiuso_da',
+        // 'note_chiusura',
         'is_reported',
         'commento_report',
         'reportato_da',
         'repot_date',
         'is_deleted',
+        'is_reopened',
+        // 'data_riapertura',
+        // 'ragione_riapertura',
     ];
 
     protected $casts = [
@@ -52,80 +55,19 @@ class Ticket extends Model
     {
         return $this->hasMany(TicketImage::class);
     }
+
+    public function logs()
+    {
+        return $this->hasMany(TicketLog::class);
+    }
+
+    public function latestLog()
+    {
+        return $this->hasOne(TicketLog::class)->latestOfMany();
+    }
+
     public function reportatoDa()
     {
         return $this->belongsTo(Technician::class, 'reportato_da');
-    }
-    public function assignToTechnician(Technician $technician)
-    {
-        if (!$technician->is_available) {
-            throw new \Exception("Il tecnico non è disponibile.");
-        }
-
-        $technician->is_available = false;
-        $technician->save();
-
-        $this->technician_id = $technician->id;
-        $this->status_id = 2;
-        $this->data_assegnazione = Carbon::now();
-        $this->save();
-
-        return $this;
-    }
-
-    public function removeFromTechnician(Technician $technician)
-    {
-        if ($this->technician_id !== $technician->id) {
-            throw new \Exception("Il ticket non è assegnato a questo tecnico.");
-        }
-
-        $technician->is_available = true;
-        $technician->save();
-
-        if ($this->status_id === 2) {
-            $this->status_id = 1;
-            $this->technician_id = null;
-            $this->data_assegnazione = null;
-        }
-        $this->save();
-
-        return $this;
-    }
-
-    public function close(Technician $technician, $note_chiusura)
-    {
-        if ($this->status_id !== 2) {
-            throw new \Exception("Il ticket non può essere chiuso perché non è assegnato.");
-        }
-
-        if ($this->status_id === 3) {
-            throw new \Exception("Il ticket è già chiuso.");
-        }
-
-        if (!$technician->is_admin && $this->technician_id !== $technician->id) {
-            throw new \Exception("Il ticket non è assegnato a questo tecnico.");
-        }
-
-        $assignedTechnician = $this->technician;
-        if ($assignedTechnician) {
-            $assignedTechnician->is_available = true;
-            $assignedTechnician->save();
-        }
-
-        // $this->technician_id = null;
-        $this->chiuso_da = $technician->id;
-        $this->status_id = 3;
-        $this->data_chiusura = Carbon::now();
-        $this->note_chiusura = $note_chiusura;
-        $this->save();
-
-
-
-        return $this;
-    }
-
-    public function closedBy()
-    {
-        return $this->belongsTo(Technician::class, 'chiuso_da');
     }
 }

@@ -64,4 +64,9 @@ class Technician extends Authenticatable implements MustVerifyEmail
     {
         return $this->hasMany(Ticket::class)->where("is_deleted", false);
     }
+
+    public function logs()
+    {
+        return $this->hasMany(TicketLog::class, "assegnato_a", "id");
+    }
 }
