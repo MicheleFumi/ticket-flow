@@ -50,10 +50,18 @@ class DashboardController extends Controller
             })
                 ->where('tickets.status_id', 3)
                 ->orderBy('latest_logs.data_chiusura', 'desc')
-                ->with(['latestLog.technician', 'status', 'user']) // se la relazione latestLog è definita correttamente
+                ->with(['latestLog.technician', 'status', 'user'])
                 ->get(['tickets.*']);
         } else {
-            $tickets = collect();
+            $tickets = Ticket::join('ticket_logs as latest_logs', function ($join) {
+                $join->on('tickets.id', '=', 'latest_logs.ticket_id')
+                    ->whereRaw('latest_logs.id = (select max(id) from ticket_logs where ticket_id = tickets.id)');
+            })
+                ->where('tickets.status_id', 3)
+                ->where('latest_logs.assegnato_a', $technician->id)
+                ->orderBy('latest_logs.data_chiusura', 'desc')
+                ->with(['latestLog.technician', 'status', 'user'])
+                ->get(['tickets.*']);
         }
 
         // dd($tickets);

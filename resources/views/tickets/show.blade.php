@@ -5,13 +5,13 @@
                 {{ __('Lista Ticket') }}
             </h2>
 
+            <div>
+                <button id="openModalButton"
+                class="bg-blue-500 hover:bg-blue-600 text-white font-bold py-2 px-4 rounded focus:outline-none focus:shadow-outline transition duration-150 ease-in-out">
+                Prendi In Carico
+            </button>
+            
             @if ($technician->is_admin && !isset($ticket['technician_id']))
-                <div>
-                    <button id="openModalButton"
-                        class="bg-blue-500 hover:bg-blue-600 text-white font-bold py-2 px-4 rounded focus:outline-none focus:shadow-outline transition duration-150 ease-in-out">
-                        Prendi In Carico
-                    </button>
-
                     <button id="openAssignTicketTechnicianSearchModalButton"
                         class="bg-green-700 hover:bg-green-900 text-white font-bold py-2 px-4 rounded focus:outline-none focus:shadow-outline transition duration-150 ease-in-out">
                         Assegna
