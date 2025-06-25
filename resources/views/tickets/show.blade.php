@@ -7,23 +7,23 @@
 
             <div>
                 <button id="openModalButton"
-                class="bg-blue-500 hover:bg-blue-600 text-white font-bold py-2 px-4 rounded focus:outline-none focus:shadow-outline transition duration-150 ease-in-out">
-                Prendi In Carico
-            </button>
-            
-            @if ($technician->is_admin && !isset($ticket['technician_id']))
+                    class="bg-blue-500 hover:bg-blue-600 text-white font-bold py-2 px-4 rounded focus:outline-none focus:shadow-outline transition duration-150 ease-in-out">
+                    Prendi In Carico
+                </button>
+
+                @if ($technician->is_admin && !isset($ticket['technician_id']))
                     <button id="openAssignTicketTechnicianSearchModalButton"
                         class="bg-green-700 hover:bg-green-900 text-white font-bold py-2 px-4 rounded focus:outline-none focus:shadow-outline transition duration-150 ease-in-out">
                         Assegna
                         Tecnico</button>
-                </div>
-            @else
-                @if ($technician->is_available === 0)
-                    <button disabled
-                        class="bg-blue-400 text-white font-bold py-2 px-4 rounded cursor-not-allowed opacity-70 focus:outline-none focus:shadow-outline transition duration-150 ease-in-out">
-                        Non Puoi Prendere Altri Ticket
-                    </button>
-                @endif
+            </div>
+        @else
+            @if ($technician->is_available === 0)
+                <button disabled
+                    class="bg-blue-400 text-white font-bold py-2 px-4 rounded cursor-not-allowed opacity-70 focus:outline-none focus:shadow-outline transition duration-150 ease-in-out">
+                    Non Puoi Prendere Altri Ticket
+                </button>
+            @endif
             @endif
 
 
@@ -49,8 +49,7 @@
                                     </div>
 
                                     <div class="flex justify-end w-full">
-                                        <button
-                                            id="openLogsModalButton"
+                                        <button id="openLogsModalButton"
                                             class="bg-yellow-600 hover:bg-yellow-700 text-white font-semibold py-1 px-3 rounded shadow-md transition duration-300 ease-in-out mt-1">
                                             Visualizza tutti i Logs
                                         </button>
@@ -75,12 +74,19 @@
                             <div class="flex items-center justify-between text-sm">
                                 <div>
                                     <span
-                                        class="px-2 py-1 rounded-full 
-                                    @if ($ticket->status->titolo === 'Aperto') bg-green-100 text-green-700
-                                    @elseif($ticket->status->titolo === 'In Lavorazione') bg-yellow-100 text-yellow-700
-                                    @else bg-red-100 text-red-700 @endif">
-                                        {{ ucfirst($ticket->status->titolo) }}
+                                        class="px-2.5 py-0.5 rounded-full text-xs font-semibold
+    @if ($ticket->is_reopened && $ticket->status->titolo === 'Aperto') bg-yellow-400 text-black dark:bg-yellow-400 dark:text-black
+    @elseif ($ticket->status->titolo === 'Aperto') bg-green-100 text-green-700 dark:bg-green-700 dark:text-green-100
+    @elseif ($ticket->status->titolo === 'In Lavorazione') bg-yellow-100 text-yellow-700 dark:bg-yellow-700 dark:text-yellow-100
+    @else bg-red-100 text-red-700 dark:bg-red-700 dark:text-red-100 @endif">
+
+                                        @if ($ticket->is_reopened && $ticket->status->titolo === 'Aperto')
+                                            Riaperto
+                                        @else
+                                            {{ ucfirst($ticket->status->titolo) }}
+                                        @endif
                                     </span>
+
                                     @if ($technician->is_admin && $ticket->is_reported)
                                         <span>
                                             <span
@@ -125,22 +131,22 @@
 
 
         <!-- Modale messaggio report -->
-        <x-modals.commentModal :ticket="$ticket"/>
+        <x-modals.commentModal :ticket="$ticket" />
 
         <!-- Modale per reportare ticket -->
-        <x-modals.reportTicketModal :ticket="$ticket"/>
+        <x-modals.reportTicketModal :ticket="$ticket" />
 
         <!-- Modale per prendere in carico-->
-        <x-modals.takeInChargeModal :ticket="$ticket"/>
+        <x-modals.takeInChargeModal :ticket="$ticket" />
 
         <!-- Modale di assegnazione tecnico ADMIN ONLY-->
-        <x-modals.assignTicketTechnicianSearchModal :technicianList="$technicianList" :ticket="$ticket"/>
+        <x-modals.assignTicketTechnicianSearchModal :technicianList="$technicianList" :ticket="$ticket" />
 
         <!-- Modale Conferma Eliminazione Ticket -->
-        <x-modals.deleteTicketModal :ticket="$ticket"/>
+        <x-modals.deleteTicketModal :ticket="$ticket" />
 
         <!-- Modale per visualizzare i logs del ticket -->
-        <x-modals.logsModal :logs="$logs" :ticket="$ticket"/>
+        <x-modals.logsModal :logs="$logs" :ticket="$ticket" />
 
         <!-- Modale riapertura ticket -->
         <x-modals.reopenTicketModal :ticket="$ticket" />
