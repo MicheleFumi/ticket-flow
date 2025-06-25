@@ -22,6 +22,12 @@ class TicketController extends Controller
         $reportedTickets = Ticket::with('status', 'technician')->where("status_id", 1)->where('is_reported', true)->orderBy('id', 'ASC')->get();
         $reopenedTickets = Ticket::with('status', 'technician')->where("status_id", 1)->where('is_reopened', true)->where("is_deleted", false)->orderBy('id', 'ASC')->get();
         $visibleTickets = $technician->is_admin ? $allTickets->merge($reopenedTickets)->merge($reportedTickets) : $tickets->merge($reopenedTickets)->merge($reportedTickets);
+        $visibleTickets = $visibleTickets->sortBy([
+            fn($a, $b) => $b->is_reopened <=> $a->is_reopened,
+            fn($a, $b) => ($a->status->titolo === 'Aperto' ? 0 : 1) <=> ($b->status->titolo === 'Aperto' ? 0 : 1),
+            fn($a, $b) => $a->created_at <=> $b->created_at,
+        ]);
+
         return view("tickets.index", compact("technician", "reportedTickets", "reopenedTickets", "visibleTickets"));
     }
 
