@@ -15,6 +15,7 @@ return new class extends Migration
             $table->id();
             $table->foreignId('ticket_id')->constrained()->onDelete('cascade');
             $table->string('file_path');
+            $table->string('file_name');
             $table->timestamps();
         });
     }

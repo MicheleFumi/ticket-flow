@@ -12,6 +12,7 @@ class TicketImage extends Model
     protected $fillable = [
         'ticket_id',
         'file_path',
+        'file_name',
     ];
 
     public function ticket()

@@ -99,12 +99,14 @@ class TicketSeeder extends Seeder
                 [
                     'ticket_id' => $ticketId,
                     'file_path' => 'https://placehold.co/400',
+                    'file_name' => 'placeholder_image_1.png',
                     'created_at' => Carbon::now(),
                     'updated_at' => Carbon::now(),
                 ],
                 [
                     'ticket_id' => $ticketId,
                     'file_path' => 'https://placehold.co/400?text=Second+Image',
+                    'file_name' => 'placeholder_image_2.png',
                     'created_at' => Carbon::now(),
                     'updated_at' => Carbon::now(),
                 ],

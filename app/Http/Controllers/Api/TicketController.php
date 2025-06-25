@@ -61,11 +61,12 @@ class TicketController extends Controller
 
         if ($request->has('images') && is_array($request->file('images'))) {
             foreach ($request->file('images') as $image) {
-                $path = $image->store('ticket_images', 'public');
+                $path = $image->store('ticket_attachments', 'local');
 
                 $ticket->images()->create([
                     'file_path' => $path,
-                ]);
+                    'file_name' => $image->getClientOriginalName()
+                ])->save();
             }
         }
 

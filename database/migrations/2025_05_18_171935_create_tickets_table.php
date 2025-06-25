@@ -17,19 +17,12 @@ return new class extends Migration
             $table->string("titolo")->nullable();
             $table->text("commento")->nullable();
             $table->foreignId('status_id')->default(1);
-            // $table->foreignId('technician_id')->nullable()->constrained('technicians')->onDelete('set null');
-            // $table->foreignId("chiuso_da")->nullable()->constrained('technicians')->onDelete('set null');
-            // $table->timestamp('data_assegnazione')->nullable();
-            // $table->timestamp('data_chiusura')->nullable();
-            // $table->text("note_chiusura")->nullable();
             $table->boolean("is_reported")->default(0);
             $table->text("commento_report")->nullable();
             $table->foreignId('reportato_da')->nullable()->constrained('technicians')->onDelete('set null');
             $table->timestamp('report_date')->nullable();
             $table->boolean("is_deleted")->default(0);
             $table->boolean("is_reopened")->default(0);
-            // $table->timestamp('data_riapertura')->nullable();
-            // $table->text("ragione_riapertura")->nullable();
             $table->timestamps();
         });
     }
