@@ -113,10 +113,11 @@
                                 <div>
                                     <span
                                         class="px-2.5 py-0.5 rounded-full text-xs font-semibold
-    @if ($ticket->is_reopened && $ticket->status->titolo === 'Aperto') bg-yellow-400 text-black dark:bg-yellow-400 dark:text-black
-    @elseif ($ticket->status->titolo === 'Aperto') bg-green-100 text-green-700 dark:bg-green-700 dark:text-green-100
-    @elseif ($ticket->status->titolo === 'In Lavorazione') bg-yellow-100 text-yellow-700 dark:bg-yellow-700 dark:text-yellow-100
-    @else bg-red-100 text-red-700 dark:bg-red-700 dark:text-red-100 @endif">
+                                        @if ($ticket->is_reopened && $ticket->status->titolo === 'Aperto') bg-yellow-400 text-black dark:bg-yellow-400 dark:text-black
+                                        @elseif ($ticket->status->titolo === 'Aperto') bg-green-100 text-green-700 dark:bg-green-700 dark:text-green-100
+                                        @elseif ($ticket->status->titolo === 'In Lavorazione') bg-yellow-100 text-yellow-700 dark:bg-yellow-700 dark:text-yellow-100
+                                        @else bg-red-100 text-red-700 dark:bg-red-700 dark:text-red-100 
+                                        @endif">
 
                                         @if ($ticket->is_reopened && $ticket->status->titolo === 'Aperto')
                                             Riaperto

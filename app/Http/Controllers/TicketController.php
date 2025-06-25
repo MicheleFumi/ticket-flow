@@ -21,8 +21,7 @@ class TicketController extends Controller
         $allTickets = Ticket::with('status', 'technician')->where("status_id", 1)->where("is_deleted", false)->orderBy('id', 'ASC')->get();
         $reportedTickets = Ticket::with('status', 'technician')->where("status_id", 1)->where('is_reported', true)->orderBy('id', 'ASC')->get();
         $reopenedTickets = Ticket::with('status', 'technician')->where("status_id", 1)->where('is_reopened', true)->where("is_deleted", false)->orderBy('id', 'ASC')->get();
-        $visibleTickets = $technician->is_admin ? $allTickets->merge($reopenedTickets)->merge($reportedTickets) : $tickets->merge($reopenedTickets)->merge($reportedTickets);
-        $visibleTickets = $visibleTickets->sortBy([
+        $visibleTickets = $technician->is_admin ? $allTickets->merge($reopenedTickets)->merge($reportedTickets) : $tickets->merge($reopenedTickets)->merge($reportedTickets)->sortBy([
             fn($a, $b) => $b->is_reopened <=> $a->is_reopened,
             fn($a, $b) => ($a->status->titolo === 'Aperto' ? 0 : 1) <=> ($b->status->titolo === 'Aperto' ? 0 : 1),
             fn($a, $b) => $a->created_at <=> $b->created_at,
@@ -38,7 +37,7 @@ class TicketController extends Controller
     {
 
 
-        $ticket->load('status', 'technician', 'reportatoDa', "logs");
+        $ticket->load('status', 'technician', 'reportatoDa', "logs", "images");
         $technician = Auth::guard()->user();
         $technicianList = Technician::where("is_available", 1)->get();
         $logs = TicketLog::where('ticket_id', $ticket->id)

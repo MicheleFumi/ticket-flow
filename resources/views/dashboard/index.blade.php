@@ -36,8 +36,8 @@
                                 @if ($ticket->images && $ticket->images->count() > 0)
                                     <div class="my-6 flex flex-wrap gap-2">
                                         @foreach ($ticket->images as $image)
-                                            <a href="{{ asset($image->file_path) }}" target="_blank">
-                                                <img src="{{ asset($image->file_path) }}"
+                                            <a href="{{ route('ticket-images.show', $image->id) }}" target="_blank">
+                                                <img src="{{ route('ticket-images.show', $image->id) }}"
                                                     alt="Img {{ $loop->iteration }}"
                                                     class="w-[50px] h-[50px] object-cover rounded hover:scale-105 transition" />
                                             </a>

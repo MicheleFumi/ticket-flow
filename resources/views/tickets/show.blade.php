@@ -60,8 +60,8 @@
                             @if (isset($ticket->images) && $ticket->images->count() > 0)
                                 <div class="my-6">
                                     @foreach ($ticket->images as $image)
-                                        <a href="{{ asset($image->file_path) }}" target="_blank" class="inline-block">
-                                            <img src="{{ asset($image->file_path) }}"
+                                        <a href="{{ route('ticket-images.show', $image->id) }}" target="_blank" class="inline-block">
+                                            <img src="{{ route('ticket-images.show', $image->id) }}"
                                                 alt="Anteprima immagine {{ $loop->iteration }}"
                                                 class="w-[100px] h-[100px] object-cover rounded hover:scale-105 transition">
                                         </a>

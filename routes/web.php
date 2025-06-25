@@ -5,6 +5,7 @@ use App\Http\Controllers\DashboardController;
 use App\Http\Controllers\ProfileController;
 use App\Http\Controllers\TechnicianController;
 use App\Http\Controllers\TicketController;
+use App\Http\Controllers\TicketImageController;
 use App\Http\Controllers\UserController;
 use App\Http\Middleware\VerifyAdmin;
 use App\Http\Middleware\VerifySuperAdmin;
@@ -43,6 +44,9 @@ Route::middleware(['auth', 'verified'])->group(function () {
     Route::post("/ticket/delete/{ticket}", [TicketController::class, 'destroy'])->name("tickets.delete")->middleware([VerifyAdmin::class]);
     Route::post("/ticket/assign-to/{ticket}", [TicketController::class, 'assignTo'])->name("tickets.assignTo")->middleware([VerifyAdmin::class]);
     Route::post("/ticket/reopen/{ticket}", [TicketController::class, 'reopen'])->name("tickets.reopen")->middleware([VerifyAdmin::class]);
+
+    //IMMAGINI
+    Route::get('/ticket-images/{image}', [TicketImageController::class, 'show'])->name('ticket-images.show');
 });
 //PROFILE
 Route::middleware('auth')->group(function () {
