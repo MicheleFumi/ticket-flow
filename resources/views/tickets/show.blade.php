@@ -6,27 +6,36 @@
             </h2>
 
             <div>
-                <button id="openModalButton"
-                    class="bg-blue-500 hover:bg-blue-600 text-white font-bold py-2 px-4 rounded focus:outline-none focus:shadow-outline transition duration-150 ease-in-out">
-                    Prendi In Carico
-                </button>
+                @if($ticket->status_id === 1 && $technician->is_available === 1)
+                    <button id="openModalButton"
+                        class="bg-blue-500 hover:bg-blue-600 text-white font-bold py-2 px-4 rounded focus:outline-none focus:shadow-outline transition duration-150 ease-in-out">
+                        Prendi In Carico
+                    </button>
+                @elseif($ticket->status_id === 1 && $technician->is_available === 0)   
+                    <button disabled
+                    class="bg-blue-400 text-white font-bold py-2 px-4 rounded cursor-not-allowed opacity-70 focus:outline-none focus:shadow-outline transition duration-150 ease-in-out">
+                    Non Puoi Prendere Altri Ticket
+                    </button>
+                @else
+                    <button disabled
+                    class="bg-blue-400 text-white font-bold py-2 px-4 rounded cursor-not-allowed opacity-70 focus:outline-none focus:shadow-outline transition duration-150 ease-in-out">
+                    Ticket già preso in carico o chiuso
+                    </button>
+                @endif
 
-                @if ($technician->is_admin && !isset($ticket['technician_id']))
+                @if ($technician->is_admin && $ticket->status_id === 1)
                     <button id="openAssignTicketTechnicianSearchModalButton"
                         class="bg-green-700 hover:bg-green-900 text-white font-bold py-2 px-4 rounded focus:outline-none focus:shadow-outline transition duration-150 ease-in-out">
                         Assegna
-                        Tecnico</button>
+                        Tecnico
+                    </button>
+                @else
+                    <button disabled
+                        class="bg-green-400 text-white font-bold py-2 px-4 rounded cursor-not-allowed opacity-70 focus:outline-none focus:shadow-outline transition duration-150 ease-in-out">
+                        Assegnazione Tecnico Non Disponibile
+                    </button>
+                @endif
             </div>
-        @else
-            @if ($technician->is_available === 0)
-                <button disabled
-                    class="bg-blue-400 text-white font-bold py-2 px-4 rounded cursor-not-allowed opacity-70 focus:outline-none focus:shadow-outline transition duration-150 ease-in-out">
-                    Non Puoi Prendere Altri Ticket
-                </button>
-            @endif
-            @endif
-
-
         </div>
     </x-slot>
 
@@ -93,7 +102,7 @@
                                                 class="inline-flex items-center overflow-hidden rounded-full bg-yellow-100 text-yellow-700 ms-2 px-2 py-1"
                                                 onclick="openReportModal('{{ $ticket->commento_report }}')">
                                                 <i
-                                                    class="bi bi-exclamation-triangle-fill mr-1 not-italic hover:underline">
+                                                    class="bi bi-exclamation-triangle-fill mr-1 not-italic hover:underline cursor-pointer">
                                                     Visualizza Dettagli Segnalazione</i>
 
                                             </span>
@@ -107,15 +116,25 @@
                                             <i class="bi bi-arrow-counterclockwise"></i> Riapri Ticket
                                         </button>
                                     @endif
-                                    @if ($technician->is_admin)
+                                    @if ($technician->is_admin && $ticket->status_id === 1)
                                         <button id="openDeleteModalButton"
                                             class="bg-red-500 hover:bg-red-600 text-white font-bold py-2 px-3 rounded">
                                             <i class="bi bi-trash3"></i>
                                         </button>
+                                    @else
+                                        <button disabled
+                                            class="bg-red-400 text-white font-bold py-2 px-3 rounded cursor-not-allowed opacity-70">
+                                            <i class="bi bi-trash3"></i>
+                                        </button>
                                     @endif
-                                    @if (!$ticket->is_reported)
+                                    @if (!$ticket->is_reported && $ticket->status_id === 1)
                                         <button id="openReportTicketModalButton"
                                             class="bg-red-500 hover:bg-red-600 text-white py-2 px-3 rounded text-sm items-center gap-2">
+                                            <i class="bi bi-flag"></i>
+                                        </button>
+                                    @elseif(!$ticket->is_reported && $ticket->status_id !== 1)
+                                        <button disabled
+                                            class="bg-red-400 text-white font-bold py-2 px-3 rounded cursor-not-allowed opacity-70">
                                             <i class="bi bi-flag"></i>
                                         </button>
                                     @endif
