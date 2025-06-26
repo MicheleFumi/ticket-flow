@@ -47,7 +47,6 @@
                             </select>
                             <div
                                 class="pointer-events-none absolute inset-y-0 right-0 flex items-center px-2 text-gray-700 dark:text-gray-300">
-                                <!-- Icona per la select, se necessaria -->
                             </div>
                         </div>
 
@@ -60,7 +59,6 @@
                             </select>
                             <div
                                 class="pointer-events-none absolute inset-y-0 right-0 flex items-center px-2 text-gray-700 dark:text-gray-300">
-                                <!-- Icona per la select, se necessaria -->
                             </div>
                         </div>
 
@@ -75,17 +73,14 @@
                                 </select>
                                 <div
                                     class="pointer-events-none absolute inset-y-0 right-0 flex items-center px-2 text-gray-700 dark:text-gray-300">
-                                    <!-- Icona per la select, se necessaria -->
                                 </div>
                             </div>
                         @endif
 
-                        <!-- NUOVO PULSANTE RESET FILTRI -->
                         <a href="{{ route('tickets.index') }}"
                            class="inline-flex items-center px-4 py-2 bg-gray-200 dark:bg-gray-600 text-gray-800 dark:text-gray-200 font-semibold rounded-full shadow-md hover:bg-gray-300 dark:hover:bg-gray-500 focus:outline-none focus:ring-2 focus:ring-gray-400 focus:ring-offset-2 dark:focus:ring-offset-gray-800 transition duration-150 ease-in-out whitespace-nowrap">
                             Reset Filtri
                         </a>
-                        <!-- FINE NUOVO PULSANTE -->
                     </div>
                 </div>
 
